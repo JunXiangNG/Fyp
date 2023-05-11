@@ -1,5 +1,5 @@
 <?php
-include ('database.php');
+include ('dataconnection.php');
 
 if(isset($_POST['submit']))
 {
@@ -178,12 +178,13 @@ if (isset($_GET['email'])) {
       <input type="email" name="email" class="reset-container"value="<?php echo $email ?>">
      
 	 
-      <input type="password" name="password"  id="password" required placeholder="Enter new password"class="reset-container" >
+      <input type="password" name="password"  id="password"placeholder="Enter new password"class="reset-container"  required pattern="(?=.*[@#!$*()])(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+        title="Password must contain at least 8 characters and at least 1 Alphabet and 1 Special Character"> 
 	  
 	  <p id="message" style="display:none; margin-left:30px; margin-top:-20px;" >Password is <span id="strenght"></span></p>
 
 
-      <input type="password" name="cpassword" required placeholder="Confirm new password"class="reset-container">
+      <input type="password" name="cpassword" required placeholder="Confirm new password"class="reset-container" require>
       <br>
       <input type="submit" name="submit" value="Submit" class="reset-btn">
    </form>
@@ -332,3 +333,4 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 </body>
 </html>
+
