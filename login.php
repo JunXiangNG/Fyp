@@ -1,6 +1,6 @@
 <?php
 
-include 'database.php';
+include 'dataconnection.php';
 
 session_start();
 
@@ -81,7 +81,7 @@ if (isset($_POST['submit'])) {
 				<div class="container">
 					<div class="row">
 						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a href="home.html">4M Online Sport Shoes Store</a></div>
+							<div id="colorlib-logo"><a href="home.php">4M Online Sport Shoes Store</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
 			            <form action="#" class="search-wrap">
@@ -249,3 +249,4 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/main.js"></script>
 </body>
 </html>
+
