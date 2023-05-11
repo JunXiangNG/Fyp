@@ -39,7 +39,7 @@
 	<body>
 	<?php
 
-include 'database.php';
+include 'dataconnection.php';
 session_start();
 if(isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
@@ -102,7 +102,27 @@ if(isset($_SESSION['username'])) {
 										<li><a href="profile.php">Edit Profile</a></li>
                                         <li><a href="logout.php">Logout</a></li>
 									</ul>
-								<li class="cart"><a href="http://localhost/fyp/cart.php#"><i class="icon-shopping-cart"></i> 0</a></li>
+									<?php
+								
+								if (isset($_SESSION['username'])) {
+								$username = $_SESSION['username'];
+								mysqli_select_db($connect, "fyp");
+								$result = mysqli_query($connect, "select * from orders WHERE username = '$username'");	
+								$count = mysqli_num_rows($result);//used to count number of rows
+
+								}
+								if ($result === false) {
+									die(mysqli_error($connect));
+								}
+
+							
+								?>
+
+								<li class="cart">
+									<a href="http://localhost/fyp/cart.php#">
+										<i class="icon-shopping-cart"></i> <?php echo $count; ?>
+									</a>
+								</li>	
 							</ul>
 						</div>
 					</div>
