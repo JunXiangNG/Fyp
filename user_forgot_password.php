@@ -1,6 +1,6 @@
 <?php
 
-include ('database.php');
+include ('dataconnection.php');
 
 $questions = array(
 	'What is the name of your first pet?',
@@ -322,3 +322,4 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/main.js"></script>
 </body>
 </html>
+
