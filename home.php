@@ -97,7 +97,7 @@ if(isset($_SESSION['username'])) {
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
 								<li><a href="contact.html">Contact</a></li>
-                                <li class="has-dropdown">
+                              
 									<a href="http://localhost/fyp/login.php">Login</a>
 								
 									<li class="cart"><a href="http://localhost/fyp/cart.php#"><i class="icon-shopping-cart"></i> 0</a></li>
