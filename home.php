@@ -1,3 +1,13 @@
+<?php
+
+include 'dataconnection.php';
+session_start();
+if(isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+    echo "<div style='font-size: 20px; padding: 10px; color:green;'>Welcome, $username!</div>";
+}
+?>
+
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -67,8 +77,6 @@
 							<ul>
 								<li class="active"><a href="http://localhost/fyp/men.php">Home</a></li>
 								<li class="has-dropdown">
-									
-									<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
 									<ul class="dropdown">
 										<li><a href="#">Running Shoes</a></li>
@@ -85,10 +93,14 @@
 										<li><a href="#">Badminton Shoes</a></li>
 									
 									</ul>
+								</li>
+							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
 								<li><a href="contact.html">Contact</a></li>
-                                <li><a href="login.php">Login</a></li>
-								<li class="cart"><a href="http://localhost/fyp/cart.php#"><i class="icon-shopping-cart"></i> 0</a></li>
+                                <li class="has-dropdown">
+									<a href="http://localhost/fyp/login.php">Login</a>
+								
+									<li class="cart"><a href="http://localhost/fyp/cart.php#"><i class="icon-shopping-cart"></i> 0</a></li>
 							</ul>
 						</div>
 					</div>
@@ -102,12 +114,13 @@
 								<div class="owl-carousel2">
 									<div class="item">
 										<div class="col">
-										<h3><a href="#">Welcome to 4M Online Sport Shoe Store</a></h3>
+											<h3><a href="#">Welcome to 4M Online Sport Shoe Store</a></h3>
 										</div>
 									</div>
 									<div class="item">
 										<div class="col">
 											<h3><a href="#">Let's start a great shopping trip together !</a></h3>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -144,35 +157,18 @@
 				   			<div class="col-sm-6 offset-sm-3 text-center slider-text">
 				   				<div class="slider-text-inner">
 				   					<div class="desc">
-					   					<h1 class="head-1">Huge</h1>
-					   					<h2 class="head-2">Sale</h2>
-					   					<h2 class="head-3"><strong class="font-weight-bold">50%</strong> Off</h2>
-					   					<p class="category"><span>Big sale sandals</span></p>
-					   					<p><a href="#" class="btn btn-primary">Shop Collection</a></p>
-				   					</div>
-				   				</div>
-				   			</div>
-				   		</div>
-			   		</div>
-			   	</li>
-			   	<li style="background-image: url(images/img_bg_3.jpg);">
-			   		<div class="overlay"></div>
-			   		<div class="container-fluid">
-			   			<div class="row">
-				   			<div class="col-sm-6 offset-sm-3 text-center slider-text">
-				   				<div class="slider-text-inner">
-				   					<div class="desc">
-					   				<h1 class="head-1">Women's</h1>
+									   <h1 class="head-1">Women's</h1>
 					   					<h2 class="head-2">Shoes</h2>
 					   					<h2 class="head-3">Collection</h2>
 					   					<p class="category"><span>New trending shoes</span></p>
-					   					<p><a href="http://localhost/fyp/women.php" class="btn btn-primary">Shop Collection</a></p>
+					   					<p><a href="http://localhost/fyp/women.php" class="btn btn-primary">Shop Collection</a></
 				   					</div>
 				   				</div>
 				   			</div>
 				   		</div>
 			   		</div>
 			   	</li>
+			
 			  	</ul>
 		  	</div>
 		</aside>
@@ -231,7 +227,7 @@ $result = mysqli_query($connect, $select_query);
     ?>
     <div class="col-md-4 col-lg-4 mb-4 text-center">
       <div class="product-entry border">
-        <a href="http://localhost/fyp/product-detail.php?product_id=<?php echo $product_id; ?>" class="prod-img">
+        <a href="http://localhost/fyp/product_detail.php?product_id=<?php echo $product_id; ?>" class="prod-img">
         <img src="<?php echo $product_image; ?>" class="img-fluid">
           <div class="desc">
             <h2><?php echo $product_name; ?></h2>
@@ -378,3 +374,5 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 	</body>
 </html>
+
+
