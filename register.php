@@ -1,6 +1,6 @@
 <?php
 
-include 'database.php';
+include 'dataconnection.php';
 
 error_reporting(0);
 
@@ -180,7 +180,7 @@ $questions = array(
 			<br>
 			<div class="input-group">
 				<input type="email" placeholder="Email" name="email" id="email" value="<?php echo $email; ?>" required>
-				<div class="error"></div>
+				
 			</div>
 			<br>
 			
@@ -199,16 +199,17 @@ $questions = array(
 			<br>
 			
 			<div class="input-group password-container">
-				<input type="password" placeholder="Password" name="password" id="password" value="<?php echo $_POST['password']; ?>" required>
-				<p id="message" style="display:none;" >Password is <span id="strenght"></span></p>
-				<div class="error"></div>
+				<input type="password" placeholder="Password" name="password" id="password" value="<?php echo $_POST['password']; ?>" required pattern="(?=.*[@#!$*()])(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+        title="Password must contain at least 8 characters and at least 1 Alphabet and 1 Special Character">
 
+				<p id="message" style="display:none;" >Password is <span id="strenght"></span></p>
+			
             </div>
 			<br>
 			
             <div class="input-group password-container">
 				<input type="password" placeholder="Confirm Password" name="cpassword"  id="confirm-password"  value="<?php echo $_POST['cpassword']; ?>" required>
-				<div class="error"></div>
+			
 			</div>
 			<br>
 		
@@ -222,7 +223,7 @@ $questions = array(
 			<br>
 			<div class="input-group">
       		<input type="text" name="answer" required placeholder="Enter your answer" >
-			  <div class="error"></div>
+			 
 			</div>
 			<br>
 			<div class="input-group">
