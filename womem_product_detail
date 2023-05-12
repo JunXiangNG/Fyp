@@ -357,7 +357,7 @@ if(isset($_POST['savebtn'])) {
 	if ($result) {
 		// Display a success message
 		echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
-		
+		echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
 		// Redirect to the cart page
 		// header('Location: cart.php');
 		// exit();
