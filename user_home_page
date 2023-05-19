@@ -53,6 +53,12 @@ if(isset($_SESSION['username'])) {
         die("Connection failed: " . mysqli_connect_error());
     }
 	?>	
+	<?php 
+    if(empty($username)) {
+        echo "<script type='text/javascript'>alert('You must be logged in to view product.');</script>";
+        echo '<script>window.location.href = "home.php";</script>';
+    }
+?>
 	<div class="colorlib-loader"></div>
 
 	<div id="page">
@@ -64,12 +70,14 @@ if(isset($_SESSION['username'])) {
 							<div id="colorlib-logo"><a href="http://localhost/fyp/user_home_page.php">4M Online Sport Shoe Store</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
-			            <form action="#" class="search-wrap">
-			               <div class="form-group">
-			                  <input type="search" class="form-control search" placeholder="Search">
-			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
-			               </div>
-			            </form>
+						<form action="http://localhost/fyp/search.php" class="search-wrap" method="GET">
+						<div class="form-group">
+							<input type="search" name="search" required value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" class="form-control search" placeholder="Search product">
+							<button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
+						</div>
+					</form>
+
+						
 			         </div>
 		         </div>
 					<div class="row">
@@ -80,8 +88,7 @@ if(isset($_SESSION['username'])) {
 									<a href="http://localhost/fyp/men.php">Men</a>
 									<ul class="dropdown">
 										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
+										
 									
 									</ul>
 								</li>
@@ -89,14 +96,13 @@ if(isset($_SESSION['username'])) {
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
 										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
+										
 									
 									</ul>
 								</li>
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="review.php">Contact</a></li>
                                 <li class="has-dropdown">
 									<a href="#">Account</a>
 									<ul class="dropdown">
@@ -166,7 +172,7 @@ if(isset($_SESSION['username'])) {
 					   					<h1 class="head-1">Men's</h1>
 					   					<h2 class="head-2">Shoes</h2>
 					   					<h2 class="head-3">Collection</h2>
-					   					<p class="category"><span>New trending shoes</span></p>
+					   					<p class="category"><span>New running shoes</span></p>
 					   					<p><a href="http://localhost/fyp/men.php" class="btn btn-primary">Shop Collection</a></p>
 				   					</div>
 				   				</div>
@@ -184,7 +190,7 @@ if(isset($_SESSION['username'])) {
 									   <h1 class="head-1">Women's</h1>
 					   					<h2 class="head-2">Shoes</h2>
 					   					<h2 class="head-3">Collection</h2>
-					   					<p class="category"><span>New trending shoes</span></p>
+					   					<p class="category"><span>New running shoes</span></p>
 					   					<p><a href="http://localhost/fyp/women.php" class="btn btn-primary">Shop Collection</a></
 				   					</div>
 				   				</div>
