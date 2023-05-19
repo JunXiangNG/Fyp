@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>Footwear - Free Bootstrap 4 Template by Colorlib</title>
+	<title>About</title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -15,6 +15,12 @@ if(isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     echo "<div style='font-size: 20px; padding: 10px; color:green;'>Welcome, $username!</div>";
 }
+?>
+<?php 
+    if(empty($username)) {
+        echo "<script type='text/javascript'>alert('You must be logged in to view product.');</script>";
+        echo '<script>window.location.href = "home.php";</script>';
+    }
 ?>
 	<!-- Animate.css -->
 	<link rel="stylesheet" href="css/animate.css">
@@ -57,12 +63,12 @@ if(isset($_SESSION['username'])) {
 							<div id="colorlib-logo"><a href="http://localhost/fyp/user_home_page.php">4M Online Sport Shoe Store</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
-			            <form action="#" class="search-wrap">
-			               <div class="form-group">
-			                  <input type="search" class="form-control search" placeholder="Search">
-			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
-			               </div>
-			            </form>
+						<form action="http://localhost/fyp/search.php" class="search-wrap" method="GET">
+						<div class="form-group">
+							<input type="search" name="search" required value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" class="form-control search" placeholder="Search product">
+							<button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
+						</div>
+					</form>
 			         </div>
 		         </div>
 					<div class="row">
