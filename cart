@@ -161,32 +161,43 @@ if (!$connect) {
 						<div class="col-sm-7 col-md-9">
 							<div id="colorlib-logo"><a href="http://localhost/fyp/user_home_page.php">4M Online Sport Shoe Store</a></div>
 						</div>
-						<div class="col-sm-5 col-md-3">
-			            <form action="#" class="search-wrap">
-			               <div class="form-group">
-			                  <input type="search" class="form-control search" placeholder="Search">
-			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
-			               </div>
-			            </form>
-			         </div>
-		         </div>
-					<div class="row">
+						
+						<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
-								<li><a href="http://localhost/fyp/user_home_page.php">Home</a></li>
-								<li class="has-dropdown active">
+								<li class="active"><a href="http://localhost/fyp/men.php">Home</a></li>
+								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
+									<ul class="dropdown">
+										<li><a href="#">Running Shoes</a></li>
+										
 									
+									</ul>
 								</li>
-								<li><a href="http://localhost/fyp/women.php">Women</a></li>
+								<li class="has-dropdown">
+									<a href="http://localhost/fyp/women.php">Women</a>
+									<ul class="dropdown">
+										<li><a href="#">Running Shoes</a></li>
+										
+									
+									</ul>
+								</li>
+							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
 								<li><a href="contact.html">Contact</a></li>
-								
-							</ul>
+                                <li class="has-dropdown">
+									<a href="#">Account</a>
+									<ul class="dropdown">
+										<li><a href="profile.php">Edit Profile</a></li>
+                                        <li><a href="logout.php">Logout</a></li>
+									</ul>
+									<li><a href="#">Order History</a></li>
+
 						</div>
 					</div>
 				</div>
 			</div>
+			
 			<div class="sale">
 				<div class="container">
 					<div class="row">
