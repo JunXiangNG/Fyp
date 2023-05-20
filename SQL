@@ -1,0 +1,62 @@
+CREATE TABLE product (
+   product_id INT(11) PRIMARY KEY,
+   product_name VARCHAR(50) NOT NULL,
+   product_price DECIMAL(10, 2) NOT NULL,
+   product_description VARCHAR(255) NOT NULL,
+   product_count INT(11) NOT NULL,
+   product_type TEXT NOT NULL,
+   product_keyword VARCHAR(50) NOT NULL,
+   product_image VARCHAR(500) NOT NULL,
+   product_size DECIMAL(4,1) NOT NULL,
+   product_color VARCHAR(20) NOT NULL,
+   product_gender VARCHAR(255) NOT NULL,
+   quantity INT NOT NULL
+);
+
+
+
+
+CREATE TABLE users (
+id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+username varchar(255) NOT NULL,
+gender char(10)  NOT NULL,
+birthday date not null,
+email varchar(255) NOT NULL,
+password varchar(255) NOT NULL,
+question varchar(255) NOT null,
+answer varchar(255) Not null
+);
+
+
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_id INT NOT NULL,
+    username varchar(255) NOT NULL, 
+    product_image VARCHAR(500) NOT NULL,
+    product_name VARCHAR(50) NOT NULL,
+    product_price DECIMAL(10, 2) NOT NULL,
+    user_size DECIMAL(4,1) NOT NULL,
+    user_color VARCHAR(20) NOT NULL,
+    user_quantity INT NOT NULL, 
+    total_cost DECIMAL(10, 2) NOT NULL,
+    order_status varchar(50) NOT NULL Default 'Pending',
+    FOREIGN KEY (product_id) REFERENCES product(product_id)
+   
+);
+CREATE TABLE checkout (
+  checkout_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(255) NOT NULL,
+  order_id INT NOT NULL,
+  received_name VARCHAR(255) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  town_city VARCHAR(255) NOT NULL,
+  state_province VARCHAR(255) NOT NULL,
+  zip_postalcode VARCHAR(255) NOT NULL,
+  card_name VARCHAR(255) NOT NULL,
+  card_number VARCHAR(255) NOT NULL,
+  card_expire VARCHAR(10) NOT NULL,
+  cvv VARCHAR(10) NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES orders(order_id),
+  FOREIGN KEY (username) REFERENCES users(username)
+);
