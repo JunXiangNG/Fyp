@@ -59,8 +59,8 @@ CREATE TABLE orders (
 );
 CREATE TABLE checkout (
   checkout_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  user_id INT NOT NULL,
-  order_id INT not null,
+  user_id int not null,
+  order_id INT NOT NULL,
   received_name VARCHAR(255) NOT NULL,
   phone VARCHAR(20) NOT NULL,
   address VARCHAR(255) NOT NULL,
