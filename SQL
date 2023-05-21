@@ -59,8 +59,8 @@ CREATE TABLE orders (
 );
 CREATE TABLE checkout (
   checkout_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  username VARCHAR(255) NOT NULL,
-  order_id INT NOT NULL,
+  user_id INT NOT NULL,
+  order_id INT not null,
   received_name VARCHAR(255) NOT NULL,
   phone VARCHAR(20) NOT NULL,
   address VARCHAR(255) NOT NULL,
@@ -72,5 +72,5 @@ CREATE TABLE checkout (
   card_expire VARCHAR(10) NOT NULL,
   cvv VARCHAR(10) NOT NULL,
   FOREIGN KEY (order_id) REFERENCES orders(order_id),
-  FOREIGN KEY (username) REFERENCES users(username)
+  FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
