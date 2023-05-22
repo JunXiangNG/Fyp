@@ -29,6 +29,7 @@ if (isset($_POST['submit'])) {
 			$result = mysqli_query($connect, $sql);
 			if ($result) {
 				echo "<script>alert('Wow! User Registration Completed.')</script>";
+				echo '<script>window.location.href = "login.php";</script>';
 				$username = "";
 				$email = "";
 				$birthday="";
@@ -55,7 +56,7 @@ $questions = array(
 	'What is your favourite brand sport shoes?',
 	'what is your ic last four numbers?'
  );
-
+ session_destroy();
 ?>
 
 <!DOCTYPE html>
@@ -186,7 +187,7 @@ $questions = array(
 			
 			<div class="input-group">
 				<p>Date of Birth:</p>
-				<input type="date"  name="birthday"min="1980-01-01" max="2023-01-01" value="<?php echo $birthday; ?>" required>
+				<input type="date"  name="birthday"min="1963-01-01" max="2005-01-01" value="<?php echo $birthday; ?>" required>
 			</div>
 			<br>
 			<br>
@@ -378,3 +379,4 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			 	
 </body>
 </html>
+
