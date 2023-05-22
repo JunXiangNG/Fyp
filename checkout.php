@@ -31,16 +31,17 @@ if (isset($_POST['submit']))
 	if(!$insert)
 	{
 		echo "<script>alert('Payment Sussecful.'); window.location.href = 'order_complete.php';</script>";
-	else{
+	}else{
 		echo"Data Insert Error";
 	}
 }
+
 ?>
 
 <!DOCTYPE HTML>
 <html>
 <head>
-	<title>4M Online Sport Shoes Store</title>
+	<title>checkout</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -74,13 +75,28 @@ if (isset($_POST['submit']))
 	<!-- Theme style  -->
 	<link rel="stylesheet" href="css/style.css">
 
-	<link rel="stylesheet" href="css/register.css">
+	
 	
 
 
 </head>
 <body>
-
+<style>
+.btn {
+  display: inline-block;
+  position: relative;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: gray;
+  color: #fff;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  cursor: pointer;
+}
+</style>
 <div class="colorlib-loader"></div>
 
 	<div id="page">
@@ -161,30 +177,27 @@ if (isset($_POST['submit']))
 				</div>
 			</div>
 		</nav>
+		<div class="colorlib-product">
+			<div class="container">
+				<div class="row row-pb-lg">
+					<div class="col-sm-10 offset-md-1">
+						<div class="process-wrap">
+							<div class="process text-center active">
+							<p><span><a href="cart.php" >01</a></span></p>
+								<h3>Shopping Cart</h3>
+							</div>
+							<div class="process text-center active">
+								<p><span>02</span></p>
+								<h3>Checkout</h3>
+							</div>
+							<div class="process text-center">
+								<p><span>03</span></p>
+								<h3>Order Complete</h3>
+							</div>
+						</div>
+					</div>
+				</div>
 
-	<div class="colorlib-product">
-  <div class="container">
-    <div class="row row-pb-lg">
-      <div class="col-sm-10 offset-md-1">
-        <div class="process-wrap">
-          <div class="process text-center active">
-            <p><span><a href="cart.php" >1</a></span></p>
-            <h3>Shopping Cart</h3>
-          </div>
-          <div class="process text-center">
-            <p><span><a href="checkout.php">2</a></span></p>
-            <h3>Checkout</h3>
-          </div>
-          <div class="process text-center">
-            <p><span><a href="order_complete.php">3</a></span></p>
-            <h3>Order Complete</h3>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-			
 			<form method="POST" class="colorlib-form">
 				<div class="row">
 					<div class="col-md-7">
@@ -231,19 +244,16 @@ if (isset($_POST['submit']))
 						<div class="cart-detail">
 							<h2>Cart Total</h2>
 							<ul>
+								
 								<li>
-									<span>Product</span>
-									<span>Total</span>
-								</li>
-								<li>
-									<span>Shoes Name</span>
+									<span>Subtotal</span>
 									<span>$59.00</span>
 								</li>
 								<li>
-									<span>Shipping</span>
-										Free Shipping
+									<span>Shipping</span><span>Free Shipping</span>
+										
 								</li>
-								<li><span>Order Total</span><span>$59.00</span></li>
+								<li><span>Total</span><span>$59.00</span></li>
 							</ul>
 						</div>
 						<div class="row">
