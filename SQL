@@ -45,18 +45,18 @@ answer varchar(255) Not null
 CREATE TABLE orders (
     order_id INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT NOT NULL,
-    username varchar(255) NOT NULL, 
-    product_image VARCHAR(500) NOT NULL,
+    username VARCHAR(255) NOT NULL, 
+    product_image VARCHAR(1000) NOT NULL,
     product_name VARCHAR(50) NOT NULL,
     product_price DECIMAL(10, 2) NOT NULL,
-    user_size DECIMAL(4,1) NOT NULL,
+    user_size DECIMAL(4, 1) NOT NULL,
     user_color VARCHAR(20) NOT NULL,
     user_quantity INT NOT NULL, 
     total_cost DECIMAL(10, 2) NOT NULL,
-    order_status varchar(50) NOT NULL Default 'Pending',
+    order_status VARCHAR(50) NOT NULL DEFAULT 'Pending',
     FOREIGN KEY (product_id) REFERENCES product(product_id)
-   
 );
+
 CREATE TABLE checkout (
   checkout_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   user_id int not null,
