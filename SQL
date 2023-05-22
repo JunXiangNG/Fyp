@@ -81,4 +81,3 @@ CREATE TABLE review (
   comment TEXT NOT NULL,
   rating INT(1) NOT NULL
 );
-
