@@ -23,7 +23,7 @@ CREATE TABLE product_details (
 );
 
 INSERT INTO brand (brand_name, brand_code)
-VALUES ('Nike, 'NK');
+VALUES ('Nike', 'NK');
 
 INSERT INTO product (brand_id, product_name, product_description, product_code)
 VALUES (1, 'Air Force 1', 'What a Great Shoes', 'AF1');
