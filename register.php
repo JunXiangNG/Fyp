@@ -63,12 +63,7 @@ $questions = array(
 <html>
 <head>
 	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Register Form </title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-	<link rel="stylesheet" type="text/css" href="css/register.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
@@ -101,6 +96,118 @@ $questions = array(
 	<link rel="stylesheet" href="css/style.css">
 
 	<style>
+		.register-container {
+    width: 1000px;
+    min-height: 250px;
+    background: #FFF;
+    border-radius: 5px;
+    margin-left: 450px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, .3);
+    padding: 40px 30px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.register-container .login-text {
+    color: #111;
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 20px;
+    display: block;
+    text-transform: capitalize;
+}
+
+.register-container .login-email .input-radio {
+    justify-content: center;
+    align-items: center;
+}
+
+.register-container .login-email .input-group {
+    width: 100%;
+    height: 50px;
+}
+
+.register-container .login-email .input-group input {
+    width: 100%;
+    height: 100%;
+    border: 2px solid #e7e7e7;
+    padding: 15px 15px;
+    font-size: 1rem;
+    border-radius: 30px;
+    background: transparent;
+    outline: none;
+    transition: .3s;
+}
+
+.register-container .login-email .input-group input:focus,
+.container .login-email .input-group input:valid {
+    border-color: #03462f;
+}
+
+.register-container .login-email .input-group .btn {
+    display: block;
+    width: 100%;
+    padding: 15px 20px;
+    text-align: center;
+    border: none;
+    background: #9bfeba;
+    outline: none;
+    border-radius: 30px;
+    font-size: 1.2rem;
+    color: #FFF;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.register-container .login-email .input-group .btn:hover {
+    transform: translateY(-5px);
+    background: #5ce78d;
+}
+
+.login-register-text {
+    color: #111;
+    font-weight: 600;
+}
+
+.login-register-text a {
+    text-decoration: none;
+    color: #6c5ce7;
+}
+
+.forgot-password-text {
+    color: #111;
+    font-weight: 600;
+}
+
+.forgot-password-text a {
+    text-decoration: none;
+    color: #6c5ce7;
+}
+
+#message {
+    display: none;
+    position: initial;
+    bottom: -46px;
+    color: #fff;
+    font-size: 15px;
+}
+
+@media (max-width: 800px) {
+    .register-container {
+        width: 90%;
+        margin: auto;
+        padding: 20px;
+    }
+
+    .register-container .login-social {
+        display: block;
+    }
+
+    .register-container .login-social a {
+        display: block;
+    }
+}
     .input-radio input[type="radio"] {
       display: inline-block;
       margin-right: 10px;
