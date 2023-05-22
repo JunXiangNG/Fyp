@@ -78,28 +78,27 @@ if(isset($_SESSION['username'])) {
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
+										<li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
 									
 									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
+										<li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
 									
 									</ul>
 								</li>
 							
 								<li class="active"><a href="http://localhost/fyp/about.php">About</a></li>
-								<li><a href="contact.html">Contact</a></li>
-								<li class="has-dropdown">
+								<li><a href="viewreview.php">Review</a></li>
+                                <li class="has-dropdown">
 									<a href="#">Account</a>
 									<ul class="dropdown">
 										<li><a href="profile.php">Edit Profile</a></li>
+										<li><a href="#">Order History</a></li>
                                         <li><a href="logout.php">Logout</a></li>
 									</ul>
 									<?php
