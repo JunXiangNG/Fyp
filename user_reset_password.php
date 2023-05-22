@@ -139,25 +139,15 @@ if (isset($_GET['email'])) {
 								<li class="active"><a href="home.php">Home</a></li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
-									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
-									
-									</ul>
+								
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
-									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
 									
-									</ul>
 								</li>
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="review.php">Review</a></li>
 								
 							</ul>
 						</div>
@@ -333,4 +323,3 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 </body>
 </html>
-
