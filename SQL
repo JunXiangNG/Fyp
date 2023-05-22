@@ -74,3 +74,11 @@ CREATE TABLE checkout (
   FOREIGN KEY (order_id) REFERENCES orders(order_id),
   FOREIGN KEY (user_id) REFERENCES users(user_id)
 );
+
+CREATE TABLE review (
+  id INT(6) UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  username varchar(255) NOT NULL, 
+  comment TEXT NOT NULL,
+  rating INT(1) NOT NULL
+);
+
