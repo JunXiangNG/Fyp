@@ -28,12 +28,9 @@ if (isset($_GET['email'])) {
 <!DOCTYPE html>
 <html lang="en">
 <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Login</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-	<link rel="stylesheet" type="text/css" href="css/register.css">
+	
+<title>Reset Password</title>
+   
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
@@ -155,30 +152,30 @@ if (isset($_GET['email'])) {
 				</div>
 			</div>
 
-	<div class="register-container">
-	<form action="" method="POST" class="login-email">
+			<form action="" method="POST" class="login-email">
 
-      <h1>Reset Password</h1>
-   
-      <?php
-      if(isset($error)){
-         echo '<span class="error-msg">'.$error.'</span>';
-      };
-      ?>
-      <input type="email" name="email" class="reset-container"value="<?php echo $email ?>">
-     
-	 
-      <input type="password" name="password"  id="password"placeholder="Enter new password"class="reset-container"  required pattern="(?=.*[@#!$*()])(?=.*[a-z])(?=.*[A-Z]).{8,}" 
-        title="Password must contain at least 8 characters and at least 1 Alphabet and 1 Special Character"> 
-	  
-	  <p id="message" style="display:none; margin-left:30px; margin-top:-20px;" >Password is <span id="strenght"></span></p>
+<p class="login-text" style="font-size: 2rem; font-weight: 800;">Reset Password</p>
+
+  <?php
+  if(isset($error)){
+	 echo '<span class="error-msg">'.$error.'</span>';
+  };
+  ?>
+  <input type="hidden" name="email" class="reset-container"value="<?php echo $email ?>">
+ 
+ 
+  <input type="password" name="password"  id="password"placeholder="Enter new password"class="reset-container"  required pattern="(?=.*[@#!$*()])(?=.*[a-z])(?=.*[A-Z]).{8,}" 
+	title="Password must contain at least 8 characters and at least 1 Alphabet and 1 Special Character"> 
+  
+  <p id="message" style="display:none; margin-left:30px; margin-top:-20px;" >Password is <span id="strenght"></span></p>
 
 
-      <input type="password" name="cpassword" required placeholder="Confirm new password"class="reset-container" require>
-      <br>
-      <input type="submit" name="submit" value="Submit" class="reset-btn">
-   </form>
-    </div>
+  <input type="password" name="cpassword" required placeholder="Confirm new password"class="reset-container" require>
+  <br>
+  <input type="submit" name="submit" value="Submit" class="reset-btn">
+</form>
+
+</div>
 
 <!--footer-->
 <footer id="colorlib-footer" role="contentinfo">
