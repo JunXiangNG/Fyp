@@ -51,12 +51,9 @@ if(isset($_POST['submit']))
 <!DOCTYPE html>
 <html lang="en">
 <meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Login</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-	<link rel="stylesheet" type="text/css" href="css/register.css">
+	
+	<title>Forgot Password</title>
+   
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css?family=Rokkitt:100,300,400,700" rel="stylesheet">
@@ -175,8 +172,8 @@ if(isset($_POST['submit']))
 				</div>
 			</div>
 
-   <form action=""class="forgot-form" method="post">
-      <h1 style="color:black;">Forgot Password</h1>
+			<form action=""class="forgot-form " method="post">
+   <p class="login-text" style="font-size: 2rem; font-weight: 800;">Forgot Password</p>
       <?php
       if(isset($error)){
          echo '<span class="error-msg">'.$error.'</span>';
@@ -200,7 +197,6 @@ if(isset($_POST['submit']))
       <input type="submit" name="submit" value="Submit" class="forgot-btn">
 			
    </form>
- 
 
 </div>
 
