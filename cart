@@ -169,7 +169,8 @@ if (!$connect) {
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
+									    <li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
 										
 									
 									</ul>
@@ -177,7 +178,8 @@ if (!$connect) {
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
+									    <li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
 										
 									
 									</ul>
@@ -189,9 +191,10 @@ if (!$connect) {
 									<a href="#">Account</a>
 									<ul class="dropdown">
 										<li><a href="profile.php">Edit Profile</a></li>
+										<li><a href="#">Order History</a></li>
                                         <li><a href="logout.php">Logout</a></li>
 									</ul>
-									<li><a href="#">Order History</a></li>
+									
 
 						</div>
 					</div>
@@ -387,7 +390,7 @@ if (isset($_SESSION['username'])) {
                     <div class="total">
                         <div class="sub">
                             <p><span>Subtotal:</span> <span class="price">$<?php echo number_format($subtotal, 2); ?></span></p>
-                            <p><span>Delivery:</span> <span>$0.00</span></p>
+                            <p><span>Delivery:</span> <span>Free Shipping</span></p>
                         </div>
                         <div class="grand-total">
                             <p><span><strong>Total:</strong></span> <span class="price">$<?php echo number_format($subtotal, 2); ?></span></p>
@@ -405,7 +408,7 @@ if (isset($_SESSION['username'])) {
 <div class="row">
     <div class="col-md-12 text-left">
 		
-        <p><a href="#" class="btn btn-primary">Proceed to Checkout</a></p>
+        <p><a href="http://localhost/fyp/checkout.php" class="btn btn-primary">Proceed to Checkout</a></p>
     </div>
 </div>
 
