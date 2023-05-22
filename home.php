@@ -75,22 +75,21 @@ if(isset($_SESSION['username'])) {
 					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
-								<li class="active"><a href="http://localhost/fyp/men.php">Home</a></li>
+								<li class="active"><a href="http://localhost/fyp/home.php">Home</a></li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
+										<li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
+										
 									
 									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
+									    <li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
 									
 									</ul>
 								</li>
@@ -132,7 +131,7 @@ if(isset($_SESSION['username'])) {
 		<aside id="colorlib-hero">
 			<div class="flexslider">
 				<ul class="slides">
-			   	<li style="background-image: url(images/img_bg_1.jpg);">
+			   	<li style="background-image: url(images/background.jpg);">
 			   		<div class="overlay"></div>
 			   		<div class="container-fluid">
 			   			<div class="row">
@@ -150,7 +149,7 @@ if(isset($_SESSION['username'])) {
 				   		</div>
 			   		</div>
 			   	</li>
-			   	<li style="background-image: url(images/img_bg_2.jpg);">
+			   	<li style="background-image: url(https://wallpaper.dog/large/624695.jpg);">
 			   		<div class="overlay"></div>
 			   		<div class="container-fluid">
 			   			<div class="row">
@@ -186,7 +185,7 @@ if(isset($_SESSION['username'])) {
 				<div class="row">
 					<div class="col-sm-6 text-center">
 						<div class="featured">
-							<a href="http://localhost/fyp/men.php" class="featured-img" style="background-image: url(images/men.jpg);"></a>
+						<a href="http://localhost/fyp/men.php" class="featured-img" style="background-image:url(https://th.bing.com/th/id/OIP.Yi12XLxOgMVFDDvaTTo18wHaFB?pid=ImgDet&rs=1);"></a>
 							<div class="desc">
 								<h2><a href="http://localhost/fyp/men.php">Shop Men's Collection</a></h2>
 							</div>
@@ -194,7 +193,7 @@ if(isset($_SESSION['username'])) {
 					</div>
 					<div class="col-sm-6 text-center">
 						<div class="featured">
-							<a href="http://localhost/fyp/women.php" class="featured-img" style="background-image: url(images/women.jpg);"></a>
+						<a href="http://localhost/fyp/women.php" class="featured-img" style="background-image: url(https://th.bing.com/th/id/OIP.GYdHBiUO9hbTg0L7zBzizwHaHa?pid=ImgDet&w=700&h=700&rs=1);"></a>
 							<div class="desc">
 								<h2><a href="http://localhost/fyp/women.php">Shop Women's Collection</a></h2>
 							</div>
@@ -254,15 +253,7 @@ $result = mysqli_query($connect, $select_query);
 					<div class="col partner-col text-center">
 						<img src="images/brand-2.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
 					</div>
-					<div class="col partner-col text-center">
-						<img src="images/brand-3.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
-					</div>
-					<div class="col partner-col text-center">
-						<img src="images/brand-4.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
-					</div>
-					<div class="col partner-col text-center">
-						<img src="images/brand-5.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
-					</div>
+				
 				</div>
 			</div>
 		</div>
