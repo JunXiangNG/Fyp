@@ -87,15 +87,16 @@ if(isset($_SESSION['username'])) {
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
-										
+										<li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
 									
 									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
+									    <li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
 										
 									
 									</ul>
