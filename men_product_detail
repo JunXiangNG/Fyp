@@ -387,52 +387,69 @@ if (!$connect) {
 		</form>
 		
 		<?php 
-	
-	if(isset($_POST['savebtn'])) {
-		// Get the form data
-		$product_id = $_GET["product_id"];
-		$select_query = "SELECT * FROM product WHERE product_id = $product_id";
-		
-	
-		if(isset($_SESSION['username'])) {
-			$username = $_SESSION['username'];
-		}
-	
-		// Query the product table to get the product name, image, and price
-		$query = "SELECT product_name, product_image, product_price FROM product WHERE product_id = '$product_id'";
-		$result = mysqli_query($connect, $query);
-	
-		// Fetch the result into variables
-		$row = mysqli_fetch_assoc($result);
-		$product_name = $row['product_name'];
-		$product_image = $row['product_image'];
-		$product_price = $row['product_price'];
-		$user_size = $_POST['size'];
-		$user_color = $_POST['colour'];
-		$user_quantity = $_POST['quantity'];
-	
-		$total_cost = $product_price * $user_quantity; // Assuming $product_price is defined
-	
-	 
-	
-		// Insert the data into the orders table
-		$insert_query = "INSERT INTO orders (username,product_id, product_name,product_price, total_cost,user_quantity, user_color, user_size, product_image) VALUES ('$username','$product_id','$product_name','$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image')";
-		$result = mysqli_query($connect, $insert_query);
-	
-		if ($result) {
-			// Display a success message
-			echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
-			echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
-			// Redirect to the cart page
-			// header('Location: cart.php');
-			// exit();
-		} else {
-			// Display an error message
-			echo "<script type='text/javascript'>alert('Order placed error!');</script>" . mysqli_error($connect);
-		}
-	}
-	
-	?>	
+if (isset($_POST['savebtn'])) {
+    // Get the form data
+    $product_id = $_GET["product_id"];
+    $select_query = "SELECT * FROM product WHERE product_id = $product_id";
+
+    if (isset($_SESSION['username'])) {
+        $username = $_SESSION['username'];
+    }
+
+    // Query the product and product_details tables to get the product name, image, and price
+    $query = "SELECT p.product_name, pd.product_image, pd.product_price 
+              FROM product p
+              INNER JOIN product_details pd ON p.product_id = pd.product_id
+              WHERE pd.product_id = '$product_id'";
+
+    $result = mysqli_query($connect, $query);
+
+    // Check if the query was successful
+    if ($result) {
+        // Fetch the result into variables
+        $row = mysqli_fetch_assoc($result);
+        $product_name = $row['product_name'];
+        $product_image = $row['product_image'];
+        $product_price = $row['product_price'];
+        $user_size = $_POST['size'];
+        $user_color = $_POST['colour'];
+        $user_quantity = $_POST['quantity'];
+
+        $total_cost = $product_price * $user_quantity; // Assuming $product_price is defined
+
+        // Sanitize the input
+        $username = mysqli_real_escape_string($connect, $username);
+        $product_id = mysqli_real_escape_string($connect, $product_id);
+        $product_name = mysqli_real_escape_string($connect, $product_name);
+        $product_price = mysqli_real_escape_string($connect, $product_price);
+        $total_cost = mysqli_real_escape_string($connect, $total_cost);
+        $user_quantity = mysqli_real_escape_string($connect, $user_quantity);
+        $user_color = mysqli_real_escape_string($connect, $user_color);
+        $user_size = mysqli_real_escape_string($connect, $user_size);
+        $product_image = mysqli_real_escape_string($connect, $product_image);
+
+        // Insert the data into the orders table
+        $insert_query = "INSERT INTO orders (username, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image)
+                         VALUES ('$username', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image')";
+        $result = mysqli_query($connect, $insert_query);
+
+        if ($result) {
+            // Display a success message
+            echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
+            echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+            // Redirect to the cart page
+            // header('Location: cart.php');
+            // exit();
+        } else {
+            // Display an error message
+            echo "<script type='text/javascript'>alert('Order placed error!');</script>" . mysqli_error($connect);
+        }
+    } else {
+        // Display an error message
+        echo "<script type='text/javascript'>alert('Query error!');</script>" . mysqli_error($connect);
+    }
+}
+?>
 		
 
 		
