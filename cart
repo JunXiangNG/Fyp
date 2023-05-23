@@ -55,6 +55,8 @@
   margin-right: 10px;
   padding: 0 5px;
   width: 20px;
+  background-color: gray;
+  color: #fff;
 }
 
 .quantity button:last-child {
@@ -101,6 +103,7 @@
   font-size: 10px;
   font-weight: 500;
   cursor: pointer;
+  height: 80px;
 }
 
 .update-button:hover {
@@ -263,10 +266,10 @@ if (!$connect) {
 							<div class="one-forth text-left px-4">
 								<span>Product Details</span>
 							</div>
-							<div class="one-eight text-center">
+							<div class="one-eight text-left px-3">
 								<span>Price</span>
 							</div>
-							<div class="one-eight text-center">
+							<div class="one-eight ">
 								<span>Quantity</span>
 							</div>
 							<div class="one-eight text-right">
@@ -327,7 +330,7 @@ if (isset($_SESSION['username'])) {
                     }
                     ?>
                     <form name="addfrm" method="post" action="">
-                        <div class="one-eight text-center">
+                        <div class="one-eight text-center" >
                             <div class="display-tc">
                                 <div class="quantity">
                                     <div class="quantity-container">
@@ -336,10 +339,13 @@ if (isset($_SESSION['username'])) {
                                         <button type="button" onclick="increaseValue(<?php echo $order_id; ?>)">+</button>
 										
                                     </div>
-									<input type="submit" name="savebtn_<?php echo $order_id; ?>" value="UPDATE" alt="Update" class="update-button">
+									
                                 </div>
+								
                             </div>
+							
                         </div>
+						<input type="submit" name="savebtn_<?php echo $order_id; ?>" value="UPDATE" alt="Update" class="update-button">
                     </form>
 
                     <?php
