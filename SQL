@@ -55,7 +55,6 @@ CREATE TABLE orders (
     user_color VARCHAR(20) NOT NULL,
     user_quantity INT NOT NULL, 
     total_cost DECIMAL(10, 2) NOT NULL,
-    subtotal DECIMAL(10, 2) NOT NULL,
     order_status VARCHAR(50) NOT NULL DEFAULT 'Pending',
     FOREIGN KEY (product_id) REFERENCES product(product_id)
 );
