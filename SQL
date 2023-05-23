@@ -43,7 +43,7 @@ CREATE TABLE orders (
     order_id INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT NOT NULL,
     username VARCHAR(255) NOT NULL, 
-    product_image VARCHAR(1000) NOT NULL,
+     product_image LONGBLOB NOT NULL, 
     product_name VARCHAR(50) NOT NULL,
     product_price DECIMAL(10, 2) NOT NULL,
     user_size DECIMAL(4, 1) NOT NULL,
