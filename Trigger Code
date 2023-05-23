@@ -1,0 +1,16 @@
+DELIMITER $$
+CREATE TRIGGER generate_product_details_id
+BEFORE INSERT ON product_details
+FOR EACH ROW
+BEGIN
+    DECLARE unique_id VARCHAR(20);
+    SET unique_id = (
+        SELECT CONCAT(b.brand_code, p.product_code, NEW.product_color, NEW.product_size)
+        FROM product p
+        JOIN brand b ON p.brand_id = b.brand_id
+        WHERE p.product_id = NEW.product_id
+        LIMIT 1
+    );
+    SET NEW.product_details_id = unique_id;
+END$$
+DELIMITER ;
