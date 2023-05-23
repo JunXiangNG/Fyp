@@ -260,7 +260,17 @@ if (!$connect) {
 				<div class="image-container">
                     <div class="product-entry border">
                         <div class="text-center">
-						<img src="<?php echo $product_image; ?>" class="img-fluid main-image">
+						<?php
+							$imageData = $row['product_image'];
+							$secondImageData = $row['second_image'];
+							
+							if ($imageData) {
+								$imageData = base64_encode($imageData);
+								echo '<img src="data:image/jpeg;base64,' . $imageData . '" class="img-fluid" />';
+							} else {
+								echo 'No Image';
+							}
+								?>
 							
                         </div>
                     </div>
@@ -357,55 +367,51 @@ if (!$connect) {
 		
 		<?php 
 	
-if(isset($_POST['savebtn'])) {
-    // Get the form data
-    $product_id = $_GET["product_id"];
-	$select_query = "SELECT * FROM product WHERE product_id = $product_id";
-	
-
-	if(isset($_SESSION['username'])) {
-		$username = $_SESSION['username'];
-	}
-
-    // Query the product table to get the product name, image, and price
-    $query = "SELECT product_name, product_price FROM product WHERE product_id = '$product_id'";
-	$result = mysqli_query($connect, $query);
-
-    // Fetch the result into variables
-    $row = mysqli_fetch_assoc($result);
-    $product_name = $row['product_name'];
-    $product_image = $row['product_image'];
-    $product_price = $row['product_price'];
-    $user_size = $_POST['size'];
-    $user_color = $_POST['colour'];
-    $user_quantity = $_POST['quantity'];
-
-    $total_cost = $product_price * $user_quantity; // Assuming $product_price is defined
-
- 
-
-    // Insert the data into the orders table
-	$insert_query = "INSERT INTO orders (username, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image) VALUES ('$username', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image')";
-
-    $result = mysqli_query($connect, $insert_query);
-
-	if ($result) {
-		// Display a success message
-		echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
-		echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
-
+	if(isset($_POST['savebtn'])) {
+		// Get the form data
+		$product_id = $_GET["product_id"];
+		$select_query = "SELECT * FROM product WHERE product_id = $product_id";
 		
-		// Redirect to the cart page
-		// header('Location: cart.php');
 	
-	} else {
-		// Display an error message
-		echo "<script type='text/javascript'>alert('Order placed error!');</script>" . mysqli_error($connect);
-		
+		if(isset($_SESSION['username'])) {
+			$username = $_SESSION['username'];
+		}
+	
+		// Query the product table to get the product name, image, and price
+		$query = "SELECT product_name, product_image, product_price FROM product WHERE product_id = '$product_id'";
+		$result = mysqli_query($connect, $query);
+	
+		// Fetch the result into variables
+		$row = mysqli_fetch_assoc($result);
+		$product_name = $row['product_name'];
+		$product_image = $row['product_image'];
+		$product_price = $row['product_price'];
+		$user_size = $_POST['size'];
+		$user_color = $_POST['colour'];
+		$user_quantity = $_POST['quantity'];
+	
+		$total_cost = $product_price * $user_quantity; // Assuming $product_price is defined
+	
+	 
+	
+		// Insert the data into the orders table
+		$insert_query = "INSERT INTO orders (username,product_id, product_name,product_price, total_cost,user_quantity, user_color, user_size, product_image) VALUES ('$username','$product_id','$product_name','$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image')";
+		$result = mysqli_query($connect, $insert_query);
+	
+		if ($result) {
+			// Display a success message
+			echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
+			echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
+			// Redirect to the cart page
+			// header('Location: cart.php');
+			// exit();
+		} else {
+			// Display an error message
+			echo "<script type='text/javascript'>alert('Order placed error!');</script>" . mysqli_error($connect);
+		}
 	}
-}
-
-?>	
+	
+	?>	
 		
 
 		
