@@ -305,7 +305,7 @@ if(isset($_SESSION['username'])) {
 						?>
 						<div class="col-md-4 col-lg-4 mb-4 text-center">
 						<div class="product-entry border">
-							<a href="http://localhost/fyp/men_product_detail.php?product_id=<?php echo $product_id; ?>" class="prod-img">
+							<a href="http://localhost/fyp/women_product_details.php?product_id=<?php echo $product_id; ?>" class="prod-img">
 							<?php
 									$imageData = $row['product_image'];
 									$secondImageData = $row['second_image'];
