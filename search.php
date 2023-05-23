@@ -239,8 +239,10 @@ if(isset($_SESSION['username'])) {
 		<?php
     if (isset($_GET['search'])) {
         $filtervalues = $_GET['search'];
-        $query = "SELECT * FROM product WHERE product_name LIKE '%$filtervalues%'";
-        $query_run = mysqli_query($connect, $query);
+        $select_query = "SELECT * FROM product
+        INNER JOIN product_details ON product.product_id = product_details.product_id
+        WHERE product_name LIKE '%$filtervalues%'";
+        $query_run = mysqli_query($connect, $select_query);
 
         if ($query_run) {
             $count = mysqli_num_rows($query_run);
@@ -259,7 +261,16 @@ if(isset($_SESSION['username'])) {
                     <div class="col-md-4 col-lg-4 mb-4 text-center">
                         <div class="product-entry border">
                             <a href="http://localhost/fyp/product_detail.php?product_id=<?php echo $product_id; ?>" class="prod-img">
-                                <img src="<?php echo $product_image; ?>" class="img-fluid">
+							<?php
+									$imageData = $row['product_image'];
+									$secondImageData = $row['second_image'];
+									
+									if ($imageData) {
+										echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="img-fluid" />';
+									} else {
+										echo 'No Image';
+									}
+										?>
                                 <div class="desc">
                                     <h2><?php echo $product_name; ?></h2>
                                     <span class="price"><?php echo $product_price; ?></span>
