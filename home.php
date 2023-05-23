@@ -55,23 +55,25 @@ if(isset($_SESSION['username'])) {
 	?>	
 	<div class="colorlib-loader"></div>
 
-	<div id="page">
-		<nav class="colorlib-nav" role="navigation">
-			<div class="top-menu">
-				<div class="container">
-					<div class="row">
-						<div class="col-sm-7 col-md-9">
-							<div id="colorlib-logo"><a href="http://localhost/fyp/user_home_page.php">4M Online Sport Shoe Store</a></div>
-						</div>
-						<div class="col-sm-5 col-md-3">
-			            <form action="#" class="search-wrap">
-			               <div class="form-group">
-			                  <input type="search" class="form-control search" placeholder="Search">
-			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
-			               </div>
-			            </form>
-			         </div>
-		         </div>
+<div id="page">
+	<nav class="colorlib-nav" role="navigation">
+		<div class="top-menu">
+			<div class="container">
+				<div class="row">
+					<div class="col-sm-7 col-md-9">
+						<div id="colorlib-logo"><a href="http://localhost/fyp/user_home_page.php">4M Online Sport Shoe Store</a></div>
+					</div>
+					<div class="col-sm-5 col-md-3">
+					<form action="http://localhost/fyp/search.php" class="search-wrap" method="GET">
+					<div class="form-group">
+						<input type="search" name="search" required value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" class="form-control search" placeholder="Search product">
+						<button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
+					</div>
+				</form>
+
+					
+				 </div>
+			 </div>
 					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
@@ -95,7 +97,7 @@ if(isset($_SESSION['username'])) {
 								</li>
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="viewreview.php">Review</a></li>
                                 <li class="has-dropdown">
 									<a href="http://localhost/fyp/login.php">Login</a>
 								
@@ -212,32 +214,42 @@ if(isset($_SESSION['username'])) {
 				</div>
 				<?php 
 				
-$select_query = "SELECT * FROM product";
-$result = mysqli_query($connect, $select_query);
-?>
+					$select_query = "SELECT *FROM product
+					INNER JOIN product_details ON product.product_id = product_details.product_id";
+					$result = mysqli_query($connect, $select_query);
+					?>
 
-<div class="container">
-  <div class="d-flex flex-wrap">
-    <?php while ($row = mysqli_fetch_assoc($result)) { //one by one return data
-      $product_id = $row['product_id'];
-      $product_image = $row['product_image'];
-      $product_name = $row['product_name'];
-      $product_price = $row['product_price'];
-    ?>
-    <div class="col-md-4 col-lg-4 mb-4 text-center">
-      <div class="product-entry border">
-        <a href="http://localhost/fyp/product_detail.php?product_id=<?php echo $product_id; ?>" class="prod-img">
-        <img src="<?php echo $product_image; ?>" class="img-fluid">
-          <div class="desc">
-            <h2><?php echo $product_name; ?></h2>
-            <span class="price"><?php echo $product_price; ?></span>
-          </div>
-        </a>
-      </div>
-    </div>
-    <?php } ?>
-  </div>
-</div>
+				<div class="container">
+				<div class="d-flex flex-wrap">
+					<?php while ($row = mysqli_fetch_assoc($result)) { //one by one return data
+					$product_id = $row['product_id'];
+					$product_image = $row['product_image'];
+					$product_name = $row['product_name'];
+					$product_price = $row['product_price'];
+					?>
+					<div class="col-md-4 col-lg-4 mb-4 text-center">
+					<div class="product-entry border">
+						<a href="http://localhost/fyp/product_detail.php?product_id=<?php echo $product_id; ?>" class="prod-img">
+					<?php
+								$imageData = $product_image;
+								$secondImageData = $row['second_image'];
+								
+								if ($imageData) {
+									echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="img-fluid" />';
+								} else {
+									echo 'No Image';
+								}
+									?>
+						<div class="desc">
+							<h2><?php echo $product_name; ?></h2>
+							<span class="price"><?php echo $product_price; ?></span>
+						</div>
+						</a>
+					</div>
+					</div>
+					<?php } ?>
+				</div>
+				</div>
 
 		<div class="colorlib-partner">
 			<div class="container">
