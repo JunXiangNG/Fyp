@@ -288,33 +288,45 @@ if(isset($_SESSION['username'])) {
 						
 					
 				
-<?php 
-  $select_query = "SELECT * FROM product WHERE product_gender='women'"; //select product which gender is women
-  $result = mysqli_query($connect, $select_query); 
-?>
-<div class="col-lg-9 col-xl-9">
-  <div class="row row-pb-md">
-    <?php while ($row = mysqli_fetch_assoc($result)) { // transfers data row by row
-      $product_id = $row['product_id'];
-      $product_image = $row['product_image'];
-      $product_name = $row['product_name'];
-      $product_price = $row['product_price'];
-      $product_gender = $row['product_gender'];
-    ?>
-    <div class="col-md-4 col-lg-4 mb-4 text-center"> <!-- arrange the image from left to right !-->
-      <div class="product-entry border">
-        <a href="http://localhost/fyp/women_product_details.php?product_id=<?php echo $product_id; ?>" class="prod-img">
-          <img src="<?php echo $product_image; ?>" class="img-fluid">
-          <div class="desc"> <!-- arrange the image from left to right !-->
-            <h2><?php echo $product_name; ?></h2>
-            <span class="price"><?php echo $product_price; ?></span>
-          </div>
-        </a>
-      </div>
-    </div>
-    <?php } ?>
-  </div>
-</div>
+					<?php 
+						$select_query = "SELECT *FROM product
+						INNER JOIN product_details ON product.product_id = product_details.product_id
+						WHERE product_gender='women'";
+						$result = mysqli_query($connect, $select_query);
+					?>
+					<div class="col-lg-9 col-xl-9">
+					<div class="row row-pb-md">
+						<?php while ($row = mysqli_fetch_assoc($result)) {
+						$product_id = $row['product_id'];
+						$product_image = $row['product_image'];
+						$product_name = $row['product_name'];
+						$product_price = $row['product_price'];
+						$product_gender = $row['product_gender'];
+						?>
+						<div class="col-md-4 col-lg-4 mb-4 text-center">
+						<div class="product-entry border">
+							<a href="http://localhost/fyp/men_product_detail.php?product_id=<?php echo $product_id; ?>" class="prod-img">
+							<?php
+									$imageData = $row['product_image'];
+									$secondImageData = $row['second_image'];
+									
+									if ($imageData) {
+										echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="img-fluid" />';
+									} else {
+										echo 'No Image';
+									}
+										?>
+							<div class="desc">
+								<h2><?php echo $product_name; ?></h2>
+								<span class="price"><?php echo $product_price; ?></span>
+							</div>
+							</a>
+						</div>
+						</div>
+						<?php } ?>
+					</div>
+					</div>
+
 
 
 							
