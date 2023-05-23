@@ -11,30 +11,7 @@ if (isset($_SESSION['username'])) {
 	
 }
 $connect = mysqli_connect("localhost","root","","fyp");
-if (isset($_POST['submit']))
-{
-	$name=$_POST['received_name'];
-	$phone=$_POST['phone'];
-	$address=$_POST['address'];
-	$town=$_POST['town_city'];
-	$state=$_POST['state_province'];
-	$zipcode=$_POST['zip_postalcode'];
-	$cardname=$_POST['card_name'];
-	$cardnumber=$_POST['card_number'];
-	$cardexpire=$_POST['card_expire'];
-	$cvv=$_POST['cvv'];
 
-	$sql="INSERT INTO `checkout`(`received_name`, `phone`, `address`, `town_city`, `state_province`, `zip_postalcode`, `card_name`, `card_number`, `card_expire`, `cvv`)
-	 VALUES('$name','$phone','$address','$town','$state','$zipcode','$cardname','$cardnumber','$cardexpire','$cvv')";
-    $insert = mysqli_query($connect,$sql);
-
-	if(!$insert)
-	{
-		echo "<script>alert('Payment Sussecful.'); window.location.href = 'order_complete.php';</script>";
-	}else{
-		echo"Data Insert Error";
-	}
-}
 
 ?>
 
@@ -110,46 +87,66 @@ if (isset($_POST['submit']))
 						<div class="col-sm-5 col-md-3">
 			            <form action="#" class="search-wrap">
 			               <div class="form-group">
-			                  <input type="search" class="form-control search" placeholder="Search">
-			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
+						   <input type="search" name="search" required value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" class="form-control search" placeholder="Search product">
+							<button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
 			               </div>
 			            </form>
 			         </div>
 		         </div>
-					<div class="row">
+				 <div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
-								<li class="active"><a href="http://localhost/fyp/men.php">Home</a></li>
+								<li class="active"><a href="http://localhost/fyp/user_home_page.php">Home</a></li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
+										<li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
 									
 									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
-										<li><a href="#">Running Shoes</a></li>
-										<li><a href="#">Basektball Shoes</a></li>
-										<li><a href="#">Badminton Shoes</a></li>
+									    <li><a href="#">Nike</a></li>
+										<li><a href="#">Adidas</a></li>
+										
 									
 									</ul>
 								</li>
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="viewreview.php">Review</a></li>
                                 <li class="has-dropdown">
 									<a href="#">Account</a>
 									<ul class="dropdown">
 										<li><a href="profile.php">Edit Profile</a></li>
-										<li><a href="checkout.php">Checkout</a></li>
+										<li><a href="#">Order History</a></li>
                                         <li><a href="logout.php">Logout</a></li>
 									</ul>
-									<li class="cart"><a href="http://localhost/fyp/cart.php#"><i class="icon-shopping-cart"></i> 0</a></li>
-						
+									
+									<?php
+								
+								if (isset($_SESSION['username'])) {
+								$username = $_SESSION['username'];
+								mysqli_select_db($connect, "fyp");
+								$result = mysqli_query($connect, "select * from orders WHERE username = '$username'");	
+								$count = mysqli_num_rows($result);//used to count number of rows
+
+								}
+								if ($result === false) {
+									die(mysqli_error($connect));
+								}
+
+							
+								?>
+
+								<li class="cart">
+									<a href="http://localhost/fyp/cart.php#">
+										<i class="icon-shopping-cart"></i> <?php echo $count; ?>
+									</a>
+								</li>	
+							</ul>
 						</div>
 					</div>
 				</div>
@@ -177,6 +174,17 @@ if (isset($_POST['submit']))
 				</div>
 			</div>
 		</nav>
+
+		<div class="breadcrumbs">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<p class="bread"><span><a href="http://localhost/fyp/cart.php">Add to cart</a></span> / <span>Checkout</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<div class="colorlib-product">
 			<div class="container">
 				<div class="row row-pb-lg">
@@ -197,7 +205,35 @@ if (isset($_POST['submit']))
 						</div>
 					</div>
 				</div>
+				<?php
+if (isset($_SESSION['username'])) {
+    $username = $_SESSION['username'];
+    $subtotal = 0; 
 
+    $select_query = "SELECT * FROM orders WHERE username = '$username'";
+    $result = mysqli_query($connect, $select_query);
+
+    if ($result === false) {
+	
+        die(mysqli_error($connect));
+	
+    }
+?>
+    <div class="row row-pb-lg">
+        <div class="col-md-12">
+            <?php
+            while ($row = mysqli_fetch_assoc($result)) {
+                $order_id = $row['order_id'];
+                $product_image = $row['product_image'];
+                $product_name = $row['product_name'];
+                $product_price = $row['product_price'];
+                $user_quantity = $row['user_quantity'];
+                $total_cost = $product_price * $user_quantity; 
+                $subtotal += $total_cost; 
+				}
+			}
+		
+            ?>
 			<form method="POST" class="colorlib-form">
 				<div class="row">
 					<div class="col-md-7">
@@ -240,20 +276,24 @@ if (isset($_POST['submit']))
 							<input type="text" name="zip_postalcode" class="form-control" placeholder="Zip Code" required>
 						</div>
 					</div>
+					
 					<div class="col-md-5">
 						<div class="cart-detail">
 							<h2>Cart Total</h2>
 							<ul>
 								
 								<li>
-									<span>Subtotal</span>
-									<span>$59.00</span>
+									
+									<div class="sub">
+									<p><span>Subtotal:</span> <span class="price">$<?php echo number_format($subtotal, 2); ?></span></p>
+									
+								</div>
 								</li>
 								<li>
 									<span>Shipping</span><span>Free Shipping</span>
 										
 								</li>
-								<li><span>Total</span><span>$59.00</span></li>
+								<li><span>Total</span><span class="price">$<?php echo number_format($subtotal, 2); ?></span></li>
 							</ul>
 						</div>
 						<div class="row">
@@ -285,15 +325,58 @@ if (isset($_POST['submit']))
 							</div>
 							</div>
 							<div class="col-md-12">
-							<button name="submit" class="btn"  >Place an order</button>
+							<button type="submit" name="savebtn" class="btn btn-primary btn-addtocart">
+								
+								<span>Place an order</span>
+							</button>
 							</div>
 						</div>
 					</div>
 				</div>
-			</form>
+			
 		</div>
 	</div>
+	</form>
+	<?php
+	$connect = mysqli_connect("localhost","root","","fyp");
+if (isset($_POST['savebtn']))
+{
+	$order_id = $_GET["order_id"];
+	$select_query = "SELECT * FROM orders WHERE order_id = '$order_id'";
+	
 
+	if(isset($_SESSION['username'])) {
+		$username = $_SESSION['username'];
+		$user_id = $_SESSION['user_id'];
+	}
+
+
+
+	$result = mysqli_query($connect, $query);
+	$name=$_POST['received_name'];
+	$phone=$_POST['phone'];
+	$address=$_POST['address'];
+	$town=$_POST['town_city'];
+	$state=$_POST['state_province'];
+	$zipcode=$_POST['zip_postalcode'];
+	$cardname=$_POST['card_name'];
+	$cardnumber=$_POST['card_number'];
+	$cardexpire=$_POST['card_expire'];
+	$cvv=$_POST['cvv'];
+
+	$sql="INSERT INTO checkout(order_id,user_id,received_name, phone,address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
+	 VALUES('$order_id','$user_id','$name','$phone','$address','$town','$state','$zipcode','$cardname','$cardnumber','$cardexpire','$cvv')";
+    $insert = mysqli_query($connect,$sql);
+
+	if(!$insert)
+	{
+		echo "<script>alert('Payment Sussecful.'); window.location.href = 'order_complete.php';</script>";
+		echo '<script>window.location.href = "http://localhost/fyp/order-complete.php";</script>';
+	}else{
+		echo"Data Insert Error";
+	}
+}
+?>
 	<footer id="colorlib-footer" role="contentinfo">
 			<div class="container">
 				<div class="row row-pb-md">
