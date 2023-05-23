@@ -55,6 +55,8 @@
   margin-right: 10px;
   padding: 0 5px;
   width: 40px;
+  background-color: gray;
+  color: #fff;
 }
 
 .quantity button:last-child {
@@ -206,15 +208,16 @@ if (!$connect) {
 
 
 
-	<?php 	   
+		<?php 	   
 						
-						if(isset($_GET['product_id']))
-						{
-							
+						if (isset($_GET['product_id'])) {
 							$product_id = $_GET["product_id"];
-							$select_query = "SELECT * FROM product WHERE product_id = $product_id";
+							$select_query = "SELECT *FROM product
+											 INNER JOIN product_details ON product.product_id = product_details.product_id
+											 WHERE product.product_id = $product_id";
+											 
 							$result_query = mysqli_query($connect, $select_query);
-
+						
 							if ($result_query && $row = mysqli_fetch_assoc($result_query)) {
 								$product_id = $row['product_id'];
 								$product_image = $row['product_image'];
@@ -223,7 +226,8 @@ if (!$connect) {
 								$product_description = $row['product_description'];
 								$product_color = $row['product_color'];
 								$product_size = $row['product_size'];
-								$product_count = $row['product_count'];
+								$product_quantity = $row['product_quantity'];
+								$second_image = $row['second_image'];
 							}
 						}
 						?>
@@ -233,13 +237,21 @@ if (!$connect) {
         <div class="row row-pb-lg product-detail-wrap">
             <div class="col-sm-6">
                 <div class="item">
+				<div class="image-container">
                     <div class="product-entry border">
                         <div class="text-center">
-                            <img src="<?php echo $product_image; ?>" class="img-fluid">
+						<img src="<?php echo $product_image; ?>" class="img-fluid main-image">
+							
+                        </div>
+                    </div>
+					<div class="product-entry border">
+                        <div class="text-center">
+						<img src="<?php echo $second_image; ?>" class="img-fluid second-image">
                         </div>
                     </div>
                 </div>
             </div>
+			</div>
             <div class="col-sm-4">
                 <div class="product-desc">
                     <div class="desc">
@@ -336,8 +348,8 @@ if(isset($_POST['savebtn'])) {
 	}
 
     // Query the product table to get the product name, image, and price
-    $query = "SELECT product_name, product_image, product_price FROM product WHERE product_id = '$product_id'";
-    $result = mysqli_query($connect, $query);
+    $query = "SELECT product_name, product_price FROM product WHERE product_id = '$product_id'";
+	$result = mysqli_query($connect, $query);
 
     // Fetch the result into variables
     $row = mysqli_fetch_assoc($result);
@@ -353,23 +365,27 @@ if(isset($_POST['savebtn'])) {
  
 
     // Insert the data into the orders table
-    $insert_query = "INSERT INTO orders (username,product_id, product_name,product_price, total_cost,user_quantity, user_color, user_size, product_image) VALUES ('$username','$product_id','$product_name','$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image')";
+	$insert_query = "INSERT INTO orders (username, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image) VALUES ('$username', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image')";
+
     $result = mysqli_query($connect, $insert_query);
 
 	if ($result) {
 		// Display a success message
 		echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
 		echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+
+		
 		// Redirect to the cart page
 		// header('Location: cart.php');
-		// exit();
+	
 	} else {
 		// Display an error message
 		echo "<script type='text/javascript'>alert('Order placed error!');</script>" . mysqli_error($connect);
+		
 	}
 }
 
-?>	
+?>		
 		
 
 		
