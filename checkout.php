@@ -281,11 +281,29 @@ if (isset($_SESSION['username'])) {
 								</div>
 							</div>
 							<div class="col-md-6">
-								<div class="form-group">
-									<label for="stateprovince">State / Province</label>
-									<input type="text" name="state_province" class="form-control" placeholder="State / Province" required>
-								</div>
+
+							<div class="form-group">
+							<label for="stateprovince">State / Province</label>
+							<select name="state_province" class="form-control" required >
+								<option value="" disabled selected>Select a State</option>
+								<option value="Johor">Johor</option>
+								<option value="Kedah">Kedah</option>
+								<option value="Kelantan">Kelantan</option>
+								<option value="Kuala Lumpur">Kuala Lumpur</option>
+								<option value="Melaka">Melaka</option>
+								<option value="Negeri Sembilan">Negeri Sembilan</option>
+								<option value="Pahang">Pahang</option>
+								<option value="Penang">Penang</option>
+								<option value="Perak">Perak</option>
+								<option value="Perlis">Perlis</option>
+								<option value="Putrajaya">Putrajaya</option>
+								<option value="Sabah">Sabah</option>
+								<option value="Sarawak">Sarawak</option>
+								<option value="Selangor">Selangor</option>
+								<option value="Terengganu">Terengganu</option>
+							</select>
 							</div>
+						</div>
 						</div>
 						<div class="form-group">
 							<label for="zipcode">Zip Code</label>
@@ -316,7 +334,7 @@ if (isset($_SESSION['username'])) {
 									
 						<div class="col-md-10">
 								<div class="form-group">
-									<label for="Card Name">Card Name</label>
+									<label for="Card Name">Card Holder Name</label>
 									<input type="text" id="cardname"  name="card_name" class="form-control" placeholder="" required>
 								</div>
 							</div>
@@ -324,19 +342,19 @@ if (isset($_SESSION['username'])) {
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="Card Number">Card Number</label>
-										<input name="card_number" id="cc-number"  type="tel" class="input-lg form-control cc-number" autocomplete="cc-number" placeholder="&bull;&bull;&bull;&bull;  &bull;&bull;&bull;&bull;  &bull;&bull;&bull;&bull;   &bull;&bull;&bull;&bull;" required>
+										<input name="card_number" id="cc-number"  type="tel" class="input-lg form-control cc-number" pattern="[0-9]{12}"title="Please enter a 12-digit card number"autocomplete="cc-number" placeholder="&bull;&bull;&bull;&bull;  &bull;&bull;&bull;&bull;  &bull;&bull;&bull;&bull;   &bull;&bull;&bull;&bull;" required>
 								</div>
 							</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="cvv">Card Expire</label>
-										<input name="card_expire"id="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="cc-exp" placeholder="&bull;&bull; / &bull;&bull;" required>
+										<input name="card_expire"id="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="cc-exp" min="2024-01" title="Please enter a card expiration date later than 2023" placeholder="&bull;&bull; / &bull;&bull;" required>
 								</div>
 							</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="card expire">CVV</label>
-										<input name="cvv"id="cc-cvc" type="tel" class="input-lg form-control cc-cvc" autocomplete="off" placeholder="&bull;&bull;&bull;&bull;" required>
+										<input name="cvv"id="cc-cvc" type="tel" class="input-lg form-control cc-cvc"  pattern="[0-9]{3,}" title="Please enter the correct CVV"autocomplete="off" placeholder="&bull;&bull;&bull;&bull;" required>
 									</div>
 							</div>
 							</div>
@@ -499,7 +517,6 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<!--Payment-->
 	<script src="js/payment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/3.0.0/jquery.payment.min.js"></script>
-
 
 
 </body>
