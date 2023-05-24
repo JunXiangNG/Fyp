@@ -247,12 +247,21 @@ if (isset($_SESSION['username'])) {
 						<h2>Billing Address</h2>
 
 						<div class="row">
-				
+						<?php
+									if (isset($_SESSION['username'])) {
+										$username = $_SESSION['username'];
+										mysqli_select_db($connect, "fyp");
+										$result = mysqli_query($connect, "SELECT * FROM orders WHERE username = '$username'");	
+									}
+									if ($result === false) {
+										die(mysqli_error($connect));
+									}
+								?>
 
 							<div class="col-md-6">
 								<div class="form-group">
 									<label for="receivername">Receiver Name</label>
-									<input type="text" name="received_name" class="form-control" placeholder="Receiver Name" required>
+									<input type="text" name="received_name" class="form-control" value="<?php echo $username; ?>" required>
 								</div>
 							</div>
 						</div>
