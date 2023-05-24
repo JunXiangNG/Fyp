@@ -15,6 +15,13 @@ $connect = mysqli_connect("localhost","root","","fyp");
 
 ?>
 
+<?php 
+    if(empty($username)) {
+        echo "<script type='text/javascript'>alert('You must be logged in to continue.');</script>";
+        echo '<script>window.location.href = "home.php";</script>';
+    }
+?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
