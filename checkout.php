@@ -158,6 +158,7 @@ $connect = mysqli_connect("localhost","root","","fyp");
 					</div>
 				</div>
 			</div>
+
 			<div class="sale">
 				<div class="container">
 					<div class="row">
@@ -212,6 +213,7 @@ $connect = mysqli_connect("localhost","root","","fyp");
 						</div>
 					</div>
 				</div>
+				
 				<?php
 if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
@@ -259,6 +261,7 @@ if (isset($_SESSION['username'])) {
 								?>
 
 							<div class="col-md-6">
+							<input type="hidden" name="order_id" value="<?php echo $_GET["order_id"]; ?>">
 								<div class="form-group">
 									<label for="receivername">Receiver Name</label>
 									<input type="text" name="received_name" class="form-control" value="<?php echo $username; ?>" required>
@@ -342,51 +345,56 @@ if (isset($_SESSION['username'])) {
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="Card Number">Card Number</label>
-										<input name="card_number" id="cc-number"  type="tel" class="input-lg form-control cc-number" pattern="[0-9]{12}"title="Please enter a 12-digit card number"autocomplete="cc-number" placeholder="&bull;&bull;&bull;&bull;  &bull;&bull;&bull;&bull;  &bull;&bull;&bull;&bull;   &bull;&bull;&bull;&bull;" required>
+										<input name="card_number"type="tel" class="input-lg form-control " pattern="[0-9]{16}" title="Please enter a 16-digit card number"  required>
 								</div>
 							</div>
-								<div class="col-md-6">
-									<div class="form-group">
-										<label for="cvv">Card Expire</label>
-										<input name="card_expire"id="cc-exp" type="tel" class="input-lg form-control cc-exp" autocomplete="cc-exp" min="2024-01" title="Please enter a card expiration date later than 2023" placeholder="&bull;&bull; / &bull;&bull;" required>
-								</div>
+							<div class="col-md-6">
+							<div class="form-group">
+								<label for="card_expire">Card Expire</label>
+								<input name="card_expire" id="cc-exp" type="text" class="input-lg form-control cc-exp" pattern="(0[1-9]|1[0-2])\/(20[2-9]\d|2[3-9]\d{2}|[3-9]\d{3})" min="2024-01"title="Please enter a card expiration date in the format MM/YYYY" placeholder="MM/YYYY" required>
+							</div>
+							</div>
 							</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label for="card expire">CVV</label>
-										<input name="cvv"id="cc-cvc" type="tel" class="input-lg form-control cc-cvc"  pattern="[0-9]{3,}" title="Please enter the correct CVV"autocomplete="off" placeholder="&bull;&bull;&bull;&bull;" required>
+										<input name="cvv" class="input-lg form-control "  pattern="[0-9]{3,}" title="Please enter the correct CVV"required>
 									</div>
-							</div>
 							</div>
 							<div class="col-md-12">
 							<button type="submit" name="savebtn" class="btn btn-primary btn-addtocart">
-								
 								<span>Place an order</span>
 							</button>
 							</div>
+							
+							</div>
+						
 						</div>
 					</div>
 				</div>
-			
+			</form>
 		</div>
-	</div>
-	</form>
-	<?php
-	$connect = mysqli_connect("localhost","root","","fyp");
+	    </div>
+	
+
+<?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+$connect = mysqli_connect("localhost","root","","fyp");
 if (isset($_POST['savebtn']))
 {
 	$order_id = $_GET["order_id"];
 	$select_query = "SELECT * FROM orders WHERE order_id = '$order_id'";
 	
-
 	if(isset($_SESSION['username'])) {
 		$username = $_SESSION['username'];
 		$user_id = $_SESSION['user_id'];
-	}
+	} else {
+     
+        echo "User session not found.";
+        exit;
+    }
 
-
-
-	$result = mysqli_query($connect, $query);
 	$name=$_POST['received_name'];
 	$phone=$_POST['phone'];
 	$address=$_POST['address'];
@@ -400,16 +408,19 @@ if (isset($_POST['savebtn']))
 
 	$sql="INSERT INTO checkout(order_id,user_id,received_name, phone,address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
 	 VALUES('$order_id','$user_id','$name','$phone','$address','$town','$state','$zipcode','$cardname','$cardnumber','$cardexpire','$cvv')";
-    $insert = mysqli_query($connect,$sql);
+    
+	$result = mysqli_query($connect, $sql);
 
-	if(!$insert)
+	if($result)
 	{
-		echo "<script>alert('Payment Sussecful.'); window.location.href = 'order_complete.php';</script>";
-		echo '<script>window.location.href = "http://localhost/fyp/order-complete.php";</script>';
+		echo "<script>alert('Payment Successful.'); window.location.href = 'order_complete.php';</script>";
+		
 	}else{
-		echo"Data Insert Error";
+		echo"Data Insert Error: " . mysqli_error($connect);
 	}
+	mysqli_close($connect);
 }
+
 ?>
 	<footer id="colorlib-footer" role="contentinfo">
 			<div class="container">
@@ -514,10 +525,15 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="js/jquery.stellar.min.js"></script>
 <!-- Main -->
 <script src="js/main.js"></script>
-	<!--Payment-->
-	<script src="js/payment.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.payment/3.0.0/jquery.payment.min.js"></script>
 
-
+<script>
+  document.getElementById("cc-exp").addEventListener("input", function (event) {
+    var input = event.target;
+    var trimmed = input.value.replace(/\s+/g, "");
+    var formatted = trimmed.replace(/^(\d{2})\/?(\d{0,4})/, "$1/$2");
+    input.value = formatted;
+  });
+</script>
+	
 </body>
 </html>
