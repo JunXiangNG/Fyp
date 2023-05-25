@@ -89,6 +89,29 @@
   margin-left: 20px;
 }
 
+.images {
+
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.small-img {
+    display: flex; 
+    gap: 10px; 
+}
+
+.small-img img {
+    width: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.small-img:hover img {
+    transform: scale(1.2);
+}
+
 
 	</style>
 	</head>
@@ -112,8 +135,12 @@ if (!$connect) {
 
 
 ?>
-
-
+<?php 
+    if(empty($username)) {
+        echo "<script type='text/javascript'>alert('You must be logged in to continue.');</script>";
+        echo '<script>window.location.href = "home.php";</script>';
+    }
+?>
 	<div class="colorlib-loader"></div>
 
 	<div id="page">
@@ -125,33 +152,58 @@ if (!$connect) {
 							<div id="colorlib-logo"><a href="http://localhost/fyp/user_home_page.php">4M Online Sport Shoe Store</a></div>
 						</div>
 						<div class="col-sm-5 col-md-3">
-			            <form action="#" class="search-wrap">
-			               <div class="form-group">
-			                  <input type="search" class="form-control search" placeholder="Search">
-			                  <button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
-			               </div>
-			            </form>
+						<form action="http://localhost/fyp/search.php" class="search-wrap" method="GET">
+						<div class="form-group">
+							<input type="search" name="search" required value="<?php echo isset($_GET['search']) ? $_GET['search'] : ''; ?>" class="form-control search" placeholder="Search product">
+							<button class="btn btn-primary submit-search text-center" type="submit"><i class="icon-search"></i></button>
+						</div>
+					</form>
+
+						
 			         </div>
 		         </div>
-				 <div class="row">
+
+				 <?php
+					$select_query = "SELECT * FROM brand";
+					$result = mysqli_query($connect, $select_query);
+						
+					?>
+
+					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
 								<li class="active"><a href="http://localhost/fyp/user_home_page.php">Home</a></li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
+
 									<ul class="dropdown">
-										<li><a href="#">Nike</a></li>
-										<li><a href="#">Adidas</a></li>
+									<?php
+										if ($result) {
+											while ($row = mysqli_fetch_assoc($result)) {
+												$brand_name = $row['brand_name'];
+												echo '<li>' . $brand_name . '</li>';
+											}
+										} else {
+											echo "Query failed: " . mysqli_error($connect);
+										}
+										?>
 									
 									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
-									    <li><a href="#">Nike</a></li>
-										<li><a href="#">Adidas</a></li>
-										
-									
+													<?php
+									if ($result) {
+										mysqli_data_seek($result, 0); // Reset the query result pointer to the first row
+										while ($row = mysqli_fetch_assoc($result)) {
+											$brand_name = $row['brand_name'];
+											echo '<li>' . $brand_name . '</li>';
+										}
+									} else {
+										echo "Query failed: " . mysqli_error($connect);
+									}
+									?>
 									</ul>
 								</li>
 							
@@ -201,7 +253,7 @@ if (!$connect) {
 								<div class="owl-carousel2">
 									<div class="item">
 										<div class="col">
-										<h3><a href="#">Make your stay on our webiste more surprising and moving</a></h3>
+											<h3><a href="#">Make your stay on our webiste more surprising and moving</a></h3>
 										</div>
 									</div>
 									<div class="item">
@@ -229,105 +281,118 @@ if (!$connect) {
 
 
 
-		<?php 	   
-						
-						if (isset($_GET['product_id'])) {
-							$product_id = $_GET["product_id"];
-							$select_query = "SELECT *FROM product
-											 INNER JOIN product_details ON product.product_id = product_details.product_id
-											 WHERE product.product_id = $product_id";
-											 
-							$result_query = mysqli_query($connect, $select_query);
-						
-							if ($result_query && $row = mysqli_fetch_assoc($result_query)) {
-								$product_id = $row['product_id'];
-								$product_image = $row['product_image'];
-								$product_name = $row['product_name'];
-								$product_price = $row['product_price'];
-								$product_description = $row['product_description'];
-								$product_color = $row['product_color'];
-								$product_size = $row['product_size'];
-								$product_quantity = $row['product_quantity'];
-								$second_image = $row['second_image'];
-							}
-						}
-						?>
- <form name="addfrm" method="post" action=""  onsubmit="return validateForm()">
-<div class="colorlib-product">
-    <div class="container">
-        <div class="row row-pb-lg product-detail-wrap">
-            <div class="col-sm-6">
-                <div class="item">
-				<div class="image-container">
-                    <div class="product-entry border">
-                        <div class="text-center">
-						<<?php
-							$imageData = $row['product_image'];
-							$secondImageData = $row['second_image'];
+		<?php
+if (isset($_GET['product_id'])) {
+    $product_id = $_GET["product_id"];
+    $select_query = "SELECT * FROM product
+                     INNER JOIN product_details ON product.product_id = product_details.product_id
+                     WHERE product.product_id = $product_id";
+                     
+    $result_query = mysqli_query($connect, $select_query);
+
+    if ($result_query) {
+        // Display the product information
+        if ($row = mysqli_fetch_assoc($result_query)) {
+            $product_id = $row['product_id'];
+            $product_image = $row['product_image'];
+            $product_name = $row['product_name'];
+            $product_price = $row['product_price'];
+            $product_description = $row['product_description'];
+           
+        }
+        
+        // Display the color and size options
+        $color_query = "SELECT DISTINCT product_color FROM product_details WHERE product_id = $product_id";
+        $size_query = "SELECT DISTINCT product_size FROM product_details WHERE product_id = $product_id";
+		$image_query = "SELECT DISTINCT product_image FROM product_details WHERE product_id = $product_id";
+        
+        $color_result = mysqli_query($connect, $color_query);
+        $size_result = mysqli_query($connect, $size_query);
+		$image_result= mysqli_query($connect, $image_query);
+?>
+
+<form name="addfrm" method="post" action="" onsubmit="return validateForm()">
+    <div class="colorlib-product">
+        <div class="container">
+            <div class="row row-pb-lg product-detail-wrap">
+                <div class="col-sm-6">
+                    <div class="item">
+					<div class="image-container">
+                        <div class="product-entry border">
+			
+						<div class="big-img">
+						<?php
+							$imageData = $product_image;
+							 
+								if ($imageData) {
+									$imageData = base64_encode($imageData);
+									echo '<img src="data:image/jpeg;base64,' . $imageData . '" class="img-fluid" />';
+								} else {
+									echo 'No Image';
+								}
 							
-							if ($imageData) {
-								$imageData = base64_encode($imageData);
-								echo '<img src="data:image/jpeg;base64,' . $imageData . '" class="img-fluid" />';
-							} else {
-								echo 'No Image';
-							}
+							?>
+
+				</div>
+					<div class="images">
+						<div class="small-img">
+							
+								<?php
+								while ($image_row = mysqli_fetch_assoc($image_result)) {
+									$imageData = $image_row['product_image'];
+									if ($imageData) {
+										$imageData = base64_encode($imageData);
+										echo '<img src="data:image/jpeg;base64,' . $imageData . '" onclick="showImg(this.src)" class="img-fluid" />';
+									} else {
+										echo 'No Image';
+									}
+								}
 								?>
 							
-                        </div>
-                    </div>
-					<div class="product-entry border">
-                        <div class="text-center">
-						<img src="<?php echo $second_image; ?>" class="img-fluid second-image">
-                        </div>
-                    </div>
-                </div>
-            </div>
-			</div>
-            <div class="col-sm-4">
-                <div class="product-desc">
-                    <div class="desc">
-                        <h3><?php echo $product_name; ?></h3>
-                        <span class="price"><?php echo $product_price; ?></span>
-                    </div>
-                    <p><b><?php echo $product_description; ?></b></p>
-
-					<div class="size-wrap">
-					<div class="input-group mb-4">
-								<div class="block-26 mb-2">
-								<div class="block-25 mb-5">
-							<h4>Size:</h4>
-							<ul style="list-style-type: none; padding: 0;">
-								<li style="display: inline-block; width: 50px; height: 50px; border: 1px solid black; text-align: center; line-height: 50px; font-weight: bold;">
-									<input type="checkbox" id="size11" name="size" value="11" onclick="handleCheckboxChange(this)">
-									<label for="size11">11</label>
-								</li>
-								<li style="display: inline-block; width: 50px; height: 50px; border: 1px solid black; text-align: center; line-height: 50px; font-weight: bold;">
-									<input type="checkbox" id="size12" name="size" value="12" onclick="handleCheckboxChange(this)">
-									<label for="size12">12</label>
-								</li>
-								<li style="display: inline-block; width: 50px; height: 50px; border: 1px solid black; text-align: center; line-height: 50px; font-weight: bold;">
-									<input type="checkbox" id="size13" name="size" value="13" onclick="handleCheckboxChange(this)">
-									<label for="size13">13</label>
-								</li>
-							</ul>
-						</div>
-
-							<div class="block-26 mb-6">
-								<h4>Colour:</h4>
-								<ul style="list-style-type: none; padding: 0;">
-									<li style="display: inline-block; width: 100px; height: 50px; border: 1px solid white; text-align: center; line-height: 50px; font-weight: bold;">
-										<input type="checkbox" id="colourWhite" name="colour" value="white"  onclick="handleCheckboxChange(this)" >
-										<label for="colourWhite"><span style="color: white;">White</span></label>
-									</li>
-									<li style="display: inline-block; width: 100px; height: 50px; border: 1px solid white; text-align: center; line-height: 50px; font-weight: bold;">
-										<input type="checkbox" id="colourBlack" name="colour" value="black" onclick="handleCheckboxChange(this)">
-										<label for="colourBlack"><span style="color: black;">Black</span></label>
-									</li>
-								</ul>
+							
 							</div>
+							</div>
+							</div>
+							</div>
+							</div>
+							</div>
+                <div class="col-sm-4">
+                    <div class="product-desc">
+                        <div class="desc">
+                            <h3><?php echo $product_name; ?></h3>
+                            <span class="price"><?php echo $product_price; ?></span>
+                        </div>
+                        <p><b><?php echo $product_description; ?></b></p>
 
+                        <div class="size-wrap">
+                            <div class="input-group mb-4">
+                                <div class="block-26 mb-2">
+                                    <div class="block-25 mb-5">
+                                        <h4>Size:</h4>
+                                        <ul style="list-style-type: none; padding: 0;">
+                                            <?php while ($size_row = mysqli_fetch_assoc($size_result)) { ?>
+                                                <li style="display: inline-block; width: 50px; height: 50px; border: 1px solid black; text-align: center; line-height: 50px; font-weight: bold;">
+                                                    <input type="checkbox" id="size" name="size" value="<?php echo $size_row['product_size']; ?>" onclick="handleCheckboxChange(this)">
+                                                    <label for="size"><span style="color: black;"><?php echo $size_row['product_size']; ?></span></label>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
 
-								<br><br><br>
+                                    <div class="block-26 mb-6">
+                                        <h4>Colour:</h4>
+                                        <ul style="list-style-type: none; padding: 0;">
+                                            <?php while ($color_row = mysqli_fetch_assoc($color_result)) { ?>
+                                                <li style="display: inline-block; width: 100px; height: 50px; border: 1px solid black; text-align: center; line-height: 50px; font-weight: bold;">
+                                                    <input type="checkbox" id="colourBlack" name="colour" value="<?php echo $color_row['product_color']; ?>" onclick="handleCheckboxChange(this)">
+                                                    <label for="colourBlack"><span style="color: black;"><?php echo $color_row['product_color']; ?></span></label>
+                                                </li>
+                                            <?php } ?>
+                                        </ul>
+                                    </div>
+                               
+                        
+						<br><br><br>
 								<h4>Quantity :</h4>
 							
 								<div class="quantity">
@@ -346,26 +411,18 @@ if (!$connect) {
 								<i class="icon-shopping-cart"></i> 
 								<span>Add to Cart</span>
 							</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
 
+<?php
+    }
+}
+?>
 
-								</p>
-					
-							</div>
-						</div>
-										</div>
-								   		</div>
-								   	</div>
-								    </div>
-								  </div>
-								</div>
-				         </div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		</form>
-		
 		<?php 
 if (isset($_POST['savebtn'])) {
     // Get the form data
@@ -416,7 +473,7 @@ if (isset($_POST['savebtn'])) {
         if ($result) {
             // Display a success message
             echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
-            echo '<script>window.location.href = "http://localhost/fyp/women_product_detail.php?product_id=' . $product_id . '";</script>';
+            echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
             // Redirect to the cart page
             // header('Location: cart.php');
             // exit();
@@ -430,6 +487,7 @@ if (isset($_POST['savebtn'])) {
     }
 }
 ?>
+
 		
 
 		
@@ -588,14 +646,10 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 								return true;
 								}
 
-															// get the current cart count from the cart element's text content
-								var cartCount = parseInt(document.getElementById("cart-item").textContent.match(/\d+/)[0]);
-
-								// increment the cart count by 1
-								cartCount++;
-
-								// update the cart element's text content with the new count
-								document.getElementById("cart-item").textContent = "Cart [" + cartCount + "]";
+								let bigImg = document.querySelector('.big-img img');
+								function showImg(pic){
+									bigImg.src = pic;
+								}					
 
 
 
