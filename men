@@ -91,48 +91,48 @@ if(isset($_SESSION['username'])) {
 							<ul>
 								<li class="active"><a href="http://localhost/fyp/user_home_page.php">Home</a></li>
 								<li class="has-dropdown">
-									<a href="http://localhost/fyp/men.php">Men</a>
+								<a href="http://localhost/fyp/men.php">Men</a>
 
-									<ul class="dropdown">
-									<?php
-										if ($result) {
-											while ($row = mysqli_fetch_assoc($result)) {
-												$brand_name = $row['brand_name'];
-												echo '<li>' . $brand_name . '</li>';
-											}
-										} else {
-											echo "Query failed: " . mysqli_error($connect);
-										}
-										?>
-									
-									</ul>
-								</li>
-								<li class="has-dropdown">
-									<a href="http://localhost/fyp/women.php">Women</a>
-									<ul class="dropdown">
-													<?php
-									if ($result) {
-										mysqli_data_seek($result, 0); // Reset the query result pointer to the first row
-										while ($row = mysqli_fetch_assoc($result)) {
-											$brand_name = $row['brand_name'];
-											echo '<li>' . $brand_name . '</li>';
-										}
-									} else {
-										echo "Query failed: " . mysqli_error($connect);
-									}
-									?>
-									</ul>
-								</li>
-							
-								<li><a href="http://localhost/fyp/about.php">About</a></li>
-								<li><a href="viewreview.php">Review</a></li>
-                                <li class="has-dropdown">
-									<a href="#">Account</a>
-									<ul class="dropdown">
-										<li><a href="profile.php">Edit Profile</a></li>
-										<li><a href="#">Order History</a></li>
-                                        <li><a href="logout.php">Logout</a></li>
-									</ul>
+						<ul class="dropdown">
+						<?php
+							if ($result) {
+								while ($row = mysqli_fetch_assoc($result)) {
+									$brand_name = $row['brand_name'];
+									echo '<li>' . $brand_name . '</li>';
+								}
+							} else {
+								echo "Query failed: " . mysqli_error($connect);
+							}
+							?>
+
+						</ul>
+						</li>
+						<li class="has-dropdown">
+						<a href="http://localhost/fyp/women.php">Women</a>
+						<ul class="dropdown">
+										<?php
+						if ($result) {
+							mysqli_data_seek($result, 0); // Reset the query result pointer to the first row
+							while ($row = mysqli_fetch_assoc($result)) {
+								$brand_name = $row['brand_name'];
+								echo '<li>' . $brand_name . '</li>';
+							}
+						} else {
+							echo "Query failed: " . mysqli_error($connect);
+						}
+						?>
+						</ul>
+						</li>
+
+						<li><a href="http://localhost/fyp/about.php">About</a></li>
+						<li><a href="viewreview.php">Review</a></li>
+						<li class="has-dropdown">
+						<a href="#">Account</a>
+						<ul class="dropdown">
+							<li><a href="profile.php">Edit Profile</a></li>
+							<li><a href="#">Order History</a></li>
+							<li><a href="logout.php">Logout</a></li>
+						</ul>
 									
 									<?php
 								
@@ -235,146 +235,140 @@ if(isset($_SESSION['username'])) {
 				</div>
 			
 				
-		<div class="colorlib-product">  <!--fliter function !-->
-			<div class="container">
-				<div class="row">
-					<div class="col-lg-3 col-xl-3">
-						<div class="row">
-							<div class="col-sm-12">
-								<div class="side border mb-1">
-									<h3>Brand</h3>
-									<ul>
-										<li><a href="#">Nike</a></li>
-										<li><a href="#">Adidas</a></li>
-										<li><a href="#"></a></li>
-										
-									</ul>
-								</div>
-							</div>
-							<div class="col-sm-12">
-								<div class="side border mb-1">
-									<h3>Colours</h3>
-									<div class="block-26 mb-2">
-										<h4>Colours</h4>
-					               <ul>
-					                
-					                  <li><a href="#">White</a></li>
-					                  <li><a href="#">Black</a></li>
-					               </ul>
-					            </div>
-					            <div class="block-26">
-										
-					            </div>
-								</div>
-							</div>
-							<div class="col-sm-12">
-								
-							</div>
-							<div class="col-sm-12">
-								<div class="side border mb-1">
-									<h3>Alphabet</h3>
-									<ul>
-										<li><a href="#">A-Z</a></li>
-										<li><a href="#">Z-A</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="col-sm-12">
-								<div class="side border mb-1">
-									<h3>Price</h3>
-									<ul>
-										<li><a href="#">0-100</a></li>
-										<li><a href="#">101-300</a></li>
-										<li><a href="#">301-500</a></li>
-										<li><a href="#">500 above</a></li>
-									</ul>
-								</div>
-							</div>
-							<div class="col-sm-12">
-								<div class="side border mb-1">
-									<h3>Size</h3>
-									<ul>
-										<li><a href="#">11</a></li>
-										<li><a href="#">12</a></li>
-										<li><a href="#">13</a></li>
-									</ul>
-								</div>
-							</div>
-						</div>
-					</div>
-					
-				
-				
-						
-					
-				
-					<?php
-							$select_query = "SELECT *FROM product
-							INNER JOIN product_details ON product.product_id = product_details.product_id
-							WHERE product_gender='men'";
-							$result = mysqli_query($connect, $select_query);
-					?>
-					<div class="col-lg-9 col-xl-9">
-					<div class="row row-pb-md">
-						<?php
-							$products = array(); // Array to group variations by product ID
+          
+<div class="colorlib-product">  <!-- Filter function -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-xl-3">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <form action="" method="GET">
+                            <h5>Filter 
+                                <button type="submit" class="btn btn-primary btn-sm float-end">Search</button>
+                            </h5>
+                            <div class="side border mb-1">
+                                <h3>Brand</h3>
+                                <?php
+                                $connect = mysqli_connect("localhost", "root", "", "fyp");
 
-							while ($row = mysqli_fetch_assoc($result)) {
-								$product_id = $row['product_id'];
-								$product_image = $row['product_image'];
-								$product_name = $row['product_name'];
-								$product_price = $row['product_price'];
+                                $brand_query = "SELECT * FROM brand";
+                                $brand_query_run  = mysqli_query($connect, $brand_query);
 
-								// Check if the product ID already exists in the array
-								if (!isset($products[$product_id])) {
-									$products[$product_id] = array(
-										'product_id' => $product_id,
-										'product_name' => $product_name,
-										'product_price' => $product_price,
-										'variations' => array() // Array to store variations
-									);
-								}
-
-								// Add the current variation to the variations array
-								$variation = array(
-									'product_color' => $row['product_color'],
-									'product_size' => $row['product_size']
-								);
-								$products[$product_id]['variations'][] = $variation;
-							}
-
-							?>
-
+                                if(mysqli_num_rows($brand_query_run) > 0)
+                                {
+                                    foreach($brand_query_run as $brandlist)
+                                    {
+                                        $checked = [];
+                                        if(isset($_GET['brands']))
+                                        {
+                                            $checked = $_GET['brands'];
+                                        }
+                                        ?>
+                                        <div>
+                                            <input type="checkbox" name="brands[]" value="<?= $brandlist['brand_id']; ?>" 
+                                                <?php if(in_array($brandlist['brand_id'], $checked)){ echo "checked"; } ?>
+                                            />
+                                            <?= $brandlist['brand_name']; ?>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                                else
+                                {
+                                    echo "No Brands Found";
+                                }
+                                ?>
+                            </div>
 							
-									<?php foreach ($products as $product) { ?>
-										<div class="col-md-4 col-lg-4 mb-4 text-center">
-											<div class="product-entry border">
-												<a href="http://localhost/fyp/men_product_detail.php?product_id=<?php echo $product['product_id']; ?>" class="prod-img">
-													<?php
-													// Display the image for the first variation
-													$firstVariation = $product['variations'][0];
-													$imageData = $product_image;
+                        </form>
+                    </div>
+                </div>
+            </div>
+       
 
-													if ($imageData) {
-														echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="img-fluid" />';
-													} else {
-														echo 'No Image';
-													}
-													?>
-													<div class="desc">
-														<h2><?php echo $product['product_name']; ?></h2>
-														<span class="price"><?php echo $product['product_price']; ?></span>
-														<?php foreach ($product['variations'] as $variation) { ?>
-															<p></p>
-														<?php } ?>
-													</div>
-												</a>
-											</div>
-										</div>
-										</div>
-										</div>
-									<?php } ?>
-								
+<?php
+$select_query = "SELECT * FROM product INNER JOIN product_details ON product.product_id = product_details.product_id WHERE product_gender='men'";
+
+if(isset($_GET['brands']))
+{
+    $brands = $_GET['brands'];
+    $brand_ids = implode(',', $brands);
+    $select_query .= " AND product.brand_id IN ($brand_ids)";
+}
+
+$result = mysqli_query($connect, $select_query);
+?>
+
+<div class="col-lg-9 col-xl-9">
+    <div class="row row-pb-md">
+        <?php
+        $products = array(); // Array to group variations by product ID
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $product_id = $row['product_id'];
+            $product_image = $row['product_image'];
+            $product_name = $row['product_name'];
+            $product_price = $row['product_price'];
+
+            // Check if the product ID already exists in the array
+            if (!isset($products[$product_id])) {
+                $products[$product_id] = array(
+                    'product_id' => $product_id,
+                    'product_name' => $product_name,
+                    'product_price' => $product_price,
+                    'product_image' => $product_image,
+                    'variations' => array() // Array to store variations
+                );
+            }
+
+            // Add the current variation to the variations array
+            $variation = array(
+                'product_color' => $row['product_color'],
+                'product_size' => $row['product_size']
+            );
+            $products[$product_id]['variations'][] = $variation;
+        }
+
+        $uniqueProducts = array(); // Array to store unique products
+
+        foreach ($products as $product) {
+            $product_name = $product['product_name'];
+
+            // Check if the product with the same name already exists in the array
+            if (!isset($uniqueProducts[$product_name])) {
+                // Add the product to the array if it doesn't exist
+                $uniqueProducts[$product_name] = $product;
+            }
+        }
+
+        foreach ($uniqueProducts as $product) { ?>
+            <div class="col-md-4 col-lg-4 mb-4 text-center">
+                <div class="product-entry border">
+                    <a href="http://localhost/fyp/men_product_detail.php?product_id=<?php echo $product['product_id']; ?>" class="prod-img">
+                        <?php
+                        // Display the image for the first variation
+                        $firstVariation = $product['variations'][0];
+                        $imageData = $product['product_image'];
+
+                        if ($imageData) {
+                            echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="img-fluid" />';
+                        } else {
+                            echo 'No Image';
+                        }
+                        ?>
+                        <div class="desc">
+                            <h2><?php echo $product['product_name']; ?></h2>
+                            <span class="price"><?php echo $product['product_price']; ?></span>
+                            <?php foreach ($product['variations'] as $variation) { ?>
+                                <p></p>
+                            <?php } ?>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        <?php } ?>
+    </div>
+</div>
 
 
 
