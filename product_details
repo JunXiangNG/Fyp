@@ -298,7 +298,7 @@ if (isset($_GET['product_id'])) {
             $product_name = $row['product_name'];
             $product_price = $row['product_price'];
             $product_description = $row['product_description'];
-           
+			$product_quantity = $row['product_quantity'];
         }
         
         // Display the color and size options
@@ -399,12 +399,21 @@ if (isset($_GET['product_id'])) {
 								<button type="button" onclick="decreaseValue()">-</button>
 								<input type="number" id="myNumber" name="quantity" min="1" max="5" value="1" readonly required>
 								<button type="button" onclick="increaseValue()">+</button>
-
+								
 								</div>
+								
+								<?php
+							if ($product_quantity <= 5) {
+								echo '<br><span class="price">Notice: ' . $product_quantity . ' Item(s) left</span>';
+							}
+							?>
+
 				            </div>
+
 							</div>
+							
 							</div>	
-						
+							
 							
 							<p class="addtocart">
 							<button type="submit" name="savebtn" class="btn btn-primary btn-addtocart">
@@ -423,7 +432,7 @@ if (isset($_GET['product_id'])) {
 }
 ?>
 
-		<?php 
+<?php 
 if (isset($_POST['savebtn'])) {
     // Get the form data
     $product_id = $_GET["product_id"];
@@ -434,7 +443,7 @@ if (isset($_POST['savebtn'])) {
     }
 
     // Query the product and product_details tables to get the product name, image, and price
-    $query = "SELECT p.product_name, pd.product_image, pd.product_price 
+    $query = "SELECT p.product_name, pd.product_price 
               FROM product p
               INNER JOIN product_details pd ON p.product_id = pd.product_id
               WHERE pd.product_id = '$product_id'";
@@ -446,7 +455,6 @@ if (isset($_POST['savebtn'])) {
         // Fetch the result into variables
         $row = mysqli_fetch_assoc($result);
         $product_name = $row['product_name'];
-        $product_image = $row['product_image'];
         $product_price = $row['product_price'];
         $user_size = $_POST['size'];
         $user_color = $_POST['colour'];
@@ -463,23 +471,39 @@ if (isset($_POST['savebtn'])) {
         $user_quantity = mysqli_real_escape_string($connect, $user_quantity);
         $user_color = mysqli_real_escape_string($connect, $user_color);
         $user_size = mysqli_real_escape_string($connect, $user_size);
-        $product_image = mysqli_real_escape_string($connect, $product_image);
 
-        // Insert the data into the orders table
-        $insert_query = "INSERT INTO orders (username, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image)
-                         VALUES ('$username', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image')";
-        $result = mysqli_query($connect, $insert_query);
+        // Check if the product with the specified color and size exists
+        $check_product_query = "SELECT * FROM product_details WHERE product_id = '$product_id' AND product_color = '$user_color' AND product_size = '$user_size'";
+        $check_product_result = mysqli_query($connect, $check_product_query);
 
-        if ($result) {
-            // Display a success message
-            echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
-            echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
-            // Redirect to the cart page
-            // header('Location: cart.php');
-            // exit();
+        if (mysqli_num_rows($check_product_result) > 0) {
+            // Product exists, continue with the order
+
+            // Query to get the product image based on color and size
+            $image_query = "SELECT product_image FROM product_details WHERE product_id = '$product_id' AND product_color = '$user_color' AND product_size = '$user_size'";
+            $image_result = mysqli_query($connect, $image_query);
+            $row = mysqli_fetch_assoc($image_result);
+            $product_image = $row['product_image'];
+
+            // Sanitize the product image
+            $product_image = mysqli_real_escape_string($connect, $product_image);
+
+            // Insert the data into the orders table
+            $insert_query = "INSERT INTO orders (username, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image)
+                             VALUES ('$username', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image')";
+            $insert_result = mysqli_query($connect, $insert_query);
+
+            if ($insert_result) {
+                // Display a success message
+                echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
+                echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
+            } else {
+                // Display an error message
+                echo "<script type='text/javascript'>alert('Failed to place order!');</script>" . mysqli_error($connect);
+            }
         } else {
-            // Display an error message
-            echo "<script type='text/javascript'>alert('Order placed error!');</script>" . mysqli_error($connect);
+            // Product does not exist
+            echo "<script type='text/javascript'>alert('No this product');</script>";
         }
     } else {
         // Display an error message
@@ -487,6 +511,9 @@ if (isset($_POST['savebtn'])) {
     }
 }
 ?>
+
+
+
 
 		
 
