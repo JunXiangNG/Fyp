@@ -326,7 +326,7 @@ $result = mysqli_query($connect, $select_query);
 		<?php foreach ($uniqueProducts as $product) { ?>
             <div class="col-md-4 col-lg-4 mb-4 text-center">
                 <div class="product-entry border">
-                    <a href="http://localhost/fyp/men_product_detail.php?product_id=<?php echo $product['product_id']; ?>" class="prod-img">
+                    <a href="http://localhost/fyp/product_detail.php?product_id=<?php echo $product['product_id']; ?>" class="prod-img">
                         <?php
                         // Display the image for the first variation
                         $firstVariation = $product['variations'][0];
