@@ -1,3 +1,13 @@
+CREATE TABLE admin (
+admin_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+admin_username varchar(255) NOT NULL,
+admin_password varchar(255) NOT NULL,
+admin_gender char(10)  NOT NULL,
+admin_bdate date not null,
+admin_email varchar(255) NOT NULL,
+admin_image LONGBLOB NULL,
+);
+
 CREATE TABLE brand (
   brand_id INT PRIMARY KEY AUTO_INCREMENT,
   brand_name VARCHAR(50) NOT NULL,
