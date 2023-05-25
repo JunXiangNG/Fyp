@@ -267,48 +267,70 @@ if(isset($_SESSION['username'])) {
 					</div>
 				</div>
 				<?php
-$select_query = "SELECT * FROM product
-	INNER JOIN product_details ON product.product_id = product_details.product_id";
-$result = mysqli_query($connect, $select_query);
+$select_query = "SELECT * FROM product INNER JOIN product_details ON product.product_id = product_details.product_id ";
 
-$products = array(); // Array to group variations by product ID
-
-while ($row = mysqli_fetch_assoc($result)) {
-    $product_id = $row['product_id'];
-    $product_image = $row['product_image'];
-    $product_name = $row['product_name'];
-    $product_price = $row['product_price'];
-
-    // Check if the product ID already exists in the array
-    if (!isset($products[$product_id])) {
-        $products[$product_id] = array(
-            'product_id' => $product_id,
-            'product_name' => $product_name,
-            'product_price' => $product_price,
-            'variations' => array() // Array to store variations
-        );
-    }
-
-    // Add the current variation to the variations array
-    $variation = array(
-        'product_color' => $row['product_color'],
-        'product_size' => $row['product_size']
-    );
-    $products[$product_id]['variations'][] = $variation;
+if(isset($_GET['brands']))
+{
+    $brands = $_GET['brands'];
+    $brand_ids = implode(',', $brands);
+    $select_query .= " AND product.brand_id IN ($brand_ids)";
 }
 
+$result = mysqli_query($connect, $select_query);
 ?>
 
-<div class="container">
-    <div class="d-flex flex-wrap">
-        <?php foreach ($products as $product) { ?>
+
+        <?php
+        $products = array(); // Array to group variations by product ID
+
+        while ($row = mysqli_fetch_assoc($result)) {
+            $product_id = $row['product_id'];
+            $product_image = $row['product_image'];
+            $product_name = $row['product_name'];
+            $product_price = $row['product_price'];
+
+            // Check if the product ID already exists in the array
+            if (!isset($products[$product_id])) {
+                $products[$product_id] = array(
+                    'product_id' => $product_id,
+                    'product_name' => $product_name,
+                    'product_price' => $product_price,
+                    'product_image' => $product_image,
+                    'variations' => array() // Array to store variations
+                );
+            }
+
+            // Add the current variation to the variations array
+            $variation = array(
+                'product_color' => $row['product_color'],
+                'product_size' => $row['product_size']
+            );
+            $products[$product_id]['variations'][] = $variation;
+        }
+
+        $uniqueProducts = array(); // Array to store unique products
+
+        foreach ($products as $product) {
+            $product_name = $product['product_name'];
+
+            // Check if the product with the same name already exists in the array
+            if (!isset($uniqueProducts[$product_name])) {
+                // Add the product to the array if it doesn't exist
+                $uniqueProducts[$product_name] = $product;
+            }
+        }
+?>
+
+		<div class="container">
+		<div class="d-flex flex-wrap">
+		<?php foreach ($uniqueProducts as $product) { ?>
             <div class="col-md-4 col-lg-4 mb-4 text-center">
                 <div class="product-entry border">
-                    <a href="http://localhost/fyp/product_detail.php?product_id=<?php echo $product['product_id']; ?>" class="prod-img">
+                    <a href="http://localhost/fyp/men_product_detail.php?product_id=<?php echo $product['product_id']; ?>" class="prod-img">
                         <?php
                         // Display the image for the first variation
                         $firstVariation = $product['variations'][0];
-                        $imageData = $product_image;
+                        $imageData = $product['product_image'];
 
                         if ($imageData) {
                             echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="img-fluid" />';
@@ -327,7 +349,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                 </div>
             </div>
         <?php } ?>
-    </div>
+	</div>
 </div>
 
 
