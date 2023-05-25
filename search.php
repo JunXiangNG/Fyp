@@ -55,7 +55,7 @@ if(isset($_SESSION['username'])) {
 	?>	
 	<?php 
     if(empty($username)) { //validation for user not login
-        echo "<script type='text/javascript'>alert('You must be logged in to view product.');</script>";
+        echo "<script type='text/javascript'>alert('You must be logged in to continue.');</script>";
         echo '<script>window.location.href = "home.php";</script>';
     }
 ?>
@@ -240,8 +240,9 @@ if(isset($_SESSION['username'])) {
     if (isset($_GET['search'])) {
         $filtervalues = $_GET['search'];
         $select_query = "SELECT * FROM product
+        INNER JOIN brand ON product.brand_id = brand.brand_id
         INNER JOIN product_details ON product.product_id = product_details.product_id
-        WHERE product_name LIKE '%$filtervalues%'";
+        WHERE product_name LIKE '%$filtervalues%' OR brand_name LIKE '%$filtervalues%'";
         $query_run = mysqli_query($connect, $select_query);
 
         if ($query_run) {
@@ -255,7 +256,8 @@ if(isset($_SESSION['username'])) {
                     $product_image = $row['product_image'];
                     $product_name = $row['product_name'];
                     $product_price = $row['product_price'];
-                    
+
+              
                     ?>
 
                     <div class="col-md-4 col-lg-4 mb-4 text-center">
@@ -263,7 +265,7 @@ if(isset($_SESSION['username'])) {
                             <a href="http://localhost/fyp/product_detail.php?product_id=<?php echo $product_id; ?>" class="prod-img">
 							<?php
 									$imageData = $row['product_image'];
-									$secondImageData = $row['second_image'];
+									
 									
 									if ($imageData) {
 										echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="img-fluid" />';
@@ -281,6 +283,8 @@ if(isset($_SESSION['username'])) {
 
                     <?php
                 }
+
+                }
                 echo '</div>';
                 echo '</div>';
                 echo '<script type="text/javascript">alert("' . $count . ' Product(s) Found.");</script>';
@@ -290,7 +294,7 @@ if(isset($_SESSION['username'])) {
         } else {
             echo '<script type="text/javascript">alert("Error !!!.");</script>';
         }
-    }
+    
 ?>
 
 
