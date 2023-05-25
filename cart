@@ -52,7 +52,7 @@
 }
 
 .quantity button {
-  margin-right: 10px;
+  margin-right: 5px;
   padding: 0 5px;
   width: 20px;
   background-color: gray;
@@ -149,7 +149,7 @@ if (!$connect) {
 
 <?php 
     if(empty($username)) {
-        echo "<script type='text/javascript'>alert('You must be logged in to view your cart.');</script>";
+        echo "<script type='text/javascript'>alert('You must be logged in to continue.');</script>";
         echo '<script>window.location.href = "home.php";</script>';
     }
 ?>
@@ -266,15 +266,24 @@ if (!$connect) {
 							<div class="one-forth text-left px-4">
 								<span>Product Details</span>
 							</div>
-							<div class="one-eight text-left px-3">
+							
+							<div class="one-eight text-left px-6">
 								<span>Price</span>
 							</div>
-							<div class="one-eight ">
+							
+							<div class="one-eight text-left pr-6">
 								<span>Quantity</span>
 							</div>
-							<div class="one-eight text-right">
+							<div class="one-eight text-right px-2">
+								<span>Size</span>
+							</div>
+							<div class="one-eight text-right px-2">
+								<span>Color</span>
+							</div>
+							<div class="one-eight text-right px-4">
 								<span>Total</span>
 							</div>
+
 							<div class="one-eight text-right px-4">
 								<span>Remove</span>
 							</div>
@@ -303,6 +312,8 @@ if (isset($_SESSION['username'])) {
             $product_name = $row['product_name'];
             $product_price = $row['product_price'];
             $user_quantity = $row['user_quantity'];
+			$user_color = $row['user_color'];
+			$user_size = $row['user_size'];
             $total_cost = $product_price * $user_quantity; 
             $subtotal += $total_cost; 
         ?>
@@ -323,7 +334,7 @@ if (isset($_SESSION['username'])) {
                             <h3><?php echo $product_name; ?></h3>
                         </div>
                     </div>
-                    <div class="one-eight text-center">
+                    <div class="one-eight text-center px-10">
                         <div class="display-tc">
                             <span class="price"><?php echo $product_price; ?></span>
                         </div>
@@ -338,7 +349,7 @@ if (isset($_SESSION['username'])) {
                     }
                     ?>
                     <form name="addfrm" method="post" action="">
-                        <div class="one-eight text-center" >
+					<div class="one-eight text-left px-6">
                             <div class="display-tc">
                                 <div class="quantity">
                                     <div class="quantity-container">
@@ -372,13 +383,25 @@ if (isset($_SESSION['username'])) {
 
                     }
                     ?>
+				<div class="one-eight text-right px-4">
+                        <div class="display-tc">
+                            <span class="price" style="margin-left: -10px;" ><?php echo $user_size; ?></span>
+                        </div>
+                    </div>
 
-                    <div class="one-eight text-right">
+					<div class="one-eight text-right px-4">
+                        <div class="display-tc">
+                            <span class="price"><?php echo $user_color; ?></span>
+                        </div>
+                    </div>
+
+
+                    <div class="one-eight text-right px-4">
                         <div class="display-tc">
                             <span class="price"><?php echo number_format($total_cost, 2); ?></span>
                         </div>
                     </div>
-                    <div class="one-eight text-right">
+                    <div class="one-eight text-right px-4">
                         <div class="display-tc">
                             <a href="cart.php?del&order_id=<?php echo $row['order_id']; ?>" onclick="return confirmation();" class="closed"></a>
                         </div>
