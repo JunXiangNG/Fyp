@@ -54,7 +54,7 @@ if(isset($_SESSION['username'])) {
 	?>
 	<?php 
     if(empty($username)) {
-        echo "<script type='text/javascript'>alert('You must be logged in to view product.');</script>";
+        echo "<script type='text/javascript'>alert('You must be logged in to continue.');</script>";
         echo '<script>window.location.href = "home.php";</script>';
     }
 ?>
@@ -78,26 +78,49 @@ if(isset($_SESSION['username'])) {
 
 						
 			         </div>
-		         </div>
-					<div class="row">
+		         </div> 
+				 
+				 <?php
+					$select_query = "SELECT * FROM brand";
+					$result = mysqli_query($connect, $select_query);
+						
+					?>
+					
+				 <div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
-								<li><a href="http://localhost/fyp/user_home_page.php">Home</a></li>
+								<li class="active"><a href="http://localhost/fyp/user_home_page.php">Home</a></li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
+
 									<ul class="dropdown">
-										<li><a href="#">Nike</a></li>
-										<li><a href="#">Adidas</a></li>
-								
+									<?php
+										if ($result) {
+											while ($row = mysqli_fetch_assoc($result)) {
+												$brand_name = $row['brand_name'];
+												echo '<li>' . $brand_name . '</li>';
+											}
+										} else {
+											echo "Query failed: " . mysqli_error($connect);
+										}
+										?>
 									
 									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
-										<li><a href="#">Nike</a></li>
-										<li><a href="#">Adidas</a></li>
-									
+													<?php
+									if ($result) {
+										mysqli_data_seek($result, 0); // Reset the query result pointer to the first row
+										while ($row = mysqli_fetch_assoc($result)) {
+											$brand_name = $row['brand_name'];
+											echo '<li>' . $brand_name . '</li>';
+										}
+									} else {
+										echo "Query failed: " . mysqli_error($connect);
+									}
+									?>
 									</ul>
 								</li>
 							
@@ -110,6 +133,7 @@ if(isset($_SESSION['username'])) {
 										<li><a href="#">Order History</a></li>
                                         <li><a href="logout.php">Logout</a></li>
 									</ul>
+									
 									<?php
 								
 								if (isset($_SESSION['username'])) {
@@ -284,44 +308,73 @@ if(isset($_SESSION['username'])) {
 						
 					
 				
-					<?php 
-						$select_query = "SELECT *FROM product
-						INNER JOIN product_details ON product.product_id = product_details.product_id
-						WHERE product_gender='men'";
-						$result = mysqli_query($connect, $select_query);
+					<?php
+							$select_query = "SELECT *FROM product
+							INNER JOIN product_details ON product.product_id = product_details.product_id
+							WHERE product_gender='men'";
+							$result = mysqli_query($connect, $select_query);
 					?>
 					<div class="col-lg-9 col-xl-9">
 					<div class="row row-pb-md">
-						<?php while ($row = mysqli_fetch_assoc($result)) {
-						$product_id = $row['product_id'];
-						$product_image = $row['product_image'];
-						$product_name = $row['product_name'];
-						$product_price = $row['product_price'];
-						$product_gender = $row['product_gender'];
-						?>
-						<div class="col-md-4 col-lg-4 mb-4 text-center">
-						<div class="product-entry border">
-							<a href="http://localhost/fyp/men_product_detail.php?product_id=<?php echo $product_id; ?>" class="prod-img">
-							<?php
-									$imageData = $row['product_image'];
-									$secondImageData = $row['second_image'];
-									
-									if ($imageData) {
-										echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="img-fluid" />';
-									} else {
-										echo 'No Image';
-									}
-										?>
-							<div class="desc">
-								<h2><?php echo $product_name; ?></h2>
-								<span class="price"><?php echo $product_price; ?></span>
-							</div>
-							</a>
-						</div>
-						</div>
-						<?php } ?>
-					</div>
-					</div>
+						<?php
+							$products = array(); // Array to group variations by product ID
+
+							while ($row = mysqli_fetch_assoc($result)) {
+								$product_id = $row['product_id'];
+								$product_image = $row['product_image'];
+								$product_name = $row['product_name'];
+								$product_price = $row['product_price'];
+
+								// Check if the product ID already exists in the array
+								if (!isset($products[$product_id])) {
+									$products[$product_id] = array(
+										'product_id' => $product_id,
+										'product_name' => $product_name,
+										'product_price' => $product_price,
+										'variations' => array() // Array to store variations
+									);
+								}
+
+								// Add the current variation to the variations array
+								$variation = array(
+									'product_color' => $row['product_color'],
+									'product_size' => $row['product_size']
+								);
+								$products[$product_id]['variations'][] = $variation;
+							}
+
+							?>
+
+							
+									<?php foreach ($products as $product) { ?>
+										<div class="col-md-4 col-lg-4 mb-4 text-center">
+											<div class="product-entry border">
+												<a href="http://localhost/fyp/men_product_detail.php?product_id=<?php echo $product['product_id']; ?>" class="prod-img">
+													<?php
+													// Display the image for the first variation
+													$firstVariation = $product['variations'][0];
+													$imageData = $product_image;
+
+													if ($imageData) {
+														echo '<img src="data:image/jpeg;base64,' . base64_encode($imageData) . '" class="img-fluid" />';
+													} else {
+														echo 'No Image';
+													}
+													?>
+													<div class="desc">
+														<h2><?php echo $product['product_name']; ?></h2>
+														<span class="price"><?php echo $product['product_price']; ?></span>
+														<?php foreach ($product['variations'] as $variation) { ?>
+															<p></p>
+														<?php } ?>
+													</div>
+												</a>
+											</div>
+										</div>
+										</div>
+										</div>
+									<?php } ?>
+								
 
 
 
