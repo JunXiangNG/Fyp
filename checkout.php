@@ -324,6 +324,7 @@ if (isset($_SESSION['username'])) {
 									<div class="sub">
 									<p><span>Subtotal:</span> <span class="price">$<?php echo number_format($subtotal, 2); ?></span></p>
 									
+									
 								</div>
 								</li>
 								<li>
@@ -331,6 +332,8 @@ if (isset($_SESSION['username'])) {
 										
 								</li>
 								<li><span>Total</span><span class="price">$<?php echo number_format($subtotal, 2); ?></span></li>
+								<input type="hidden" name="subtotal" value="<?php echo $subtotal; ?>">
+
 							</ul>
 						</div>
 						<div class="row">
@@ -365,6 +368,7 @@ if (isset($_SESSION['username'])) {
 							<button type="submit" name="savebtn" class="btn btn-primary btn-addtocart">
 								<span>Place an order</span>
 							</button>
+							</form>
 							</div>
 							
 							</div>
@@ -372,7 +376,7 @@ if (isset($_SESSION['username'])) {
 						</div>
 					</div>
 				</div>
-			</form>
+								
 		</div>
 	    </div>
 	
@@ -380,20 +384,22 @@ if (isset($_SESSION['username'])) {
 <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-$connect = mysqli_connect("localhost","root","","fyp");
-if (isset($_POST['savebtn']))
-{
-	$order_id = $_GET["order_id"];
-	$select_query = "SELECT * FROM orders WHERE order_id = '$order_id'";
-	
-	if(isset($_SESSION['username'])) {
-		$username = $_SESSION['username'];
-		$user_id = $_SESSION['user_id'];
-	} else {
-     
-        echo "User session not found.";
-        exit;
-    }
+
+$connect = mysqli_connect("localhost", "root", "", "fyp");
+
+if (isset($_POST['savebtn'])) {
+    session_start(); 
+
+    if (isset($_SESSION['username'])) {
+        $username = $_SESSION['username'];
+        
+
+        $select_query = "SELECT * FROM orders WHERE username = '$username'";
+        $result = mysqli_query($connect, $select_query);
+
+        if ($result === false) {
+            die(mysqli_error($connect));
+        }
 
 	$name=$_POST['received_name'];
 	$phone=$_POST['phone'];
@@ -405,23 +411,28 @@ if (isset($_POST['savebtn']))
 	$cardnumber=$_POST['card_number'];
 	$cardexpire=$_POST['card_expire'];
 	$cvv=$_POST['cvv'];
+    $subtotal = $_POST['subtotal'];	
 
-	$sql="INSERT INTO checkout(order_id,user_id,received_name, phone,address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
-	 VALUES('$order_id','$user_id','$name','$phone','$address','$town','$state','$zipcode','$cardname','$cardnumber','$cardexpire','$cvv')";
+
+	$sql="INSERT INTO checkout(order_id,username,received_name, phone,address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv,subtotal)
+	 VALUES('$order_id','$username','$name','$phone','$address','$town','$state','$zipcode','$cardname','$cardnumber','$cardexpire','$cvv','$subtotal')";
     
 	$result = mysqli_query($connect, $sql);
 
 	if($result)
 	{
-		echo "<script>alert('Payment Successful.'); window.location.href = 'order_complete.php';</script>";
+		echo "<script>alert('Payment Successful.'); window.location.href = 'order-complete.php';</script>";
 		
 	}else{
 		echo"Data Insert Error: " . mysqli_error($connect);
 	}
 	mysqli_close($connect);
 }
-
+}
 ?>
+
+
+
 	<footer id="colorlib-footer" role="contentinfo">
 			<div class="container">
 				<div class="row row-pb-md">
