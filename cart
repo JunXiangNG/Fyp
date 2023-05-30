@@ -44,8 +44,8 @@
     font-weight: 500;
 }
 .quantity input{
-    width: 25px;
-    font-size: 17px;
+    width: 24px;
+    font-size: 12px;
     font-weight: 400;
     text-align: center;
     margin-left: 1px;
@@ -54,7 +54,7 @@
 .quantity button {
   margin-right: 5px;
   padding: 0 5px;
-  width: 20px;
+  width: 18px;
   background-color: gray;
   color: #fff;
 }
@@ -80,20 +80,20 @@
 .btn i {
   position: absolute;
   top: 50%;
-  left: 10px;
+  left: 50px;
   transform: translateY(-50%);
 }
 
 .btn span {
   display: inline-block;
-  margin-left: 20px;
+  margin-left: 30px;
 }
 
 
 .update-button {
   display: inline-block;
   position: relative;
-  padding: 3px 3px;
+  padding: 3px 1px;
   border: none;
   border-radius: 3px;
   background-color: gray;
@@ -101,7 +101,7 @@
   text-align: center;
   text-decoration: none;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 100;
   cursor: pointer;
   height: 80px;
 }
@@ -164,32 +164,52 @@ if (!$connect) {
 						<div class="col-sm-7 col-md-9">
 							<div id="colorlib-logo"><a href="http://localhost/fyp/user_home_page.php">4M Online Sport Shoe Store</a></div>
 						</div>
+						<?php
+					$select_query = "SELECT * FROM brand";
+					$result = mysqli_query($connect, $select_query);
 						
-						<div class="row">
+					?>
+
+					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
 								<li class="active"><a href="http://localhost/fyp/user_home_page.php">Home</a></li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
+
 									<ul class="dropdown">
-									    <li><a href="#">Nike</a></li>
-										<li><a href="#">Adidas</a></li>
-										
+									<?php
+										if ($result) {
+											while ($row = mysqli_fetch_assoc($result)) {
+												$brand_name = $row['brand_name'];
+												echo '<li>' . $brand_name . '</li>';
+											}
+										} else {
+											echo "Query failed: " . mysqli_error($connect);
+										}
+										?>
 									
 									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
-									    <li><a href="#">Nike</a></li>
-										<li><a href="#">Adidas</a></li>
-										
-									
+													<?php
+									if ($result) {
+										mysqli_data_seek($result, 0); // Reset the query result pointer to the first row
+										while ($row = mysqli_fetch_assoc($result)) {
+											$brand_name = $row['brand_name'];
+											echo '<li>' . $brand_name . '</li>';
+										}
+									} else {
+										echo "Query failed: " . mysqli_error($connect);
+									}
+									?>
 									</ul>
 								</li>
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
-								<li><a href="contact.html">Contact</a></li>
+								<li><a href="viewreview.php">Review</a></li>
                                 <li class="has-dropdown">
 									<a href="#">Account</a>
 									<ul class="dropdown">
@@ -267,24 +287,27 @@ if (!$connect) {
 								<span>Product Details</span>
 							</div>
 							
-							<div class="one-eight text-left px-6">
+							<div class="one-eight text-left px-8">
 								<span>Price</span>
 							</div>
 							
-							<div class="one-eight text-left pr-6">
+							<div class="one-eight text-left pr-4">
 								<span>Quantity</span>
 							</div>
-							<div class="one-eight text-right px-2">
+							<div class="one-eight text-right pr-6">
 								<span>Size</span>
 							</div>
-							<div class="one-eight text-right px-2">
+							<div class="one-eight text-right pr-8">
 								<span>Color</span>
 							</div>
-							<div class="one-eight text-right px-4">
+							<div class="one-eight text-right pr-6">
+								<span>Gender</span>
+							</div>
+							<div class="one-eight text-right pr-4">
 								<span>Total</span>
 							</div>
 
-							<div class="one-eight text-right px-4">
+							<div class="one-eight text-right pr-4">
 								<span>Remove</span>
 							</div>
 						</div>
@@ -309,6 +332,7 @@ if (isset($_SESSION['username'])) {
         while ($row = mysqli_fetch_assoc($result)) {
             $order_id = $row['order_id'];
             $product_image = $row['product_image'];
+			$product_gender = $row['product_gender'];
             $product_name = $row['product_name'];
             $product_price = $row['product_price'];
             $user_quantity = $row['user_quantity'];
@@ -336,7 +360,7 @@ if (isset($_SESSION['username'])) {
                     </div>
                     <div class="one-eight text-center px-10">
                         <div class="display-tc">
-                            <span class="price"><?php echo $product_price; ?></span>
+                            <span class="price">RM <?php echo $product_price; ?></span>
                         </div>
                     </div>
 
@@ -349,7 +373,7 @@ if (isset($_SESSION['username'])) {
                     }
                     ?>
                     <form name="addfrm" method="post" action="">
-					<div class="one-eight text-left px-6">
+					<div class="one-eight text-left pr-10">
                             <div class="display-tc">
                                 <div class="quantity">
                                     <div class="quantity-container">
@@ -383,25 +407,31 @@ if (isset($_SESSION['username'])) {
 
                     }
                     ?>
-				<div class="one-eight text-right px-4">
+				<div class="one-eight text-right pr-6">
                         <div class="display-tc">
                             <span class="price" style="margin-left: -10px;" ><?php echo $user_size; ?></span>
                         </div>
                     </div>
 
-					<div class="one-eight text-right px-4">
+					<div class="one-eight text-right pr-6">
                         <div class="display-tc">
                             <span class="price"><?php echo $user_color; ?></span>
                         </div>
                     </div>
-
-
-                    <div class="one-eight text-right px-4">
+					<div class="one-eight text-right px-4">
                         <div class="display-tc">
-                            <span class="price"><?php echo number_format($total_cost, 2); ?></span>
+                            <span class="price"><?php echo $product_gender; ?></span>
                         </div>
                     </div>
-                    <div class="one-eight text-right px-4">
+
+                    <div class="one-eight text-right pr-6">
+                        <div class="display-tc">
+                            <span class="price">RM<?php echo number_format($total_cost, 2); ?></span>
+							<input type="hidden" name="total_cost" value="<?php echo $total_cost; ?>">
+
+                        </div>
+                    </div>
+                    <div class="one-eight text-right pr-6">
                         <div class="display-tc">
                             <a href="cart.php?del&order_id=<?php echo $row['order_id']; ?>" onclick="return confirmation();" class="closed"></a>
                         </div>
@@ -426,11 +456,11 @@ if (isset($_SESSION['username'])) {
                 <div class="col-sm-4 text-center">
                     <div class="total">
                         <div class="sub">
-                            <p><span>Subtotal:</span> <span class="price">$<?php echo number_format($subtotal, 2); ?></span></p>
+                            <p><span>Subtotal:</span> <span class="price">RM<?php echo number_format($subtotal, 2); ?></span></p>
                             <p><span>Delivery:</span> <span>Free Shipping</span></p>
                         </div>
                         <div class="grand-total">
-                            <p><span><strong>Total:</strong></span> <span class="price">$<?php echo number_format($subtotal, 2); ?></span></p>
+                            <p><span><strong>Total:</strong></span> <span class="price">RM<?php echo number_format($subtotal, 2); ?></span></p>
                         </div>
                     </div>
                 </div>
