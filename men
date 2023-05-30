@@ -358,7 +358,7 @@ $result = mysqli_query($connect, $select_query);
                         ?>
                         <div class="desc">
                             <h2><?php echo $product['product_name']; ?></h2>
-                            <span class="price"><?php echo $product['product_price']; ?></span>
+                            <span class="price">RM <?php echo $product['product_price']; ?></span>
                             <?php foreach ($product['variations'] as $variation) { ?>
                                 <p></p>
                             <?php } ?>
