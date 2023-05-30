@@ -100,7 +100,7 @@ if(isset($_SESSION['username'])) {
 
 <?php 
 if(empty($username)) {
-    echo "<script type='text/javascript'>alert('You must be logged in to view product.');</script>";
+    echo "<script type='text/javascript'>alert('You must be logged in to continue.');</script>";
     echo '<script>window.location.href = "home.php";</script>';
 }
 ?>	
@@ -220,7 +220,7 @@ $connect = mysqli_connect("localhost", "root", "", "fyp");
 if (!$connect) {
     die("Connection failed: " . mysqli_connect_error());
 }
-$query = "SELECT * FROM review";
+$query = "SELECT * FROM review ORDER BY id DESC";
 $result = mysqli_query($connect, $query);
 
 // Check for errors
