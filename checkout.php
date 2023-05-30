@@ -100,25 +100,47 @@ $connect = mysqli_connect("localhost","root","","fyp");
 			            </form>
 			         </div>
 		         </div>
-				 <div class="row">
+				 <?php
+					$select_query = "SELECT * FROM brand";
+					$result = mysqli_query($connect, $select_query);
+						
+					?>
+
+					<div class="row">
 						<div class="col-sm-12 text-left menu-1">
 							<ul>
 								<li class="active"><a href="http://localhost/fyp/user_home_page.php">Home</a></li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
+
 									<ul class="dropdown">
-										<li><a href="#">Nike</a></li>
-										<li><a href="#">Adidas</a></li>
+									<?php
+										if ($result) {
+											while ($row = mysqli_fetch_assoc($result)) {
+												$brand_name = $row['brand_name'];
+												echo '<li>' . $brand_name . '</li>';
+											}
+										} else {
+											echo "Query failed: " . mysqli_error($connect);
+										}
+										?>
 									
 									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
 									<ul class="dropdown">
-									    <li><a href="#">Nike</a></li>
-										<li><a href="#">Adidas</a></li>
-										
-									
+													<?php
+									if ($result) {
+										mysqli_data_seek($result, 0); // Reset the query result pointer to the first row
+										while ($row = mysqli_fetch_assoc($result)) {
+											$brand_name = $row['brand_name'];
+											echo '<li>' . $brand_name . '</li>';
+										}
+									} else {
+										echo "Query failed: " . mysqli_error($connect);
+									}
+									?>
 									</ul>
 								</li>
 							
@@ -131,6 +153,7 @@ $connect = mysqli_connect("localhost","root","","fyp");
 										<li><a href="#">Order History</a></li>
                                         <li><a href="logout.php">Logout</a></li>
 									</ul>
+									
 									
 									<?php
 								
@@ -243,7 +266,7 @@ if (isset($_SESSION['username'])) {
 			}
 		
             ?>
-			<form method="POST" class="colorlib-form">
+			<form method="POST" class="colorlib-form" style="background-color: #88c8bc;">
 				<div class="row">
 					<div class="col-md-7">
 						<h2>Billing Address</h2>
@@ -315,14 +338,14 @@ if (isset($_SESSION['username'])) {
 					</div>
 					
 					<div class="col-md-5">
-						<div class="cart-detail">
+						<div class="cart-detail" style="background-color: whitesmoke;">
 							<h2>Cart Total</h2>
 							<ul>
 								
 								<li>
 									
 									<div class="sub">
-									<p><span>Subtotal:</span> <span class="price">$<?php echo number_format($subtotal, 2); ?></span></p>
+									<p><span>Subtotal:</span> <span class="price">RM <?php echo number_format($subtotal, 2); ?></span></p>
 									
 									
 								</div>
@@ -331,7 +354,7 @@ if (isset($_SESSION['username'])) {
 									<span>Shipping</span><span>Free Shipping</span>
 										
 								</li>
-								<li><span>Total</span><span class="price">$<?php echo number_format($subtotal, 2); ?></span></li>
+								<li><span>Total</span><span class="price">RM <?php echo number_format($subtotal, 2); ?></span></li>
 								<input type="hidden" name="subtotal" value="<?php echo $subtotal; ?>">
 
 							</ul>
