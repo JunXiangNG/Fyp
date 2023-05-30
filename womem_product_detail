@@ -299,6 +299,7 @@ if (isset($_GET['product_id'])) {
             $product_price = $row['product_price'];
             $product_description = $row['product_description'];
 			$product_quantity = $row['product_quantity'];
+			$product_gender = $row['product_gender'];
         }
         
         // Display the color and size options
@@ -362,8 +363,9 @@ if (isset($_GET['product_id'])) {
                     <div class="product-desc">
                         <div class="desc">
                             <h3><?php echo $product_name; ?></h3>
-                            <span class="price"><?php echo $product_price; ?></span>
+                            <span class="price">RM <?php echo $product_price; ?></span>
                         </div>
+						<p><b><?php echo $product_gender; ?></b></p>
                         <p><b><?php echo $product_description; ?></b></p>
 
                         <div class="size-wrap">
@@ -394,7 +396,7 @@ if (isset($_GET['product_id'])) {
                                     </div>
                                
                         
-						<br><br><br>
+									<br><br><br>
 								<h4>Quantity :</h4>
 							
 								<div class="quantity">
@@ -403,12 +405,31 @@ if (isset($_GET['product_id'])) {
 								<button type="button" onclick="increaseValue()">+</button>
 								
 								</div>
-								
+					
 								<?php
-							if ($product_quantity <= 5) {
-								echo '<br><span class="price">Notice: ' . $product_quantity . ' Item(s) left</span>';
+
+								$query = "SELECT * FROM product
+								INNER JOIN product_details ON product.product_id = product_details.product_id
+								WHERE product.product_id = $product_id";
+								$result = mysqli_query($connect, $query);
+
+								if ($result && mysqli_num_rows($result) > 0) {
+									while ($row = mysqli_fetch_assoc($result)) {
+										$product_quantity = $row['product_quantity'];
+										$product_name = $row['product_name'];
+										$product_size = $row['product_size'];
+										$product_color = $row['product_color'];
+								
+
+									if ($product_quantity <= 5) {
+										echo '<br><span class="price">Notice: ' . $product_name . ', Size:' . $product_size . ',Color: ' . $product_color . ' , ' . $product_quantity . ' Item(s) left</span>';
+
+									} else {
+										echo "";
+									}
+								}
 							}
-							?>
+								?>
 
 				            </div>
 
