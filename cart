@@ -54,7 +54,7 @@
 .quantity button {
   margin-right: 5px;
   padding: 0 5px;
-  width: 18px;
+  width: 19px;
   background-color: gray;
   color: #fff;
 }
@@ -317,7 +317,7 @@ if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $subtotal = 0; 
 
-    $select_query = "SELECT * FROM orders WHERE username = '$username'";
+    $select_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
     $result = mysqli_query($connect, $select_query);
 
     if ($result === false) {
@@ -364,14 +364,16 @@ if (isset($_SESSION['username'])) {
                         </div>
                     </div>
 
-                    <?php //edit quantity
-                    if (isset($_GET["edit"])) {
-
-                        $order_id = $_GET["order_id"];
-                        $result = mysqli_query($connect, "select * from orders where order_id = $order_id");
-                        $row = mysqli_fetch_assoc($result);
-                    }
-                    ?>
+					<?php
+						if (isset($_GET["edit"])) { //edit quantity of table add_to_cart and orders
+							$order_id = $_GET["order_id"];
+							$query = "SELECT * FROM orders
+									JOIN add_to_cart ON orders.order_id = add_to_cart.order_id
+									WHERE orders.order_id = $order_id";
+							$result = mysqli_query($connect, $query);
+							$row = mysqli_fetch_assoc($result);
+						}
+						?>
                     <form name="addfrm" method="post" action="">
 					<div class="one-eight text-left pr-10">
                             <div class="display-tc">
@@ -392,21 +394,23 @@ if (isset($_SESSION['username'])) {
                     </form>
 
                     <?php
+						if (isset($_POST["savebtn_$order_id"])) {
+							$user_quantity = $_POST['quantity']; // update $user_quantity
 
-                    if (isset($_POST["savebtn_$order_id"])) {
-                        $user_quantity = $_POST['quantity']; // update $user_quantity
+							// Update quantity in the "orders" table
+							mysqli_query($connect, "UPDATE orders SET user_quantity='$user_quantity' WHERE order_id=$order_id");
 
-                        mysqli_query($connect, "UPDATE orders SET user_quantity='$user_quantity' WHERE order_id=$order_id");
+							// Update quantity in the "add_to_cart" table
+							mysqli_query($connect, "UPDATE add_to_cart SET user_quantity='$user_quantity' WHERE order_id=$order_id");
 
-                        ?>
-                        <script type="text/javascript">
-                            alert("Quantity Updated");
-                            window.location.href = "cart.php";
-                        </script>
-                    <?php
+							// Redirect or display a success message
+							echo "<script type='text/javascript'>
+									alert('Quantity Updated');
+									window.location.href = 'cart.php';
+								</script>";
+						}
+						?>
 
-                    }
-                    ?>
 				<div class="one-eight text-right pr-6">
                         <div class="display-tc">
                             <span class="price" style="margin-left: -10px;" ><?php echo $user_size; ?></span>
@@ -492,8 +496,10 @@ if (isset($_SESSION['username'])) {
 if (isset($_REQUEST["del"])) 
 {
     $order_id = $_REQUEST["order_id"];
-    $delete_query = "DELETE FROM orders WHERE order_id = $order_id";
+    $delete_query = "DELETE FROM orders  WHERE order_id = $order_id";
+	$delete_query2 = "DELETE FROM add_to_cart  WHERE order_id = $order_id";
     $result = mysqli_query($connect, $delete_query);
+	$result = mysqli_query($connect, $delete_query2);
     
     if ($result === false) {
         die(mysqli_error($connect));
