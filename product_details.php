@@ -520,12 +520,12 @@ if (isset($_POST['savebtn'])) {
 				if ($update_result && $update_result2) {
 					// Display a success message
 					echo "<script type='text/javascript'>alert('Order updated successfully!');</script>";
-					echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+					echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
 				} else {
 					// Display an error message
 					
 					echo "<script type='text/javascript'>alert('Failed to update order , only can order 5 item per time only!');</script>" . mysqli_error($connect);
-					echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+					echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
 				}
 			
             } else {
@@ -551,7 +551,7 @@ if (isset($_POST['savebtn'])) {
 				if ($insert_result && $ins_result) {
 				// Display a success message
 				echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
-				echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+				echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
 				} else {
 				// Display an error message
 				echo "<script type='text/javascript'>alert('Failed to place order!');</script>" . mysqli_error($connect);
