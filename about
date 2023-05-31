@@ -18,7 +18,7 @@ if(isset($_SESSION['username'])) {
 ?>
 <?php 
     if(empty($username)) {
-        echo "<script type='text/javascript'>alert('You must be logged in to view product.');</script>";
+        echo "<script type='text/javascript'>alert('You must be logged in to continue.');</script>";
         echo '<script>window.location.href = "home.php";</script>';
     }
 ?>
@@ -106,7 +106,7 @@ if(isset($_SESSION['username'])) {
 								if (isset($_SESSION['username'])) {
 								$username = $_SESSION['username'];
 								mysqli_select_db($connect, "fyp");
-								$result = mysqli_query($connect, "select * from orders WHERE username = '$username'");	
+								$result = mysqli_query($connect, "select * from add_to_cart WHERE username = '$username'");	
 								$count = mysqli_num_rows($result);//used to count number of rows
 
 								}
@@ -173,9 +173,9 @@ if(isset($_SESSION['username'])) {
 					</div>
 					<div class="col-sm-6">
 						<div class="about-wrap">
-							<h2>Footwear the leading eCommerce Store around the Globe</h2>
-							<p>The Big Oxmox advised her not to do so, because there were thousands of bad Commas, wild Question Marks and devious Semikoli, but the Little Blind Text didn’t listen. She packed her seven versalia, put her initial into the belt and made herself on the way.</p>
-							<p>When she reached the first hills of the Italic Mountains, she had a last view back on the skyline of her hometown Bookmarksgrove, the headline of Alphabet Village and the subline of her own road, the Line Lane. Pityful a rethoric question ran over her cheek, then she continued her way.</p>
+							<h2>4M Online Sport Shoe Store</h2>
+							<p>Welcome to 4M Online Sport Shoe Store! As students from MMU IT, we have created this website with a sole purpose in mind: to provide you with an exceptional user experience. Our primary focus at the moment is on running shoes, specifically from the renowned brands Nike and Adidas. With a passion for sports and a commitment to quality, we aim to offer you a wide selection of top-notch athletic footwear that combines style, comfort, and performance. Whether you're a professional athlete or an enthusiastic runner, our goal is to enhance your sporting journey by delivering the perfect pair of running shoes to meet your needs. Browse our collection and discover the perfect fit for your active lifestyle at 4M Online Sport Shoe Store!</p>
+		
 						</div>
 					</div>
 				</div>
