@@ -223,7 +223,7 @@ if (!$connect) {
 								if (isset($_SESSION['username'])) {
 								$username = $_SESSION['username'];
 								mysqli_select_db($connect, "fyp");
-								$result = mysqli_query($connect, "select * from orders WHERE username = '$username'");	
+								$result = mysqli_query($connect, "select * from add_to_cart WHERE username = '$username'");	
 								$count = mysqli_num_rows($result);//used to count number of rows
 
 								}
@@ -506,22 +506,36 @@ if (isset($_POST['savebtn'])) {
         if (mysqli_num_rows($check_product_result) > 0) {
             // Product with the specified color and size exists
             // Query to check if the product already exists in orders table
-            $check_query = "SELECT * FROM orders WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
+            $check_query = "SELECT * FROM add_to_cart WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
             $check_result = mysqli_query($connect, $check_query);
 
-            if (mysqli_num_rows($check_result) > 0) {
-                // Product already exists in the orders table, update the order
-                $update_query = "UPDATE orders SET user_quantity = user_quantity + '$user_quantity' WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
-                $update_result = mysqli_query($connect, $update_query);
-
-                if ($update_result) {
-                    // Display a success message
-                    echo "<script type='text/javascript'>alert('Order updated successfully!');</script>";
-                    echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
-                } else {
-                    // Display an error message
-                    echo "<script type='text/javascript'>alert('Failed to update order!');</script>" . mysqli_error($connect);
-                }
+			if (mysqli_num_rows($check_result) > 0) {
+				// Product already exists in the orders table, update the order
+				$update_query = "UPDATE orders SET user_quantity = user_quantity + '$user_quantity' WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
+			
+				$update_result = false;
+				if ($user_quantity <6) {
+					$update_result = mysqli_query($connect, $update_query);
+				}
+			
+				$update_query2 = "UPDATE add_to_cart SET user_quantity = user_quantity + '$user_quantity' WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
+			
+				$update_result2 = false;
+				if ($user_quantity <6) {
+					$update_result2 = mysqli_query($connect, $update_query2);
+				}
+			
+				if ($update_result && $update_result2) {
+					// Display a success message
+					echo "<script type='text/javascript'>alert('Order updated successfully!');</script>";
+					echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+				} else {
+					// Display an error message
+					
+					echo "<script type='text/javascript'>alert('Failed to update order , only can order 5 item per time only!');</script>" . mysqli_error($connect);
+					echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+				}
+			
             } else {
                 // Query to get the product image based on color and size
                 $image_query = "SELECT product_image FROM product_details WHERE product_id = '$product_id' AND product_color = '$user_color' AND product_size = '$user_size'";
