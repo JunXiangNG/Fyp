@@ -293,11 +293,13 @@ if (isset($_SESSION['username'])) {
 						</div>
 						<div class="form-group">
 							<label for="phonenumber">Phone Number</label>
-							<input type="text" name="phone" class="form-control" placeholder="Phone Number" required>
+							<input type="text" name="phone" class="form-control" placeholder="Phone Number" pattern="\d{3}-\d{7}" title="Please enter a correct phone number in the format , for example: 011-26126335" required>
+
 						</div>
 						<div class="form-group">
 							<label for="address">Address</label>
-							<input type="text" name="address" class="form-control" placeholder="Address" required>
+							<input type="text" name="address" class="form-control" placeholder="Address" pattern="^[0-9]+(, )?.+" title="Please enter a correct address in the format , for example: 26, jalan ah looh"  required>
+
 						</div>
 						<div class="row">
 							<div class="col-md-6">
@@ -333,7 +335,7 @@ if (isset($_SESSION['username'])) {
 						</div>
 						<div class="form-group">
 							<label for="zipcode">Zip Code</label>
-							<input type="text" name="zip_postalcode" class="form-control" placeholder="Zip Code" required>
+							<input type="text" name="zip_postalcode" class="form-control" placeholder="Zip Code" pattern="[0-9]{5}" title="Please enter a correct zip code for example: 83700"  required>
 						</div>
 					</div>
 					
@@ -442,14 +444,18 @@ if (isset($_POST['savebtn'])) {
     
 	$result = mysqli_query($connect, $sql);
 
-	if($result)
-	{
-		echo "<script>alert('Payment Successful.'); window.location.href = 'order-complete.php';</script>";
+		if ($result) {
+			echo "<script>alert('Payment Successful.'); window.location.href = 'order-complete.php';</script>";
+			
+			$delete_query2 = "DELETE FROM add_to_cart WHERE username = '$username'";
+			$result = mysqli_query($connect, $delete_query2);
+			
+		} else {
+			echo "Payment Error: " . mysqli_error($connect);
+		}
 		
-	}else{
-		echo"Data Insert Error: " . mysqli_error($connect);
-	}
-	mysqli_close($connect);
+		mysqli_close($connect);
+	
 }
 }
 ?>
