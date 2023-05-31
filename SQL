@@ -5,7 +5,7 @@ admin_password varchar(255) NOT NULL,
 admin_gender char(10)  NOT NULL,
 admin_bdate date not null,
 admin_email varchar(255) NOT NULL,
-admin_image LONGBLOB NULL,
+admin_image LONGBLOB NULL
 );
 
 CREATE TABLE brand (
