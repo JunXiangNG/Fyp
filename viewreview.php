@@ -161,7 +161,7 @@ if(empty($username)) {
                             if (isset($_SESSION['username'])) {
                             $username = $_SESSION['username'];
                             mysqli_select_db($connect, "fyp");
-                            $result = mysqli_query($connect, "select * from orders WHERE username = '$username'");	
+                            $result = mysqli_query($connect, "select * from add_to_cart WHERE username = '$username'");	
                             $count = mysqli_num_rows($result);//used to count number of rows
 
                             }
