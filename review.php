@@ -90,7 +90,7 @@ if(isset($_SESSION['username'])) {
 	?>	
 	<?php 
     if(empty($username)) {
-        echo "<script type='text/javascript'>alert('You must be logged in to view product.');</script>";
+        echo "<script type='text/javascript'>alert('You must be logged in to continue.');</script>";
         echo '<script>window.location.href = "home.php";</script>';
     }
 ?>	
@@ -150,7 +150,7 @@ if(isset($_SESSION['username'])) {
 								if (isset($_SESSION['username'])) {
 								$username = $_SESSION['username'];
 								mysqli_select_db($connect, "fyp");
-								$result = mysqli_query($connect, "select * from orders WHERE username = '$username'");	
+								$result = mysqli_query($connect, "select * from add_to_cart WHERE username = '$username'");	
 								$count = mysqli_num_rows($result);//used to count number of rows
 
 								}
