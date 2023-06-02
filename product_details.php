@@ -298,8 +298,10 @@ if (isset($_GET['product_id'])) {
             $product_name = $row['product_name'];
             $product_price = $row['product_price'];
             $product_description = $row['product_description'];
-			$product_quantity = $row['product_quantity'];
-			$product_gender = $row['product_gender'];
+	  $product_quantity = $row['product_quantity'];
+	  $product_gender = $row['product_gender'];
+	  $product_size = $row['product_size'];
+	  $product_color = $row['product_color'];
         }
         
         // Display the color and size options
@@ -409,7 +411,9 @@ if (isset($_GET['product_id'])) {
 								INNER JOIN product_details ON product.product_id = product_details.product_id
 								WHERE product.product_id = $product_id";
 								$result = mysqli_query($connect, $query);
-
+								echo '<script>';
+								echo 'var productQuantity = ' . $product_quantity . ';'; //pass the product_quantity value to java srcipt button quantity
+								echo '</script>';
 								if ($result && mysqli_num_rows($result) > 0) {
 									while ($row = mysqli_fetch_assoc($result)) {
 										$product_quantity = $row['product_quantity'];
@@ -456,18 +460,23 @@ if (isset($_GET['product_id'])) {
 if (isset($_POST['savebtn'])) {
     // Get the form data
     $product_id = $_GET["product_id"];
+    $order_id = $_GET["order_id"];
 
     if (isset($_SESSION['username'])) {
         $username = $_SESSION['username'];
     }
 
     // Query the product and product_details tables to get the product name, image, and price
-    $query = "SELECT p.product_name, pd.product_price 
+    $query = "SELECT p.product_name, pd.product_price , pd.product_quantity
               FROM product p
               INNER JOIN product_details pd ON p.product_id = pd.product_id
-              WHERE pd.product_id = '$product_id' AND  product_gender='men'";
+              WHERE pd.product_id = '$product_id' ";
+
 
     $result = mysqli_query($connect, $query);
+
+
+	$order_query="SELECT order_id FROM add_to_cart a INNER JOIN orders o ON a.order_id = o.order_id WHERE a.order_id  '$order_id' ";
 
     // Check if the query was successful
     if ($result) {
@@ -475,6 +484,7 @@ if (isset($_POST['savebtn'])) {
         $row = mysqli_fetch_assoc($result);
         $product_name = $row['product_name'];
         $product_price = $row['product_price'];
+        $product_quantity = $row['product_quantity'];
         $user_size = $_POST['size'];
         $user_color = $_POST['colour'];
         $user_quantity = $_POST['quantity'];
@@ -503,32 +513,32 @@ if (isset($_POST['savebtn'])) {
 
 			if (mysqli_num_rows($check_result) > 0) {
 				// Product already exists in the orders table, update the order
-				$update_query = "UPDATE orders SET user_quantity = user_quantity + '$user_quantity' WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
-			
+				$update_query = "UPDATE orders SET user_quantity = user_quantity + 1 WHERE username = '$username' AND order_id = '$order_id' AND user_size = '$user_size' AND user_color = '$user_color'";
+				
 				$update_result = false;
-				if ($user_quantity <6) {
+				if ($user_quantity >6) {
 					$update_result = mysqli_query($connect, $update_query);
 				}
-			
-				$update_query2 = "UPDATE add_to_cart SET user_quantity = user_quantity + '$user_quantity' WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
-			
+				
+				$update_query2 = "UPDATE add_to_cart SET user_quantity = user_quantity + 1 WHERE username = '$username' AND order_id = '$order_id' AND user_size = '$user_size' AND user_color = '$user_color'";
+				
 				$update_result2 = false;
-				if ($user_quantity <6) {
+				if ($user_quantity >6) {
 					$update_result2 = mysqli_query($connect, $update_query2);
 				}
-			
+				
 				if ($update_result && $update_result2) {
 					// Display a success message
 					echo "<script type='text/javascript'>alert('Order updated successfully!');</script>";
-					echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
+					echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
 				} else {
 					// Display an error message
-					
-					echo "<script type='text/javascript'>alert('Failed to update order , only can order 5 item per time only!');</script>" . mysqli_error($connect);
-					echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
+					echo "<script type='text/javascript'>alert('Failed to update order, can only order a maximum of 5 items!');</script>" . mysqli_error($connect);
+					echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
 				}
+			}
 			
-            } else {
+			 else {
                 // Query to get the product image based on color and size
                 $image_query = "SELECT product_image FROM product_details WHERE product_id = '$product_id' AND product_color = '$user_color' AND product_size = '$user_size'";
                 $image_result = mysqli_query($connect, $image_query);
@@ -551,7 +561,7 @@ if (isset($_POST['savebtn'])) {
 				if ($insert_result && $ins_result) {
 				// Display a success message
 				echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
-				echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
+				echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
 				} else {
 				// Display an error message
 				echo "<script type='text/javascript'>alert('Failed to place order!');</script>" . mysqli_error($connect);
@@ -570,6 +580,7 @@ if (isset($_POST['savebtn'])) {
     }
 }
 ?>
+
 
 
 
@@ -686,13 +697,12 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 								<script>
 								function increaseValue() {
-									var value = parseInt(document.getElementById('myNumber').value, 10); //parseInt(string,radix)   radix(10) - determine the binary to be used(decimal)
-									value = isNaN(value) ? 1 : value; //If it cannot be converted to an integer type, the default value is 1
-									value++;
-									if (value > 5) { //make sure the number is not greater than 5
-									value = 5;
+									var value = parseInt(document.getElementById('myNumber').value, 10);
+									value = isNaN(value) ? 1 : value;
+									if (value < 5 && value < productQuantity) {
+										value++;
 									}
-									document.getElementById('myNumber').value = value; //sets the new value back into the input box 
+									document.getElementById('myNumber').value = value;
 								}
 
 								function decreaseValue() {
@@ -700,7 +710,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 									value = isNaN(value) ? 1 : value;
 									value--;
 									if (value < 1) {
-									value = 1;
+										value = 1;
 									}
 									document.getElementById('myNumber').value = value;
 								}
