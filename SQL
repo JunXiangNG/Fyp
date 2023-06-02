@@ -38,20 +38,21 @@ CREATE TABLE product_details (
 
 
 CREATE TABLE users (
-user_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
-username varchar(255) NOT NULL,
-gender char(10)  NOT NULL,
-birthday date not null,
-email varchar(255) NOT NULL,
-password varchar(255) NOT NULL,
-question varchar(255) NOT null,
-answer varchar(255) Not null,
+  user_id int NOT NULL PRIMARY KEY AUTO_INCREMENT,
+  username varchar(255) NOT NULL,
+  gender char(10) NOT NULL,
+  birthday date not null,
+  email varchar(255) NOT NULL,
+  password varchar(255) NOT NULL,
+  question varchar(255) NOT null,
+  answer varchar(255) Not null,
   phone VARCHAR(20) NOT NULL,
   address VARCHAR(255) NOT NULL,
   town_city VARCHAR(255) NOT NULL,
   state_province VARCHAR(255) NOT NULL,
   zip_postalcode VARCHAR(255) NOT NULL
 );
+
 
 
 CREATE TABLE orders (
