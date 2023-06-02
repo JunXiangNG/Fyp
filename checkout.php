@@ -146,12 +146,12 @@ $connect = mysqli_connect("localhost","root","","fyp");
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
 								<li><a href="viewreview.php">Review</a></li>
-                                <li class="has-dropdown">
+                                					<li class="has-dropdown">
 									<a href="#">Account</a>
 									<ul class="dropdown">
 										<li><a href="profile.php">Edit Profile</a></li>
 										<li><a href="#">Order History</a></li>
-                                        <li><a href="logout.php">Logout</a></li>
+                                       					 <li><a href="logout.php">Logout</a></li>
 									</ul>
 									
 									
@@ -160,7 +160,7 @@ $connect = mysqli_connect("localhost","root","","fyp");
 								if (isset($_SESSION['username'])) {
 								$username = $_SESSION['username'];
 								mysqli_select_db($connect, "fyp");
-								$result = mysqli_query($connect, "select * from orders WHERE username = '$username'");	
+								$result = mysqli_query($connect, "select * from add_to_cart WHERE username = '$username'");	
 								$count = mysqli_num_rows($result);//used to count number of rows
 
 								}
@@ -242,20 +242,20 @@ if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $subtotal = 0; 
 
-    $select_query = "SELECT * FROM orders WHERE username = '$username'";
+    $select_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
     $result = mysqli_query($connect, $select_query);
-
+    
     if ($result === false) {
-	
         die(mysqli_error($connect));
-	
     }
+    
 ?>
     <div class="row row-pb-lg">
         <div class="col-md-12">
             <?php
             while ($row = mysqli_fetch_assoc($result)) {
                 $order_id = $row['order_id'];
+	      $product_id = $row['product_id'];
                 $product_image = $row['product_image'];
                 $product_name = $row['product_name'];
                 $product_price = $row['product_price'];
@@ -275,15 +275,18 @@ if (isset($_SESSION['username'])) {
 						<?php
 									if (isset($_SESSION['username'])) {
 										$username = $_SESSION['username'];
+										if (isset($_GET['order_id'])) {
+										$order_id = $_GET['order_id'];
 										mysqli_select_db($connect, "fyp");
-										$result = mysqli_query($connect, "SELECT * FROM orders WHERE username = '$username'");	
-									}
+										$result = mysqli_query($connect, "SELECT * FROM add_to_cart WHERE username = '$username'");	
+									}}
 									if ($result === false) {
 										die(mysqli_error($connect));
 									}
 								?>
 
 							<div class="col-md-6">
+								
 							<input type="hidden" name="order_id" value="<?php echo $_GET["order_id"]; ?>">
 								<div class="form-group">
 									<label for="receivername">Receiver Name</label>
@@ -293,7 +296,7 @@ if (isset($_SESSION['username'])) {
 						</div>
 						<div class="form-group">
 							<label for="phonenumber">Phone Number</label>
-							<input type="text" name="phone" class="form-control" placeholder="Phone Number" pattern="\d{3}-\d{8}" title="Please enter a correct phone number in the format , for example: 011-26126335" required>
+							<input type="text" name="phone" class="form-control" placeholder="Phone Number" pattern="\d{3}-\d{7}" title="Please enter a correct phone number in the format , for example: 011-26126335" required>
 
 						</div>
 						<div class="form-group">
@@ -317,7 +320,6 @@ if (isset($_SESSION['username'])) {
 								</div>
 							</div>
 							<div class="col-md-6">
-
 							<div class="form-group">
 								<label for="city">Select City:</label>
 								<select id="city" name="town_city"class="form-control"required>
@@ -397,6 +399,7 @@ if (isset($_SESSION['username'])) {
 								
 		</div>
 	    </div>
+	
 
 <?php
 ini_set('display_errors', 1);
@@ -428,11 +431,11 @@ if (isset($_POST['savebtn'])) {
 	$cardnumber=$_POST['card_number'];
 	$cardexpire=$_POST['card_expire'];
 	$cvv=$_POST['cvv'];
-    $subtotal = $_POST['subtotal'];	
+  	
 
 
-	$sql="INSERT INTO checkout(order_id,username,received_name, phone,address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv,subtotal)
-	 VALUES('$order_id','$username','$name','$phone','$address','$town','$state','$zipcode','$cardname','$cardnumber','$cardexpire','$cvv','$subtotal')";
+	$sql="INSERT INTO checkout(order_id,username,received_name, phone,address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
+	 VALUES('$order_id','$username','$name','$phone','$address','$town','$state','$zipcode','$cardname','$cardnumber','$cardexpire','$cvv')";
     
 	$result = mysqli_query($connect, $sql);
 
@@ -565,9 +568,11 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     var formatted = trimmed.replace(/^(\d{2})\/?(\d{0,4})/, "$1/$2");
     input.value = formatted;
   });
-</script>
-<script>
-    function populateCities() {
+
+
+
+
+  function populateCities() {
       var stateSelect = document.getElementById("state");
       var citySelect = document.getElementById("city");
       var state = stateSelect.value;
@@ -653,6 +658,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
         }
 	}
 }
-  </script>
+</script>
+	
 </body>
 </html>
