@@ -85,7 +85,7 @@ CREATE TABLE checkout (
   card_expire VARCHAR(10) NOT NULL,
   cvv VARCHAR(10) NOT NULL,
   FOREIGN KEY (order_id) REFERENCES orders(order_id),
-  subtotal DECIMAL(10, 2) NOT NULL
+ 
 );
 
 
