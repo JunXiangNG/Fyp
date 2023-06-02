@@ -87,6 +87,10 @@
 #formContainer {
       display: none;
     }
+select{
+	width:300px;
+	height:44px;
+}	
 
 </style>
 	</head>
@@ -116,6 +120,11 @@ if (isset($_POST['submit'])) {
   $gender = $_POST['gender'];
   $birthday = $_POST['birthday'];
   $email = $_POST['email'];
+  $phone=$_POST['phone'];
+  $address=$_POST['address'];
+  $town=$_POST['town_city'];
+  $state=$_POST['state_province'];
+  $zipcode=$_POST['zip_postalcode'];
 
   // Check if email already exists in the database
   $result = mysqli_query($connect, "SELECT user_id FROM users WHERE email='$email' AND user_id != $id");
@@ -125,11 +134,12 @@ if (isset($_POST['submit'])) {
     echo "<script>alert('Email already exists in the database. Please choose a different email.')</script>";
   } else {
     // Update user data in the database
-    $result = mysqli_query($connect, "UPDATE users SET username='$username', gender='$gender', birthday='$birthday', email='$email' WHERE user_id=$id");
+    $result = mysqli_query($connect, "UPDATE users SET username='$username', gender='$gender', birthday='$birthday', email='$email',phone='$phone',address='$address',town_city='$town',state_province='$state',zip_postalcode='$zipcode' WHERE user_id=$id");
 
     if ($result) {
       // Display success message
-	  echo "<script>alert('User Details Succesful updated.Login again to check the updated information.');window.location.href = 'logout.php';</script>";
+	  echo "<script>alert('Details Succesful updated.Login again to check the updated information.');window.location.href = 'logout.php';</script>";
+    
     } else {
       // Display error message
       echo "<script>alert('Failed to update user details.');</script>" . mysqli_error($connect);
@@ -173,6 +183,12 @@ if ($count > 0) {
   $gender = $row['gender'];
   $birthday = $row['birthday'];
   $email = $row['email'];
+  $phone=$row['phone'];
+  $address=$row['address'];
+  $town=$row['town_city'];
+  $state=$row['state_province'];
+  $zipcode=$row['zip_postalcode'];
+
 
   ?>
 
@@ -281,30 +297,75 @@ if ($count > 0) {
 			<form method="POST" action="profile.php"onsubmit="return validateForm();">
       <fieldset>
         <h1>User Profile</h1>
-        <input type="hidden" name="email" class="input-field" value="<?php echo $email; ?>">
+		<label>Email :</label>
+        <input type="email" name="email" class="input-field" value="<?php echo $email; ?>"readonly>
         <br>
         <input type="hidden" name="id" value="<?php echo $id; ?>">
-        <label>Username:</label>
+		<br>
+        <label>Username :</label>
         <input type="text" name="username" class="input-field" value="<?php echo $username; ?>"><br><br>
-        <label>Gender:<?php echo "\t\t$gender" ?></label><br>
+        <label>Gender :<?php echo "\t\t$gender" ?></label><br>
         <input type="radio" name="gender" value="Male" <?php if ($gender == "Male") echo "checked"; else if (!$gender) echo "checked"; ?>>Male<br>
         <input type="radio" name="gender" value="Female" <?php if ($gender == "Female") echo "checked"; else if (!$gender) echo "checked"; ?>>Female<br><br>
-        <label>Birthday:</label>
+        <label>Birthday :</label>
         <input type="date" name="birthday" min="1963-01-01" max="2005-01-01" class="input-field" value="<?php echo $birthday; ?>"><br><br>
 
         <input type="checkbox" name="change_password" id="change-password-checkbox" onchange="togglePasswordFields()"> Change Password<br><br>
-
+		
         <div id="password-fields" style="display: none;">
-          <label>New Password:</label>
+          <label>New Password :</label>
           <input type="password" name="password" id="password" class="input-field password-container"  pattern="(?=.*[@#!$*()])(?=.*[a-z])(?=.*[A-Z]).{8,}"
             title="Password must contain at least 8 characters and at least 1 Alphabet and 1 Special Character"><br><br>
 			
-			<p id="message" style="display:none;" >Password is <span id="strenght"></span></p>
+			<p id="message" style="display:none; font-weight: bold;" >Password is <span id="strenght"></span></p>
 
-          <label>Confirm Password:</label>
+          <label>Confirm Password :</label>
           <input type="password" name="cpassword" class="input-field" id="confirm-password"><br><br>
         </div>
 
+		<input type="checkbox" name="set_address" id="set_address-checkbox" onchange="toggleAddressFields()">  Billing Details<br><br>
+		<div id="address-fields" style="display: none;">
+							<div class="form-group">
+							<label for="phonenumber">Phone Number :</label>
+							<input type="text" name="phone"class="input-field" placeholder="Phone Number" pattern="\d{3}-\d{8}" title="Please enter a correct phone number in the format , for example: 011-26126335"value="<?php echo $phone; ?>" >
+
+						</div>
+						<div class="form-group">
+							<label for="address">Address :</label>
+							<input type="text" name="address" class="input-field" placeholder="Address" pattern="^[0-9]+(, )?.+" title="Please enter a correct address in the format , for example: 26, jalan ah looh" value="<?php echo $address; ?>" >
+
+						</div>
+					
+							
+								<div class="form-group">
+                <body onload="populateCities()">
+
+<div class="form-group">
+  <label for="state">Select State:</label>
+  <select id="state" name="state_province" class="input-field" onchange="populateCities()">
+    <option value="">- Select State -</option>
+    <option value="Johor" <?php if ($state == "Johor") echo "selected"; ?>>Johor</option>
+    <option value="Selangor" <?php if ($state == "Selangor") echo "selected"; ?>>Selangor</option>
+    <option value="Melaka" <?php if ($state == "Melaka") echo "selected"; ?>>Melaka</option>
+    <option value="Pahang" <?php if ($state == "Pahang") echo "selected"; ?>>Pahang</option>
+    <option value="Negeri Sembilan" <?php if ($state == "Negeri Sembilan") echo "selected"; ?>>Negeri Sembilan</option>
+    <!-- Add more state options here -->
+  </select>
+</div>
+
+<div class="form-group">
+  <label for="city">Select City:</label>
+  <select id="city" name="town_city" class="input-field" value="<?php echo $town; ?>">
+    <option value="">- Select City -</option>
+  </select>
+</div>
+						
+						<div class="form-group">
+							<label for="zipcode">Zip Code</label>
+							<input type="text" name="zip_postalcode" class="input-field" placeholder="Zip Code" pattern="[0-9]{5}" title="Please enter a correct zip code for example: 83700"value="<?php echo $zipcode; ?>"   >
+						</div>
+					</div>
+					
         <input type="submit" name="submit" value="Save"><br>
       </fieldset>
     </form>
@@ -389,6 +450,20 @@ if ($count > 0) {
       }
     }
   </script>
+
+  <script>
+    function toggleAddressFields() {
+      var AddressFields = document.getElementById("address-fields");
+      var SetaddressCheckbox = document.getElementById("set_address-checkbox");
+
+      if (SetaddressCheckbox.checked) {
+        AddressFields.style.display = "block";
+      } else {
+        AddressFields.style.display = "none";
+      }
+    }
+  </script>
+
    <script>
     function validateForm() {
       var password = document.getElementById("password").value;
@@ -402,6 +477,75 @@ if ($count > 0) {
       return true; // Allow form submission
     }
   </script>
+
+<script>
+    function populateCities() {
+      var stateSelect = document.getElementById("state");
+      var citySelect = document.getElementById("city");
+      var state = stateSelect.value;
+      var town = "<?php echo isset($town) ? $town : ''; ?>";
+
+      // Clear city options
+      citySelect.innerHTML = '<option value="">- Select City -</option>';
+
+      if (state === "Johor") {
+        // Add Johor cities
+        var johorCities = ["Yong Peng", "Segamat", "Johor Bahru", "Tangkak", "Skudai", "Muar", "Kluang", "Pasir Gudang", "Kulai"];
+        for (var i = 0; i < johorCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = johorCities[i];
+          option.value = johorCities[i];
+          citySelect.add(option);
+        }
+      } else if (state === "Selangor") {
+        // Add Selangor cities
+        var selangorCities = ["Petaling Jaya", "Shah Alam", "Klang", "Puchong", "Cheras", "Rawang", "Semenyih", "Putrajaya", "Cyberjaya"];
+        for (var i = 0; i < selangorCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = selangorCities[i];
+          option.value = selangorCities[i];
+          citySelect.add(option);
+        }
+      } else if (state === "Melaka") {
+        // Add Melaka cities
+        var melakaCities = ["Ayer Keroh", "Alor Gajah", "Malacca City (Bandaraya Melaka)", "Klebang", "Jasin", "Batu Berendam", "Bukit Katil"];
+        for (var i = 0; i < melakaCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = melakaCities[i];
+          option.value = melakaCities[i];
+          citySelect.add(option);
+        }
+      } else if (state === "Pahang") {
+        // Add Pahang cities
+        var pahangCities = ["Kuantan", "Cameron Highlands", "Temerloh", "Raub", "Mentakab", "Pekan", "Kuala Lipis", "Gambang"];
+        for (var i = 0; i < pahangCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = pahangCities[i];
+          option.value = pahangCities[i];
+          citySelect.add(option);
+        }
+      } else if (state === "Negeri Sembilan") {
+        // Add Negeri Sembilan cities
+        var negerisembilanCities = ["Seremban", "Port Dickson", "Nilai", "Seri Menanti", "Bahau", "Kuala Pilah", "Rembau", "Gemas"];
+        for (var i = 0; i < negerisembilanCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = negerisembilanCities[i];
+          option.value = negerisembilanCities[i];
+          citySelect.add(option);
+        }
+      }
+
+      // Set the selected city if it matches the previous selection
+      if (town !== "") {
+        citySelect.value = town;
+      }
+    }
+
+    // Call the populateCities() function when the page loads
+    window.onload = populateCities;
+  </script>
+
+
 
 </body>
 </html>
