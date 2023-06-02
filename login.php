@@ -72,7 +72,7 @@ if (isset($_POST['submit'])) {
     min-height: 250px;
     background: #FFF;
     border-radius: 5px;
-    margin-left: 450px;
+    margin-left: 250px;
     box-shadow: 0 0 5px rgba(0, 0, 0, .3);
     padding: 40px 30px;
     margin-top: 20px;
@@ -242,6 +242,7 @@ if (isset($_POST['submit'])) {
 			<p class="login-register-text">Don't have an account? <a href="register.php">Register Here</a>.</p>
 			
 			<p class="forgot-password-text">Forgot Password ? <a href="user_forgot_password.php">Click Here</a></p>
+			
 		</form>
 	</div>
 	<!--footer-->
