@@ -57,6 +57,8 @@ $questions = array(
 	'what is your ic last four numbers?'
  );
  session_destroy();
+
+
 ?>
 
 <!DOCTYPE html>
@@ -101,7 +103,7 @@ $questions = array(
     min-height: 250px;
     background: #FFF;
     border-radius: 5px;
-    margin-left: 450px;
+    margin-left: 250px;
     box-shadow: 0 0 5px rgba(0, 0, 0, .3);
     padding: 40px 30px;
     margin-top: 20px;
@@ -476,4 +478,3 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			 	
 </body>
 </html>
-
