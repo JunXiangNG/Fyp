@@ -328,70 +328,68 @@ if (isset($_SESSION['username'])) {
 ?>
    <div class="row row-pb-lg">
     <div class="col-md-12">
-        <?php
-        while ($row = mysqli_fetch_assoc($result)) {
-            $order_id = $row['order_id'];
-            $product_image = $row['product_image'];
-			$product_gender = $row['product_gender'];
-            $product_name = $row['product_name'];
-            $product_price = $row['product_price'];
-            $user_quantity = $row['user_quantity'];
-			$user_color = $row['user_color'];
-			$user_size = $row['user_size'];
-            $total_cost = $product_price * $user_quantity; 
-            $subtotal += $total_cost; 
-        ?>
-            <div class="product-cart d-flex">
-                <div class="one-forth">
-                    <div class="product-img" style="background-image: url('<?php
-                        $imageData = $row['product_image'];
-                        if ($imageData) {
-                            $imageData = base64_encode($imageData);
-                            echo 'data:image/jpeg;base64,' . $imageData;
-                        } else {
-                            echo 'path/to/default/image.jpg'; // Provide a default image path if the product image is empty
-                        }
-                    ?>');">
-                    </div>
-            
-                        <div class="display-tc">
-                            <h3><?php echo $product_name; ?></h3>
-                        </div>
-                    </div>
-                    <div class="one-eight text-center px-10">
-                        <div class="display-tc">
-                            <span class="price">RM <?php echo $product_price; ?></span>
-                        </div>
-                    </div>
+	  <?php
+	  
+while ($row = mysqli_fetch_assoc($result)) {
+    $order_id = $row['order_id'];
+    $product_image = $row['product_image'];
+    $product_gender = $row['product_gender'];
+    $product_name = $row['product_name'];
+    $product_price = $row['product_price'];
+    $user_quantity = $row['user_quantity'];
+    $user_color = $row['user_color'];
+    $user_size = $row['user_size'];
+    $total_cost = $product_price * $user_quantity;
+    $subtotal += $total_cost;
+?>
+    <div class="product-cart d-flex">
+        <div class="one-forth">
+            <div class="product-img" style="background-image: url('<?php
+            $imageData = $row['product_image'];
+            if ($imageData) {
+                $imageData = base64_encode($imageData);
+                echo 'data:image/jpeg;base64,' . $imageData;
+            } else {
+                echo 'path/to/default/image.jpg'; // Provide a default image path if the product image is empty
+            }
+            ?>');">
+            </div>
 
-					<?php
-						if (isset($_GET["edit"])) { //edit quantity of table add_to_cart and orders
-							$order_id = $_GET["order_id"];
-							$query = "SELECT * FROM orders
-									JOIN add_to_cart ON orders.order_id = add_to_cart.order_id
-									WHERE orders.order_id = $order_id";
-							$result = mysqli_query($connect, $query);
-							$row = mysqli_fetch_assoc($result);
-						}
-						?>
-                    <form name="addfrm" method="post" action="">
-					<div class="one-eight text-left pr-10">
-                            <div class="display-tc">
-                                <div class="quantity">
-                                    <div class="quantity-container">
-                                        <button type="button" onclick="decreaseValue(<?php echo $order_id; ?>)">-</button>
-                                        <input type="number" id="myNumber_<?php echo $order_id; ?>" name="quantity" min="1" max="5" value="<?php echo $user_quantity; ?>" readonly>
-                                        <button type="button" onclick="increaseValue(<?php echo $order_id; ?>)">+</button>
-										
-                                    </div>
-									
-                                </div>
-								
-                            </div>
-							
+            <div class="display-tc">
+                <h3><?php echo $product_name; ?></h3>
+            </div>
+        </div>
+        <div class="one-eight text-center px-10">
+            <div class="display-tc">
+                <span class="price">RM <?php echo $product_price; ?></span>
+            </div>
+        </div>
+
+        <?php
+        if (isset($_GET["edit"])) { //edit quantity of table add_to_cart and orders
+            $order_id = $_GET["order_id"];
+            $query = "SELECT * FROM orders
+                    JOIN add_to_cart ON orders.order_id = add_to_cart.order_id
+                    WHERE orders.order_id = $order_id";
+            $result = mysqli_query($connect, $query);
+            $row = mysqli_fetch_assoc($result);
+        }
+        ?>
+        <form name="addfrm" method="post" action="">
+            <div class="one-eight text-left pr-10">
+                <div class="display-tc">
+                    <div class="quantity">
+                        <div class="quantity-container">
+                            <button type="button" onclick="decreaseValue(<?php echo $order_id; ?>)">-</button>
+                            <input type="number" id="myNumber_<?php echo $order_id; ?>" name="quantity" min="1" max="5" value="<?php echo $user_quantity; ?>" readonly required>
+                            <button type="button" onclick="increaseValue(<?php echo $order_id; ?>)">+</button>
                         </div>
-						<input type="submit" name="savebtn_<?php echo $order_id; ?>" value="UPDATE" alt="Update" class="update-button">
-                    </form>
+                    </div>
+                </div>
+            </div>
+            <input type="submit" name="savebtn_<?php echo $order_id; ?>" value="UPDATE" alt="Update" class="update-button">
+        </form>
+
 
                     <?php
 						if (isset($_POST["savebtn_$order_id"])) {
@@ -408,9 +406,9 @@ if (isset($_SESSION['username'])) {
 									alert('Quantity Updated');
 									window.location.href = 'cart.php';
 								</script>";
-						}
-						?>
-
+						
+							}
+							?>
 				<div class="one-eight text-right pr-6">
                         <div class="display-tc">
                             <span class="price" style="margin-left: -10px;" ><?php echo $user_size; ?></span>
@@ -441,15 +439,16 @@ if (isset($_SESSION['username'])) {
                         </div>
 
                         </div>
-						</div>
+						</div> 
             </div>
         </div>
     </div>
 
 <?php
-            }
+            
+						}
         }
-    
+
 ?>
 <div class="row row-pb-lg">
     <div class="col-md-12">
@@ -482,7 +481,12 @@ if (isset($_SESSION['username'])) {
         <p><a href="http://localhost/fyp/checkout.php" class="btn btn-primary">Proceed to Checkout</a></p>
     </div>
 </div>
-
+<?php 
+    if(empty($order_id)) {
+        echo "<script type='text/javascript'>alert('You must be add product first.');</script>";
+        echo '<script>window.location.href = "user_home_page.php";</script>';
+    }
+?>
 							</div>
 						</div>
 					</div>
@@ -590,28 +594,28 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		</footer>
 	</div>
 	<script>
-							
-								function increaseValue(orderId) {
-								var input = document.getElementById('myNumber_' + orderId);
-								var value = parseInt(input.value, 10);//parseInt(string,radix)   radix(10) - determine the binary to be used(decimal)
-								value = isNaN(value) ? 1 : value;//If it cannot be converted to an integer type, the default value is 1
-								value++;
-								if (value > 5) {//make sure the number is not greater than 5
-									value = 5;
-								}
-								input.value = value;//sets the new value back into the input box 
-							}
+						function increaseValue(orderId) {
+						var input = document.getElementById('myNumber_' + orderId);
+						var value = parseInt(input.value, 10);
+						value = isNaN(value) ? 1 : value;
+						if (value < 5 && value < productQuantity) {
+							value++;
+						}
+						input.value = value;
+					}
 
-							function decreaseValue(orderId) {
-								var input = document.getElementById('myNumber_' + orderId);
-								var value = parseInt(input.value, 10);
-								value = isNaN(value) ? 1 : value;
-								value--;
-								if (value < 1) {
-									value = 1;
-								}
-								input.value = value;
-							}
+					function decreaseValue(orderId) {
+						var input = document.getElementById('myNumber_' + orderId);
+						var value = parseInt(input.value, 10);
+						value = isNaN(value) ? 1 : value;
+						value--;
+						if (value < 1) {
+							value = 1;
+						}
+						input.value = value;
+					}
+
+
 
 
 								</script>
@@ -642,7 +646,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 	<script src="js/jquery.stellar.min.js"></script>
 	<!-- Main -->
 	<script src="js/main.js"></script>
-	<script type="text/javascript">
+	<script type="text/javascript"></script>
 
 
 	</body>
