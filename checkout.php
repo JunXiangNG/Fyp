@@ -293,7 +293,7 @@ if (isset($_SESSION['username'])) {
 						</div>
 						<div class="form-group">
 							<label for="phonenumber">Phone Number</label>
-							<input type="text" name="phone" class="form-control" placeholder="Phone Number" pattern="\d{3}-\d{7}" title="Please enter a correct phone number in the format , for example: 011-26126335" required>
+							<input type="text" name="phone" class="form-control" placeholder="Phone Number" pattern="\d{3}-\d{8}" title="Please enter a correct phone number in the format , for example: 011-26126335" required>
 
 						</div>
 						<div class="form-group">
@@ -304,32 +304,25 @@ if (isset($_SESSION['username'])) {
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-									<label for="towncity">Town / City</label>
-									<input type="text" name="town_city" class="form-control" placeholder="Town / City" required>
+								<label for="state" >Select State:</label>
+								<select id="state" name="state_province"class="form-control" required onchange="populateCities()">
+									<option value="">- Select State -</option>
+									<option value="johor">Johor</option>
+									<option value="selangor">Selangor</option>
+									<option value="melaka">Melaka</option>
+									<option value="pahang">Pahang</option>
+									<option value="negerisembilan">Negeri Sembilan</option>
+									<!-- Add more state options here -->
+								</select>
 								</div>
 							</div>
 							<div class="col-md-6">
 
 							<div class="form-group">
-							<label for="stateprovince">State / Province</label>
-							<select name="state_province" class="form-control" required >
-								<option value="" disabled selected>Select a State</option>
-								<option value="Johor">Johor</option>
-								<option value="Kedah">Kedah</option>
-								<option value="Kelantan">Kelantan</option>
-								<option value="Kuala Lumpur">Kuala Lumpur</option>
-								<option value="Melaka">Melaka</option>
-								<option value="Negeri Sembilan">Negeri Sembilan</option>
-								<option value="Pahang">Pahang</option>
-								<option value="Penang">Penang</option>
-								<option value="Perak">Perak</option>
-								<option value="Perlis">Perlis</option>
-								<option value="Putrajaya">Putrajaya</option>
-								<option value="Sabah">Sabah</option>
-								<option value="Sarawak">Sarawak</option>
-								<option value="Selangor">Selangor</option>
-								<option value="Terengganu">Terengganu</option>
-							</select>
+								<label for="city">Select City:</label>
+								<select id="city" name="town_city"class="form-control"required>
+									<option value="">- Select City -</option>
+								</select>
 							</div>
 						</div>
 						</div>
@@ -404,7 +397,6 @@ if (isset($_SESSION['username'])) {
 								
 		</div>
 	    </div>
-	
 
 <?php
 ini_set('display_errors', 1);
@@ -574,6 +566,93 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
     input.value = formatted;
   });
 </script>
-	
+<script>
+    function populateCities() {
+      var stateSelect = document.getElementById("state");
+      var citySelect = document.getElementById("city");
+      var state = stateSelect.value;
+
+      // Clear city options
+      citySelect.innerHTML = '<option value="">- Select City -</option>';
+
+      if (state === "johor") {
+        // Add Johor cities
+        var johorCities = ["Yong Peng", "Segamat", "Johor Bahru"];
+        for (var i = 0; i < johorCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = johorCities[i];
+          option.value = johorCities[i];
+          citySelect.add(option);
+        }
+      } else if (state === "selangor") {
+        // Add Selangor cities
+        var selangorCities = ["Petaling Jaya", "Shah Alam", "Klang"];
+        for (var i = 0; i < selangorCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = selangorCities[i];
+          option.value = selangorCities[i];
+          citySelect.add(option);
+        }
+      }
+      // Add more conditions for other states here
+    }
+  </script>
+	<script>
+    function populateCities() {
+      var stateSelect = document.getElementById("state");
+      var citySelect = document.getElementById("city");
+      var state = stateSelect.value;
+
+      // Clear city options
+      citySelect.innerHTML = '<option value="">- Select City -</option>';
+
+      if (state === "johor") {
+        // Add Johor cities
+        var johorCities = ["Yong Peng", "Segamat", "Johor Bahru","Tangkak","Skudai","Muar","Kluang","Pasir Gudang","Kulai"];
+        for (var i = 0; i < johorCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = johorCities[i];
+          option.value = johorCities[i];
+          citySelect.add(option);
+        }
+      } else if (state === "selangor") {
+        // Add Selangor cities
+        var selangorCities = ["Petaling Jaya", "Shah Alam", "Klang","Puchong","Cheras","Rawang","Semenyih","Putrajaya","Cyberjaya"];
+        for (var i = 0; i < selangorCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = selangorCities[i];
+          option.value = selangorCities[i];
+          citySelect.add(option);
+        }
+      }else if (state === "melaka") {
+        // Add Selangor cities
+        var melakaCities = ["Ayer Keroh", "Alor Gajah", "Malacca City (Bandaraya Melaka)","Klebang","Jasin","Batu Berendam","Bukit Katil"];
+        for (var i = 0; i <melakaCities .length; i++) {
+          var option = document.createElement("option");
+          option.text = melakaCities[i];
+          option.value = melakaCities [i];
+          citySelect.add(option);
+        }
+    }else if (state === "pahang") {
+        // Add Selangor cities
+        var pahangCities = ["Kuantan", "Cameron Highlands", "Temerloh","Raub","Mentakab ","Pekan","Kuala Lipis","Gambang"];
+        for (var i = 0; i <pahangCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = pahangCities[i];
+          option.value = pahangCities[i];
+          citySelect.add(option);
+        }
+	}else if (state === "negerisembilan") {
+        // Add Selangor cities
+        var negerisembilanCities = ["Seremban", "Port Dickson ", "Nilai","Seri Menanti","Bahau","Kuala Pilah ","Rembau","Gemas "];
+        for (var i = 0; i <negerisembilanCities.length; i++) {
+          var option = document.createElement("option");
+          option.text = negerisembilanCities[i];
+          option.value = negerisembilanCities[i];
+          citySelect.add(option);
+        }
+	}
+}
+  </script>
 </body>
 </html>
