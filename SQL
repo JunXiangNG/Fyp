@@ -45,7 +45,12 @@ birthday date not null,
 email varchar(255) NOT NULL,
 password varchar(255) NOT NULL,
 question varchar(255) NOT null,
-answer varchar(255) Not null
+answer varchar(255) Not null,
+  phone VARCHAR(20) NOT NULL,
+  address VARCHAR(255) NOT NULL,
+  town_city VARCHAR(255) NOT NULL,
+  state_province VARCHAR(255) NOT NULL,
+  zip_postalcode VARCHAR(255) NOT NULL
 );
 
 
