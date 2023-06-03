@@ -119,7 +119,9 @@ CREATE TABLE `dummy_table` (
   `card_number` varchar(16) DEFAULT NULL,
   `card_expire` varchar(7) DEFAULT NULL,
   `cvv` varchar(4) DEFAULT NULL
-) 
+);
+
 INSERT INTO `dummy_table` (`id`, `card_number`, `card_expire`, `cvv`) VALUES
 (NULL, '1234567890123456', '06/2023', '123'),
 (NULL, '9876543210987654', '09/2024', '456');
+
