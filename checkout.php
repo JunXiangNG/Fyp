@@ -401,7 +401,7 @@ if (isset($_SESSION['username'])) {
 		</div>
 	    </div>
 	
-	    <?php
+      <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -431,53 +431,61 @@ if (isset($_POST['savebtn'])) {
 	    $cardexpire = $_POST['card_expire'];
 	    $cvv = $_POST['cvv'];
       
-	    // Insert checkout record
-	    $sql = "INSERT INTO checkout(order_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
-		  VALUES('$order_id', '$username', '$name', '$phone', '$address', '$town', '$state', '$zipcode', '$cardname', '$cardnumber', '$cardexpire', '$cvv')";
+	    // Perform validation against the dummy table
+	    $query = "SELECT COUNT(*) FROM dummy_table WHERE card_number = '$cardnumber' AND card_expire = '$cardexpire' AND cvv = '$cvv'";
+	    $result = mysqli_query($connect, $query);
+	    $numRows = mysqli_fetch_array($result)[0];
       
-	    $result = mysqli_query($connect, $sql);
-      
-	    if ($result) {
-	        echo "<script>alert('Payment Successful.'); window.location.href = 'order-complete.php';</script>";
-      
-	        $delete_query2 = "DELETE FROM add_to_cart WHERE username = '$username'";
-	        $result = mysqli_query($connect, $delete_query2);
-      
-	        // Fetch all products in the cart
-	        $cart_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
-	        $cart_result = mysqli_query($connect, $cart_query);
-      
-	        while ($cart_row = mysqli_fetch_array($cart_result)) {
-		        $product_id = $cart_row['product_id'];
-		        $user_size = $cart_row['size'];
-		        $user_color = $cart_row['colour'];
-		        $user_quantity = $cart_row['quantity'];
-      
-		        // Get current product quantity from product_details table
-		        $product_query = "SELECT product_quantity FROM product_details
-				      WHERE product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
-		        $product_result = mysqli_query($connect, $product_query);
-		      
-		        if ($product_row = mysqli_fetch_array($product_result)) {
-			        
-			        $new_quantity = $product_row['product_quantity'] - $user_quantity;
-			        
-			        // Update product quantity in product_details table
-			        $update_query = "UPDATE product_details
-			        SET product_quantity = $new_quantity
-			        WHERE product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
-					
-					echo "Update Query: " . $update_query; // Output the update query for debugging
-					
-					$update_result = mysqli_query($connect, $update_query);
-					
-					if (!$update_result) {
-					echo "Error updating product quantity: " . mysqli_error($connect);
-					}
-					}
-				}
+	    if ($numRows > 0) {
+	        // Insert checkout record
+	        $sql = "INSERT INTO checkout(order_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
+		          VALUES('$order_id', '$username', '$name', '$phone', '$address', '$town', '$state', '$zipcode', '$cardname', '$cardnumber', '$cardexpire', '$cvv')";
+	      
+	        $result = mysqli_query($connect, $sql);
+	      
+	        if ($result) {
+	            echo "<script>alert('Payment Successful.'); window.location.href = 'order-complete.php';</script>";
+	      
+	            $delete_query2 = "DELETE FROM add_to_cart WHERE username = '$username'";
+	            $result = mysqli_query($connect, $delete_query2);
+	      
+	            // Fetch all products in the cart
+	            $cart_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
+	            $cart_result = mysqli_query($connect, $cart_query);
+	      
+	            while ($cart_row = mysqli_fetch_array($cart_result)) {
+		            $product_id = $cart_row['product_id'];
+		            $user_size = $cart_row['size'];
+		            $user_color = $cart_row['colour'];
+		            $user_quantity = $cart_row['quantity'];
+	      
+		            // Get current product quantity from product_details table
+		            $product_query = "SELECT product_quantity FROM product_details
+				                      WHERE product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
+		            $product_result = mysqli_query($connect, $product_query);
+		          
+		            if ($product_row = mysqli_fetch_array($product_result)) {
+			            $new_quantity = $product_row['product_quantity'] - $user_quantity;
+			            
+			            // Update product quantity in product_details table
+			            $update_query = "UPDATE product_details
+			                             SET product_quantity = $new_quantity
+			                             WHERE product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
+						
+						echo "Update Query: " . $update_query; // Output the update query for debugging
+						
+						$update_result = mysqli_query($connect, $update_query);
+						
+						if (!$update_result) {
+						    echo "Error updating product quantity: " . mysqli_error($connect);
+						}
+		            }
+		        }
+	        } else {
+	            echo "Payment Error: " . mysqli_error($connect);
+	        }
 	    } else {
-	        echo "Payment Error: " . mysqli_error($connect);
+	        echo "<script>alert('Card Details not matched.'); window.location.href = 'ww.php';</script>";
 	    }
       
 	    mysqli_close($connect);
