@@ -237,35 +237,32 @@ if (!$result) {
 </div>
 
     <div id="add-comment">
-    <div class="row">
-        <div class="col-md-25">
-            <div class="contact-wrap">
-                <h3>Customer Reviews</h3>
-                <?php while ($row = mysqli_fetch_assoc($result)): ?>
-                <div class="row">
-                    <div class="w-100"></div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="fname">Name: <?php echo $row['username']; ?></label>
-                            
-                        </div>
-                    </div>
-                    <div class="w-100"></div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="subject">Rating: <?php echo $row['rating']; ?></label><br>
-                        </div>
-                    </div> 
-                    <div class="w-100"></div>
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label for="message">Review: <?php echo $row['comment'] ; ?></label>
-                            
-                        </div>
-                    </div>
+    <div class="contact-wrap">
+    <h3>Customer Reviews</h3>
+    <?php while ($row = mysqli_fetch_assoc($result)): ?>
+        <div class="row" <?php echo $row['review_status']; ?>>
+            <div class="w-100"></div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="fname">Name: <?php echo $row['username']; ?></label>
                 </div>
-                <?php endwhile; ?>
             </div>
+            <div class="w-100"></div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="subject">Rating: <?php echo $row['rating']; ?></label><br>
+                </div>
+            </div> 
+            <div class="w-100"></div>
+            <div class="col-sm-12">
+                <div class="form-group">
+                    <label for="message">Review: <?php echo $row['comment']; ?></label>
+                </div>
+            </div>
+        </div>
+    <?php endwhile; ?>
+</div>
+
         </div>
     </div>
 </div>
