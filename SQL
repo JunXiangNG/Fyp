@@ -95,7 +95,7 @@ CREATE TABLE review (
   username varchar(255) NOT NULL, 
   comment TEXT NOT NULL,
   rating INT(1) NOT NULL,
-  review_status VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
+  review_status VARCHAR(50) NOT NULL DEFAULT NULL,
 );
 
 
