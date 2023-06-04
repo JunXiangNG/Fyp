@@ -57,20 +57,25 @@ CREATE TABLE users (
 
 CREATE TABLE orders (
     order_id INT PRIMARY KEY AUTO_INCREMENT,
-    product_id INT NOT NULL,
     username VARCHAR(255) NOT NULL, 
-    product_image LONGBLOB NOT NULL, 
-    product_name VARCHAR(50) NOT NULL,
-    product_gender VARCHAR(10) NOT NULL,
-    product_price DECIMAL(10, 2) NOT NULL,
-    user_size INT NOT NULL,
-    user_color VARCHAR(20) NOT NULL,
-    user_quantity INT NOT NULL, 
+    order_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     total_cost DECIMAL(10, 2) NOT NULL,
     order_status VARCHAR(50) NOT NULL DEFAULT 'Pending',
-    order_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (product_id) REFERENCES product(product_id)
-    );
+    FOREIGN KEY (username) REFERENCES users(username)
+);
+
+CREATE TABLE order_details (
+  order_details_id INT PRIMARY KEY AUTO_INCREMENT,
+  order_id INT NOT NULL,
+  product_id INT NOT NULL,
+  product_color VARCHAR(20) NOT NULL,
+  product_size INT NOT NULL,
+  product_quantity INT NOT NULL,
+  FOREIGN KEY (order_id) REFERENCES product_order (order_id),
+  FOREIGN KEY (product_id) REFERENCES product (product_id)
+);
+
+
 CREATE TABLE checkout (
   checkout_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   username VARCHAR(255) NOT NULL, 
