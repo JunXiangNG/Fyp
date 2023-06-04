@@ -68,9 +68,9 @@ CREATE TABLE orders (
     user_quantity INT NOT NULL, 
     total_cost DECIMAL(10, 2) NOT NULL,
     order_status VARCHAR(50) NOT NULL DEFAULT 'Pending',
+    order_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (product_id) REFERENCES product(product_id)
-);
-
+    );
 CREATE TABLE checkout (
   checkout_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   username VARCHAR(255) NOT NULL, 
