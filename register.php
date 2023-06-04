@@ -302,7 +302,7 @@ $questions = array(
 				<input type="password" placeholder="Password" name="password" id="password" value="<?php echo $_POST['password']; ?>" required pattern="(?=.*[@#!$*()])(?=.*[a-z])(?=.*[A-Z]).{8,}" 
         title="Password must contain at least 8 characters and at least 1 Alphabet and 1 Special Character">
 
-				<p id="message" style="display:none;" >Password is <span id="strenght"></span></p>
+				<p id="message" style="display:none;font-weight:bold;" >Password is <span id="strenght"></span></p>
 			
             </div>
 			<br>
