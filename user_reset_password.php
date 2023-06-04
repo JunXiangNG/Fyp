@@ -167,7 +167,7 @@ if (isset($_GET['email'])) {
   <input type="password" name="password"  id="password"placeholder="Enter new password"class="reset-container"  required pattern="(?=.*[@#!$*()])(?=.*[a-z])(?=.*[A-Z]).{8,}" 
 	title="Password must contain at least 8 characters and at least 1 Alphabet and 1 Special Character"> 
   
-  <p id="message" style="display:none; margin-left:30px; margin-top:-20px;" >Password is <span id="strenght"></span></p>
+  <p id="message" style="display:none; margin-left:30px; margin-top:-20px; font-weight:bold;" >Password is <span id="strenght"></span></p>
 
 
   <input type="password" name="cpassword" required placeholder="Confirm new password"class="reset-container" require>
