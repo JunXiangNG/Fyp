@@ -7,6 +7,7 @@ error_reporting(0);
 session_start();
 if (isset($_SESSION['username'])) {
 	$username = $_SESSION['username'];
+	$phone = $_SESSION['phone'];
 	echo "<div style='font-size: 20px; padding: 10px; color:green;'>Welcome, $username!</div>";
 	
 }
@@ -146,12 +147,12 @@ $connect = mysqli_connect("localhost","root","","fyp");
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
 								<li><a href="viewreview.php">Review</a></li>
-                                					<li class="has-dropdown">
+                                <li class="has-dropdown">
 									<a href="#">Account</a>
 									<ul class="dropdown">
 										<li><a href="profile.php">Edit Profile</a></li>
 										<li><a href="#">Order History</a></li>
-                                       					 <li><a href="logout.php">Logout</a></li>
+                                        <li><a href="logout.php">Logout</a></li>
 									</ul>
 									
 									
@@ -160,7 +161,7 @@ $connect = mysqli_connect("localhost","root","","fyp");
 								if (isset($_SESSION['username'])) {
 								$username = $_SESSION['username'];
 								mysqli_select_db($connect, "fyp");
-								$result = mysqli_query($connect, "select * from add_to_cart WHERE username = '$username'");	
+								$result = mysqli_query($connect, "select * from orders WHERE username = '$username'");	
 								$count = mysqli_num_rows($result);//used to count number of rows
 
 								}
@@ -242,25 +243,24 @@ if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $subtotal = 0; 
 
-    $select_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
+    $select_query = "SELECT * FROM orders WHERE username = '$username'";
     $result = mysqli_query($connect, $select_query);
-    
+
     if ($result === false) {
+	
         die(mysqli_error($connect));
+	
     }
-    
 ?>
     <div class="row row-pb-lg">
         <div class="col-md-12">
             <?php
             while ($row = mysqli_fetch_assoc($result)) {
                 $order_id = $row['order_id'];
-	      $product_id = $row['product_id'];
                 $product_image = $row['product_image'];
                 $product_name = $row['product_name'];
                 $product_price = $row['product_price'];
                 $user_quantity = $row['user_quantity'];
-		
                 $total_cost = $product_price * $user_quantity; 
                 $subtotal += $total_cost; 
 				}
@@ -273,10 +273,30 @@ if (isset($_SESSION['username'])) {
 						<h2>Billing Address</h2>
 
 						<div class="row">
-						
+						<?php
+									$username = $_SESSION['username'];
+									$result = mysqli_query($connect, "SELECT * FROM users WHERE username='$username'");
+									$count = mysqli_num_rows($result);
+									
+									// Display user data and edit form
+									if ($count > 0) {
+									  $row = mysqli_fetch_assoc($result);
+									  $id = $row['user_id'];
+									  $username = $row['username'];
+									  $gender = $row['gender'];
+									  $birthday = $row['birthday'];
+									  $email = $row['email'];
+									  $phone=$row['phone'];
+									  $address=$row['address'];
+									  $town=$row['town_city'];
+									  $state=$row['state_province'];
+									  $zipcode=$row['zip_postalcode'];
+									
+									}
+									  
+								?>
 
 							<div class="col-md-6">
-								
 							<input type="hidden" name="order_id" value="<?php echo $_GET["order_id"]; ?>">
 								<div class="form-group">
 									<label for="receivername">Receiver Name</label>
@@ -285,42 +305,43 @@ if (isset($_SESSION['username'])) {
 							</div>
 						</div>
 						<div class="form-group">
-							<label for="phonenumber">Phone Number</label>
-							<input type="text" name="phone" class="form-control" placeholder="Phone Number" pattern="\d{3}-\d{7}" title="Please enter a correct phone number in the format , for example: 011-26126335" required>
-
+    				<label for="phonenumber">Phone Number</label>
+    				<input type="text" name="phone" class="form-control" pattern="\d{3}-\d{8}" title="Please enter a correct phone number in the format, for example: 011-26126335"value="<?php echo $phone; ?>" required>
 						</div>
 						<div class="form-group">
 							<label for="address">Address</label>
-							<input type="text" name="address" class="form-control" placeholder="Address" pattern="^[0-9]+(, )?.+" title="Please enter a correct address in the format , for example: 26, jalan ah looh"  required>
+							<input type="text" name="address" class="form-control" placeholder="Address" pattern="^[0-9]+(, )?.+" title="Please enter a correct address in the format , for example: 26, jalan ah looh" value="<?php echo $address; ?>" required>
 
 						</div>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
-								<label for="state" >Select State:</label>
-								<select id="state" name="state_province"class="form-control" required onchange="populateCities()">
-									<option value="">- Select State -</option>
-									<option value="johor">Johor</option>
-									<option value="selangor">Selangor</option>
-									<option value="melaka">Melaka</option>
-									<option value="pahang">Pahang</option>
-									<option value="negerisembilan">Negeri Sembilan</option>
-									<!-- Add more state options here -->
-								</select>
-								</div>
+								<body onload="populateCities()">
+								<label for="state" >Select State:</label><br>
+								<select id="state" name="state_province" class="input-field" onchange="populateCities()"style="width: 200px; height: 50px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+								<option value="">- Select State -</option>
+								<option value="Johor" <?php if ($state == "Johor") echo "selected"; ?>>Johor</option>
+								<option value="Selangor" <?php if ($state == "Selangor") echo "selected"; ?>>Selangor</option>
+								<option value="Melaka" <?php if ($state == "Melaka") echo "selected"; ?>>Melaka</option>
+								<option value="Pahang" <?php if ($state == "Pahang") echo "selected"; ?>>Pahang</option>
+								<option value="Negeri Sembilan" <?php if ($state == "Negeri Sembilan") echo "selected"; ?>>Negeri Sembilan</option>
+								<!-- Add more state options here -->
+						</select>
+						</div>
 							</div>
 							<div class="col-md-6">
+
 							<div class="form-group">
-								<label for="city">Select City:</label>
-								<select id="city" name="town_city"class="form-control"required>
-									<option value="">- Select City -</option>
-								</select>
+								<label for="city">Select City:</label><br>
+								<select id="city" name="town_city" class="input-field" value="<?php echo $town; ?>"style="width: 200px; height: 50px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
+    							<option value="">- Select City -</option>
+ 							 </select>
 							</div>
 						</div>
 						</div>
 						<div class="form-group">
 							<label for="zipcode">Zip Code</label>
-							<input type="text" name="zip_postalcode" class="form-control" placeholder="Zip Code" pattern="[0-9]{5}" title="Please enter a correct zip code for example: 83700"  required>
+							<input type="text" name="zip_postalcode" class="form-control" placeholder="Zip Code" pattern="[0-9]{5}" title="Please enter a correct zip code for example: 83700" value="<?php echo $zipcode; ?>" required>
 						</div>
 					</div>
 					
@@ -390,7 +411,7 @@ if (isset($_SESSION['username'])) {
 		</div>
 	    </div>
 
-		<?php
+<?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -508,76 +529,6 @@ mysqli_close($connect);
 ?>
 
 
-
-
-
-
-
-	<footer id="colorlib-footer" role="contentinfo">
-			<div class="container">
-				<div class="row row-pb-md">
-					<div class="col footer-col colorlib-widget">
-						<h4>About Footwear</h4>
-						<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
-						<p>
-							<ul class="colorlib-social-icons">
-								<li><a href="#"><i class="icon-twitter"></i></a></li>
-								<li><a href="#"><i class="icon-facebook"></i></a></li>
-								<li><a href="#"><i class="icon-linkedin"></i></a></li>
-								<li><a href="#"><i class="icon-dribbble"></i></a></li>
-							</ul>
-						</p>
-					</div>
-					<div class="col footer-col colorlib-widget">
-						<h4>Customer Care</h4>
-						<p>
-							<ul class="colorlib-footer-links">
-								<li><a href="#">Contact</a></li>
-								<li><a href="#">Returns/Exchange</a></li>
-								<li><a href="#">Gift Voucher</a></li>
-								<li><a href="#">Wishlist</a></li>
-								<li><a href="#">Special</a></li>
-								<li><a href="#">Customer Services</a></li>
-								<li><a href="#">Site maps</a></li>
-							</ul>
-						</p>
-					</div>
-					<div class="col footer-col colorlib-widget">
-						<h4>Information</h4>
-						<p>
-							<ul class="colorlib-footer-links">
-								<li><a href="#">About us</a></li>
-								<li><a href="#">Delivery Information</a></li>
-								<li><a href="#">Privacy Policy</a></li>
-								<li><a href="#">Support</a></li>
-								<li><a href="#">Order Tracking</a></li>
-							</ul>
-						</p>
-					</div>
-
-					<div class="col footer-col">
-						<h4>News</h4>
-						<ul class="colorlib-footer-links">
-							<li><a href="blog.html">Blog</a></li>
-							<li><a href="#">Press</a></li>
-							<li><a href="#">Exhibitions</a></li>
-						</ul>
-					</div>
-
-					<div class="col footer-col">
-						<h4>Contact Information</h4>
-						<ul class="colorlib-footer-links">
-							<li>291 South 21th Street, <br> Suite 721 New York NY 10016</li>
-							<li><a href="tel://1234567920">+ 1235 2355 98</a></li>
-							<li><a href="mailto:info@yoursite.com">info@yoursite.com</a></li>
-							<li><a href="#">yoursite.com</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<div class="copy">
-				<div class="row">
-					<div class="col-sm-12 text-center">
 						<p>
 							<span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
 Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
@@ -616,105 +567,85 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="js/jquery.stellar.min.js"></script>
 <!-- Main -->
 <script src="js/main.js"></script>
-
-<script>
+	<!--Payment-->
+	<script src="js/payment.js"></script>
+	<script>
   document.getElementById("cc-exp").addEventListener("input", function (event) {
     var input = event.target;
     var trimmed = input.value.replace(/\s+/g, "");
     var formatted = trimmed.replace(/^(\d{2})\/?(\d{0,4})/, "$1/$2");
     input.value = formatted;
   });
+</script>
 
-
-
-
-  function populateCities() {
-      var stateSelect = document.getElementById("state");
-      var citySelect = document.getElementById("city");
-      var state = stateSelect.value;
-
-      // Clear city options
-      citySelect.innerHTML = '<option value="">- Select City -</option>';
-
-      if (state === "johor") {
-        // Add Johor cities
-        var johorCities = ["Yong Peng", "Segamat", "Johor Bahru"];
-        for (var i = 0; i < johorCities.length; i++) {
-          var option = document.createElement("option");
-          option.text = johorCities[i];
-          option.value = johorCities[i];
-          citySelect.add(option);
-        }
-      } else if (state === "selangor") {
-        // Add Selangor cities
-        var selangorCities = ["Petaling Jaya", "Shah Alam", "Klang"];
-        for (var i = 0; i < selangorCities.length; i++) {
-          var option = document.createElement("option");
-          option.text = selangorCities[i];
-          option.value = selangorCities[i];
-          citySelect.add(option);
-        }
-      }
-      // Add more conditions for other states here
-    }
-  </script>
-	<script>
+<script>
     function populateCities() {
       var stateSelect = document.getElementById("state");
       var citySelect = document.getElementById("city");
       var state = stateSelect.value;
+      var town = "<?php echo isset($town) ? $town : ''; ?>";
 
       // Clear city options
       citySelect.innerHTML = '<option value="">- Select City -</option>';
 
-      if (state === "johor") {
+      if (state === "Johor") {
         // Add Johor cities
-        var johorCities = ["Yong Peng", "Segamat", "Johor Bahru","Tangkak","Skudai","Muar","Kluang","Pasir Gudang","Kulai"];
+        var johorCities = ["Yong Peng", "Segamat", "Johor Bahru", "Tangkak", "Skudai", "Muar", "Kluang", "Pasir Gudang", "Kulai"];
         for (var i = 0; i < johorCities.length; i++) {
           var option = document.createElement("option");
           option.text = johorCities[i];
           option.value = johorCities[i];
           citySelect.add(option);
         }
-      } else if (state === "selangor") {
+      } else if (state === "Selangor") {
         // Add Selangor cities
-        var selangorCities = ["Petaling Jaya", "Shah Alam", "Klang","Puchong","Cheras","Rawang","Semenyih","Putrajaya","Cyberjaya"];
+        var selangorCities = ["Petaling Jaya", "Shah Alam", "Klang", "Puchong", "Cheras", "Rawang", "Semenyih", "Putrajaya", "Cyberjaya"];
         for (var i = 0; i < selangorCities.length; i++) {
           var option = document.createElement("option");
           option.text = selangorCities[i];
           option.value = selangorCities[i];
           citySelect.add(option);
         }
-      }else if (state === "melaka") {
-        // Add Selangor cities
-        var melakaCities = ["Ayer Keroh", "Alor Gajah", "Malacca City (Bandaraya Melaka)","Klebang","Jasin","Batu Berendam","Bukit Katil"];
-        for (var i = 0; i <melakaCities .length; i++) {
+      } else if (state === "Melaka") {
+        // Add Melaka cities
+        var melakaCities = ["Ayer Keroh", "Alor Gajah", "Malacca City (Bandaraya Melaka)", "Klebang", "Jasin", "Batu Berendam", "Bukit Katil"];
+        for (var i = 0; i < melakaCities.length; i++) {
           var option = document.createElement("option");
           option.text = melakaCities[i];
-          option.value = melakaCities [i];
+          option.value = melakaCities[i];
           citySelect.add(option);
         }
-    }else if (state === "pahang") {
-        // Add Selangor cities
-        var pahangCities = ["Kuantan", "Cameron Highlands", "Temerloh","Raub","Mentakab ","Pekan","Kuala Lipis","Gambang"];
-        for (var i = 0; i <pahangCities.length; i++) {
+      } else if (state === "Pahang") {
+        // Add Pahang cities
+        var pahangCities = ["Kuantan", "Cameron Highlands", "Temerloh", "Raub", "Mentakab", "Pekan", "Kuala Lipis", "Gambang"];
+        for (var i = 0; i < pahangCities.length; i++) {
           var option = document.createElement("option");
           option.text = pahangCities[i];
           option.value = pahangCities[i];
           citySelect.add(option);
         }
-	}else if (state === "negerisembilan") {
-        // Add Selangor cities
-        var negerisembilanCities = ["Seremban", "Port Dickson ", "Nilai","Seri Menanti","Bahau","Kuala Pilah ","Rembau","Gemas "];
-        for (var i = 0; i <negerisembilanCities.length; i++) {
+      } else if (state === "Negeri Sembilan") {
+        // Add Negeri Sembilan cities
+        var negerisembilanCities = ["Seremban", "Port Dickson", "Nilai", "Seri Menanti", "Bahau", "Kuala Pilah", "Rembau", "Gemas"];
+        for (var i = 0; i < negerisembilanCities.length; i++) {
           var option = document.createElement("option");
           option.text = negerisembilanCities[i];
           option.value = negerisembilanCities[i];
           citySelect.add(option);
         }
-	}
-}
-</script>
-	
+      }
+
+      // Set the selected city if it matches the previous selection
+      if (town !== "") {
+        citySelect.value = town;
+      }
+    }
+
+    // Call the populateCities() function when the page loads
+    window.onload = populateCities;
+  </script>
+
+
+
 </body>
 </html>
