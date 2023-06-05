@@ -320,7 +320,8 @@ $result = mysqli_query($connect, $select_query);
 	</div>
 </div>
 
-		<div class="colorlib-partner">
+		
+<div class="colorlib-partner">
 			<div class="container">
 				<div class="row">
 					<div class="col-sm-8 offset-sm-2 text-center colorlib-heading colorlib-heading-sm">
@@ -329,12 +330,13 @@ $result = mysqli_query($connect, $select_query);
 				</div>
 				<div class="row">
 					<div class="col partner-col text-center">
-						<img src="images/brand-1.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
+					<img src="images/brand-1.jpg" class="img-fluid" style="max-width: 50%;" alt="Free html4 bootstrap 4 template">
+
 					</div>
 					<div class="col partner-col text-center">
-						<img src="images/brand-2.jpg" class="img-fluid" alt="Free html4 bootstrap 4 template">
+						<img src="images/brand-2.jpg" class="img-fluid" style="max-width: 50%;" alt="Free html4 bootstrap 4 template">
 					</div>
-				
+					
 				</div>
 			</div>
 		</div>
@@ -343,7 +345,7 @@ $result = mysqli_query($connect, $select_query);
 			<div class="container">
 				<div class="row row-pb-md">
 					<div class="col footer-col colorlib-widget">
-						<h4>About Footwear</h4>
+						<h4>About 4M Online Sport Shoe Store</h4>
 						<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
 						<p>
 							<ul class="colorlib-social-icons">
@@ -358,13 +360,7 @@ $result = mysqli_query($connect, $select_query);
 						<h4>Customer Care</h4>
 						<p>
 							<ul class="colorlib-footer-links">
-								<li><a href="#">Contact</a></li>
-								<li><a href="#">Returns/Exchange</a></li>
-								<li><a href="#">Gift Voucher</a></li>
-								<li><a href="#">Wishlist</a></li>
-								<li><a href="#">Special</a></li>
-								<li><a href="#">Customer Services</a></li>
-								<li><a href="#">Site maps</a></li>
+							<li><a href="viewreview.php">Review</a></li>
 							</ul>
 						</p>
 					</div>
@@ -372,31 +368,21 @@ $result = mysqli_query($connect, $select_query);
 						<h4>Information</h4>
 						<p>
 							<ul class="colorlib-footer-links">
-								<li><a href="#">About us</a></li>
-								<li><a href="#">Delivery Information</a></li>
-								<li><a href="#">Privacy Policy</a></li>
-								<li><a href="#">Support</a></li>
-								<li><a href="#">Order Tracking</a></li>
+								<li><a href="about.php">About us</a></li>
+								
 							</ul>
 						</p>
 					</div>
 
-					<div class="col footer-col">
-						<h4>News</h4>
-						<ul class="colorlib-footer-links">
-							<li><a href="blog.html">Blog</a></li>
-							<li><a href="#">Press</a></li>
-							<li><a href="#">Exhibitions</a></li>
-						</ul>
-					</div>
+					
 
 					<div class="col footer-col">
 						<h4>Contact Information</h4>
 						<ul class="colorlib-footer-links">
-							<li>291 South 21th Street, <br> Suite 721 New York NY 10016</li>
-							<li><a href="tel://1234567920">+ 1235 2355 98</a></li>
-							<li><a href="mailto:info@yoursite.com">info@yoursite.com</a></li>
-							<li><a href="#">yoursite.com</a></li>
+							<li>28,Jalan Bukit Beruang, <br> Taman Bukit Beruang</li>
+							<li><a href="tel://1234567920">+60 11-26121234</a></li>
+							<li><a href="mailto:info@yoursite.com">www.4M.com</a></li>
+							
 						</ul>
 					</div>
 				</div>
@@ -406,7 +392,7 @@ $result = mysqli_query($connect, $select_query);
 					<div class="col-sm-12 text-center">
 						<p>
 							<span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">4M</a>
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></span> 
 							<span class="block">Demo Images: <a href="http://unsplash.co/" target="_blank">Unsplash</a> , <a href="http://pexels.com/" target="_blank">Pexels.com</a></span>
 						</p>
@@ -415,6 +401,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			</div>
 		</footer>
 	</div>
+
 
 	<div class="gototop js-top">
 		<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
