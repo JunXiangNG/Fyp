@@ -390,7 +390,7 @@ if (isset($_SESSION['username'])) {
 		</div>
 	    </div>
 
-	    <?php
+		<?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -423,83 +423,88 @@ if (isset($_POST['savebtn'])) {
         // Perform validation against the dummy table
         $query = "SELECT COUNT(*) FROM dummy_table WHERE card_number = '$cardnumber' AND card_expire = '$cardexpire' AND cvv = '$cvv'";
         $result = mysqli_query($connect, $query);
-        $numRows = mysqli_num_rows($result);
+        $numRows = mysqli_fetch_array($result)[0];
 
-        // Fetch all products in the cart
-        $cart_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
-        $cart_result = mysqli_query($connect, $cart_query);
+        if ($numRows > 0) {
+            // Payment data matches the dummy table, proceed with insertion
+            while ($cart_row = mysqli_fetch_array($result)) {
+                $order_id = $cart_row['order_id'];
+                $product_id = $cart_row['product_id'];
+                $user_size = $cart_row['size'];
+                $user_color = $cart_row['colour'];
+                $user_quantity = $cart_row['quantity'];
 
-        while ($cart_row = mysqli_fetch_array($cart_result)) {
-            $order_id = $cart_row['order_id'];
-            $product_id = $cart_row['product_id'];
-            $user_size = $cart_row['size'];
-            $user_color = $cart_row['colour'];
-            $user_quantity = $cart_row['quantity'];
+                // Insert checkout record
+                $sql = "INSERT INTO checkout(order_id, product_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
+                        VALUES ('$order_id', '$product_id', '$username', '$name', '$phone', '$address', '$town', '$state', '$zipcode', '$cardname', '$cardnumber', '$cardexpire', '$cvv')";
 
-            // Insert checkout record
-            $sql = "INSERT INTO checkout(order_id, product_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
-                    VALUES('$order_id', '$product_id', '$username', '$name', '$phone', '$address', '$town', '$state', '$zipcode', '$cardname', '$cardnumber', '$cardexpire', '$cvv')";
+                $result = mysqli_query($connect, $sql);
 
-            $result = mysqli_query($connect, $sql);
+                if (!$result) {
+                    echo "Error inserting checkout record: " . mysqli_error($connect);
+                    exit;
+                }
+            }
 
-        
+            // Update user details
+            $update_query = "UPDATE users SET phone = '$phone', address = '$address', town_city = '$town', state_province = '$state', zip_postalcode = '$zipcode' WHERE username = '$username'";
+            $result2 = mysqli_query($connect, $update_query);
+
+            if (!$result2) {
+                echo "Error updating user details: " . mysqli_error($connect);
+                exit;
+            }
+
+            // Update product quantity
+            while ($cart_row = mysqli_fetch_array($result)) {
+                $order_id = $cart_row['order_id'];
+                $product_id = $cart_row['product_id'];
+                $user_size = $cart_row['size'];
+                $user_color = $cart_row['colour'];
+                $user_quantity = $cart_row['quantity'];
+
+                $product_query = "SELECT product_details_id, product_quantity
+                                  FROM product_details
+                                  WHERE product_id = '$product_id' AND product_size = '$user_size' AND product_color = '$user_color'";
+                $product_result = mysqli_query($connect, $product_query);
+
+                if ($product_row = mysqli_fetch_array($product_result)) {
+                    $product_details_id = $product_row['product_details_id'];
+                    $product_quantity = $product_row['product_quantity'];
+                    $new_product_quantity = $product_quantity - $user_quantity;
+
+                    $update_query = "UPDATE product_details
+                                     SET product_quantity = $new_product_quantity
+                                     WHERE product_details_id = '$product_details_id'";
+
+                    $update_result = mysqli_query($connect, $update_query);
+
+                    if (!$update_result) {
+                        echo "Error updating product quantity: " . mysqli_error($connect);
+                        exit;
+                    }
+                }
+            }
+
+            // Clear the cart
+            $delete_query = "DELETE FROM add_to_cart WHERE username = '$username'";
+            $delete_result = mysqli_query($connect, $delete_query);
+
+            if (!$delete_result) {
+                echo "Error clearing cart: " . mysqli_error($connect);
+                exit;
+            }
+
+            echo "<script>alert('Payment Successful.'); window.location.href = 'order-complete.php';</script>";
+            exit;
+        } else {
+            echo "<script>alert('Card Details not matched.'); window.location.href = 'http://localhost/fyp/checkout.php';</script>";
+            exit;
         }
-
-        if ($result && $numRows > 0) {
-	while ($cart_row = mysqli_fetch_array($cart_result)) {
-	    $order_id = $cart_row['order_id'];
-	    $product_id = $cart_row['product_id'];
-	    $user_size = $cart_row['size'];
-	    $user_color = $cart_row['colour'];
-	    $user_quantity = $cart_row['quantity'];
-      
-	    // Insert checkout record
-	    $sql = "INSERT INTO checkout(order_id, product_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
-		  VALUES('$order_id', '$product_id', '$username', '$name', '$phone', '$address', '$town', '$state', '$zipcode', '$cardname', '$cardnumber', '$cardexpire', '$cvv')";
-      
-	    $result = mysqli_query($connect, $sql);
-      
-	    if ($result) {
-	        $product_query = "SELECT product_details_id, product_quantity
-			      FROM product_details
-			      WHERE product_id = '$product_id' AND product_size = '$user_size' AND product_color = '$user_color'";
-	        $product_result = mysqli_query($connect, $product_query);
-      
-	        if ($product_row = mysqli_fetch_array($product_result)) {
-		  $product_details_id = $product_row['product_details_id'];
-		  $product_quantity = $product_row['product_quantity'];
-		  $new_product_quantity = $product_quantity - $user_quantity;
-      
-		  $update_query = "UPDATE product_details
-			         SET product_quantity = $new_product_quantity
-			         WHERE product_details_id = '$product_details_id'";
-      
-		  $update_result = mysqli_query($connect, $update_query);
-      
-		  if (!$update_result) {
-		      echo "Error updating product quantity: " . mysqli_error($connect);
-		  } else {
-		      echo "Product quantity updated successfully.";
-		  }
-	        }
-	    } else {
-	        echo "Error inserting checkout record: " . mysqli_error($connect);
-	    }
-	}
-      
-	echo "<script>alert('Payment Successful.'); window.location.href = 'order-complete.php';</script>";
-      
-	$delete_query2 = "DELETE FROM add_to_cart WHERE username = '$username'";
-	$result = mysqli_query($connect, $delete_query2);
-      } else {
-	echo "<script>alert('Card Details not matched.'); window.location.href = 'http://localhost/fyp/checkout.php';</script>";
-      }
-      
-      mysqli_close($connect);
-      
-      
     }
 }
+
+mysqli_close($connect);
 ?>
 
 
