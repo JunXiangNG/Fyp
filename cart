@@ -317,7 +317,10 @@ if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $subtotal = 0; 
 
-    $select_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
+    $select_query = "SELECT add_to_cart.*, product_details.product_quantity
+    FROM add_to_cart
+    INNER JOIN product_details ON add_to_cart.product_id = product_details.product_id
+    WHERE add_to_cart.username = '$username'";
     $result = mysqli_query($connect, $select_query);
 
     if ($result === false) {
@@ -339,8 +342,13 @@ while ($row = mysqli_fetch_assoc($result)) {
     $user_quantity = $row['user_quantity'];
     $user_color = $row['user_color'];
     $user_size = $row['user_size'];
+    $product_quantity=$row['product_quantity'];
     $total_cost = $product_price * $user_quantity;
     $subtotal += $total_cost;
+    echo '<script>';
+    echo 'var productQuantity = ' . $product_quantity . ';'; //pass the product_quantity value to java srcipt button quantity
+   echo '</script>';
+   
 ?>
     <div class="product-cart d-flex">
         <div class="one-forth">
@@ -383,6 +391,7 @@ while ($row = mysqli_fetch_assoc($result)) {
                             <button type="button" onclick="decreaseValue(<?php echo $order_id; ?>)">-</button>
                             <input type="number" id="myNumber_<?php echo $order_id; ?>" name="quantity" min="1" max="5" value="<?php echo $user_quantity; ?>" readonly required>
                             <button type="button" onclick="increaseValue(<?php echo $order_id; ?>)">+</button>
+		        
                         </div>
                     </div>
                 </div>
@@ -405,10 +414,13 @@ while ($row = mysqli_fetch_assoc($result)) {
 							echo "<script type='text/javascript'>
 									alert('Quantity Updated');
 									window.location.href = 'cart.php';
+									
 								</script>";
 						
 							}
 							?>
+							
+
 				<div class="one-eight text-right pr-6">
                         <div class="display-tc">
                             <span class="price" style="margin-left: -10px;" ><?php echo $user_size; ?></span>
@@ -594,25 +606,28 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 		</footer>
 	</div>
 	<script>
-						function increaseValue(orderId) {
-						var input = document.getElementById('myNumber_' + orderId);
-						var value = parseInt(input.value, 10);
-						value = isNaN(value) ? 1 : value;
-						if (value < 5 && value < productQuantity) {
-							value++;
-						}
-						input.value = value;
+					
+					function increaseValue(orderId) {
+					var input = document.getElementById('myNumber_' + orderId);
+					var value = parseInt(input.value, 10);//parseInt(string,radix)   radix(10) - determine the binary to be used(decimal)
+					value = isNaN(value) ? 1 : value;//If it cannot be converted to an integer type, the default value is 1
+					value++;
+					if (value > 5 || value > productQuantity) {//make sure the number is not greater than 5
+					value =  productQuantity;
+					}
+					document.getElementById('myNumber_' + orderId).value = value;//sets the new value back into the input box 
 					}
 
+
+
 					function decreaseValue(orderId) {
-						var input = document.getElementById('myNumber_' + orderId);
-						var value = parseInt(input.value, 10);
-						value = isNaN(value) ? 1 : value;
-						value--;
-						if (value < 1) {
-							value = 1;
-						}
-						input.value = value;
+					var value = parseInt(document.getElementById('myNumber_' + orderId).value, 10);
+					value = isNaN(value) ? 1 : value;
+					value--;
+					if (value < 1) {
+					value = 1;
+					}
+					document.getElementById('myNumber_' + orderId).value = value;
 					}
 
 
