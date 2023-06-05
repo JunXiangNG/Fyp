@@ -88,7 +88,7 @@ CREATE TABLE checkout (
   card_number VARCHAR(255) NOT NULL,
   card_expire VARCHAR(10) NOT NULL,
   cvv VARCHAR(10) NOT NULL,
-  FOREIGN KEY (product_id) REFERENCES product (product_id)，
+  FOREIGN KEY (product_id) REFERENCES product (product_id),
   FOREIGN KEY (order_id) REFERENCES orders(order_id)
  
 );
@@ -128,4 +128,3 @@ CREATE TABLE `dummy_table` (
 INSERT INTO `dummy_table` (`id`, `card_number`, `card_expire`, `cvv`) VALUES
 (NULL, '1234567890123456', '06/2023', '123'),
 (NULL, '9876543210987654', '09/2024', '456');
-
