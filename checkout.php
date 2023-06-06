@@ -7,7 +7,6 @@ error_reporting(0);
 session_start();
 if (isset($_SESSION['username'])) {
 	$username = $_SESSION['username'];
-	$phone = $_SESSION['phone'];
 	echo "<div style='font-size: 20px; padding: 10px; color:green;'>Welcome, $username!</div>";
 	
 }
@@ -147,12 +146,12 @@ $connect = mysqli_connect("localhost","root","","fyp");
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
 								<li><a href="viewreview.php">Review</a></li>
-                                <li class="has-dropdown">
+                                					<li class="has-dropdown">
 									<a href="#">Account</a>
 									<ul class="dropdown">
 										<li><a href="profile.php">Edit Profile</a></li>
-										<li><a href="#">Order History</a></li>
-                                        <li><a href="logout.php">Logout</a></li>
+										<li><a href="order_history.php">Order History</a></li>
+                                       					 <li><a href="logout.php">Logout</a></li>
 									</ul>
 									
 									
@@ -161,7 +160,7 @@ $connect = mysqli_connect("localhost","root","","fyp");
 								if (isset($_SESSION['username'])) {
 								$username = $_SESSION['username'];
 								mysqli_select_db($connect, "fyp");
-								$result = mysqli_query($connect, "select * from orders WHERE username = '$username'");	
+								$result = mysqli_query($connect, "select * from add_to_cart WHERE username = '$username'");	
 								$count = mysqli_num_rows($result);//used to count number of rows
 
 								}
@@ -243,24 +242,25 @@ if (isset($_SESSION['username'])) {
     $username = $_SESSION['username'];
     $subtotal = 0; 
 
-    $select_query = "SELECT * FROM orders WHERE username = '$username'";
+    $select_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
     $result = mysqli_query($connect, $select_query);
-
+    
     if ($result === false) {
-	
         die(mysqli_error($connect));
-	
     }
+    
 ?>
     <div class="row row-pb-lg">
         <div class="col-md-12">
             <?php
             while ($row = mysqli_fetch_assoc($result)) {
                 $order_id = $row['order_id'];
+	      $product_id = $row['product_id'];
                 $product_image = $row['product_image'];
                 $product_name = $row['product_name'];
                 $product_price = $row['product_price'];
                 $user_quantity = $row['user_quantity'];
+		
                 $total_cost = $product_price * $user_quantity; 
                 $subtotal += $total_cost; 
 				}
@@ -277,7 +277,7 @@ if (isset($_SESSION['username'])) {
 									$username = $_SESSION['username'];
 									$result = mysqli_query($connect, "SELECT * FROM users WHERE username='$username'");
 									$count = mysqli_num_rows($result);
-									
+
 									// Display user data and edit form
 									if ($count > 0) {
 									  $row = mysqli_fetch_assoc($result);
@@ -291,12 +291,13 @@ if (isset($_SESSION['username'])) {
 									  $town=$row['town_city'];
 									  $state=$row['state_province'];
 									  $zipcode=$row['zip_postalcode'];
-									
+
 									}
-									  
+
 								?>
 
 							<div class="col-md-6">
+								
 							<input type="hidden" name="order_id" value="<?php echo $_GET["order_id"]; ?>">
 								<div class="form-group">
 									<label for="receivername">Receiver Name</label>
@@ -305,8 +306,9 @@ if (isset($_SESSION['username'])) {
 							</div>
 						</div>
 						<div class="form-group">
-    				<label for="phonenumber">Phone Number</label>
-    				<input type="text" name="phone" class="form-control" pattern="\d{3}-\d{8}" title="Please enter a correct phone number in the format, for example: 011-26126335"value="<?php echo $phone; ?>" required>
+						<label for="phonenumber">Phone Number</label>
+    						<input type="text" name="phone" class="form-control" pattern="\d{3}-\d{7}" title="Please enter a correct phone number in the format, for example: 011-26126335"value="<?php echo $phone; ?>" required>
+
 						</div>
 						<div class="form-group">
 							<label for="address">Address</label>
@@ -316,6 +318,7 @@ if (isset($_SESSION['username'])) {
 						<div class="row">
 							<div class="col-md-6">
 								<div class="form-group">
+								<label for="state" >Select State:</label>
 								<body onload="populateCities()">
 								<label for="state" >Select State:</label><br>
 								<select id="state" name="state_province" class="input-field" onchange="populateCities()"style="width: 200px; height: 50px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
@@ -330,9 +333,9 @@ if (isset($_SESSION['username'])) {
 						</div>
 							</div>
 							<div class="col-md-6">
-
 							<div class="form-group">
-								<label for="city">Select City:</label><br>
+								
+							<label for="city">Select City:</label><br>
 								<select id="city" name="town_city" class="input-field" value="<?php echo $town; ?>"style="width: 200px; height: 50px; padding: 5px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px;">
     							<option value="">- Select City -</option>
  							 </select>
@@ -411,7 +414,7 @@ if (isset($_SESSION['username'])) {
 		</div>
 	    </div>
 
-<?php
+	    <?php
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
@@ -422,7 +425,7 @@ if (isset($_POST['savebtn'])) {
 
     if (isset($_SESSION['username'])) {
         $username = $_SESSION['username'];
-
+        $phone = $_SESSION['phone'];
         $select_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
         $result = mysqli_query($connect, $select_query);
 
@@ -444,94 +447,133 @@ if (isset($_POST['savebtn'])) {
         // Perform validation against the dummy table
         $query = "SELECT COUNT(*) FROM dummy_table WHERE card_number = '$cardnumber' AND card_expire = '$cardexpire' AND cvv = '$cvv'";
         $result = mysqli_query($connect, $query);
-        $numRows = mysqli_fetch_array($result)[0];
+        $numRows = mysqli_num_rows($result);
 
-        if ($numRows > 0) {
-            // Payment data matches the dummy table, proceed with insertion
-            while ($cart_row = mysqli_fetch_array($result)) {
-                $order_id = $cart_row['order_id'];
-                $product_id = $cart_row['product_id'];
-                $user_size = $cart_row['size'];
-                $user_color = $cart_row['colour'];
-                $user_quantity = $cart_row['quantity'];
+        // Fetch all products in the cart
+        $cart_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
+        $cart_result = mysqli_query($connect, $cart_query);
 
-                // Insert checkout record
-                $sql = "INSERT INTO checkout(order_id, product_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
-                        VALUES ('$order_id', '$product_id', '$username', '$name', '$phone', '$address', '$town', '$state', '$zipcode', '$cardname', '$cardnumber', '$cardexpire', '$cvv')";
+   
+	// Update user details
+	$update_query = "UPDATE users SET phone = '$phone', address = '$address', town_city = '$town', state_province = '$state', zip_postalcode = '$zipcode' WHERE username = '$username'";
+	$result2 = mysqli_query($connect, $update_query);
+	if (!$result2) {
+	echo "Error updating user details: " . mysqli_error($connect);
+	exit;
+	}
+        
+        
 
-                $result = mysqli_query($connect, $sql);
+        if ($result && $numRows > 0) {
+	while ($cart_row = mysqli_fetch_array($cart_result)) {
+	    $order_id = $cart_row['order_id'];
+	    $product_id = $cart_row['product_id'];
+	    $user_size = $cart_row['size'];
+	    $user_color = $cart_row['colour'];
+	    $user_quantity = $cart_row['quantity'];
+      
+	    // Insert checkout record
+	    $sql = "INSERT INTO checkout(order_id, product_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
+		  VALUES('$order_id', '$product_id', '$username', '$name', '$phone', '$address', '$town', '$state', '$zipcode', '$cardname', '$cardnumber', '$cardexpire', '$cvv')";
+      
+	    $result = mysqli_query($connect, $sql);
+      
+	   
+	        $product_query = "SELECT product_details_id, product_quantity
+			      FROM product_details
+			      WHERE product_id = '$product_id' AND product_size = '$user_size' AND product_color = '$user_color'";
+				$row = mysqli_fetch_assoc($product_result);
+				$product_quantity = $row['product_quantity'];
+	        $product_result = mysqli_query($connect, $product_query);
+      
+	        
+      
+	        $update_query = "UPDATE product_details SET product_quantity = $product_quantity - $user_quantity WHERE product_id = '$product_id'";
 
-                if (!$result) {
-                    echo "Error inserting checkout record: " . mysqli_error($connect);
-                    exit;
-                }
-            }
-
-            // Update user details
-            $update_query = "UPDATE users SET phone = '$phone', address = '$address', town_city = '$town', state_province = '$state', zip_postalcode = '$zipcode' WHERE username = '$username'";
-            $result2 = mysqli_query($connect, $update_query);
-
-            if (!$result2) {
-                echo "Error updating user details: " . mysqli_error($connect);
-                exit;
-            }
-
-            // Update product quantity
-            while ($cart_row = mysqli_fetch_array($result)) {
-                $order_id = $cart_row['order_id'];
-                $product_id = $cart_row['product_id'];
-                $user_size = $cart_row['size'];
-                $user_color = $cart_row['colour'];
-                $user_quantity = $cart_row['quantity'];
-
-                $product_query = "SELECT product_details_id, product_quantity
-                                  FROM product_details
-                                  WHERE product_id = '$product_id' AND product_size = '$user_size' AND product_color = '$user_color'";
-                $product_result = mysqli_query($connect, $product_query);
-
-                if ($product_row = mysqli_fetch_array($product_result)) {
-                    $product_details_id = $product_row['product_details_id'];
-                    $product_quantity = $product_row['product_quantity'];
-                    $new_product_quantity = $product_quantity - $user_quantity;
-
-                    $update_query = "UPDATE product_details
-                                     SET product_quantity = $new_product_quantity
-                                     WHERE product_details_id = '$product_details_id'";
-
-                    $update_result = mysqli_query($connect, $update_query);
-
-                    if (!$update_result) {
-                        echo "Error updating product quantity: " . mysqli_error($connect);
-                        exit;
-                    }
-                }
-            }
-
-            // Clear the cart
-            $delete_query = "DELETE FROM add_to_cart WHERE username = '$username'";
-            $delete_result = mysqli_query($connect, $delete_query);
-
-            if (!$delete_result) {
-                echo "Error clearing cart: " . mysqli_error($connect);
-                exit;
-            }
-
-            echo "<script>alert('Payment Successful.'); window.location.href = 'order-complete.php';</script>";
-            exit;
-        } else {
-            echo "<script>alert('Card Details not matched.'); window.location.href = 'http://localhost/fyp/checkout.php';</script>";
-            exit;
-        }
+      
+		  $update_result = mysqli_query($connect, $update_query);
+      
+		  if (!$update_result) {
+		      echo "Error updating product quantity: " . mysqli_error($connect);
+		  } else {
+		      echo "Product quantity updated successfully.";
+		  }
+	  
+	}
+      
+	echo "<script>alert('Payment Successful.'); window.location.href = 'order-complete.php';</script>";
+      
+	$delete_query2 = "DELETE FROM add_to_cart WHERE username = '$username'";
+	$result = mysqli_query($connect, $delete_query2);
+      } else {
+	echo "<script>alert('Card Details not matched.'); window.location.href = 'http://localhost/fyp/checkout.php';</script>";
+      }
+      
+      mysqli_close($connect);
+      
+      
     }
 }
-
-mysqli_close($connect);
 ?>
 
 
+
+
+
+
+
+<footer id="colorlib-footer" role="contentinfo">
+			<div class="container">
+				<div class="row row-pb-md">
+					<div class="col footer-col colorlib-widget">
+						<h4>About 4M Online Sport Shoe Store</h4>
+						<p>Even the all-powerful Pointing has no control about the blind texts it is an almost unorthographic life</p>
+						<p>
+							<ul class="colorlib-social-icons">
+								<li><a href="#"><i class="icon-twitter"></i></a></li>
+								<li><a href="#"><i class="icon-facebook"></i></a></li>
+								<li><a href="#"><i class="icon-linkedin"></i></a></li>
+								
+							</ul>
+						</p>
+					</div>
+					<div class="col footer-col colorlib-widget">
+						<h4>Customer Care</h4>
+						<p>
+							<ul class="colorlib-footer-links">
+							<li><a href="viewreview.php">Review</a></li>
+							</ul>
+						</p>
+					</div>
+					<div class="col footer-col colorlib-widget">
+						<h4>Information</h4>
+						<p>
+							<ul class="colorlib-footer-links">
+								<li><a href="about.php">About us</a></li>
+								
+							</ul>
+						</p>
+					</div>
+
+					
+
+					<div class="col footer-col">
+						<h4>Contact Information</h4>
+						<ul class="colorlib-footer-links">
+							<li>28,Jalan Bukit Beruang, <br> Taman Bukit Beruang</li>
+							<li><a href="tel://1234567920">+60 11-26121234</a></li>
+							<li><a href="mailto:info@yoursite.com">www.4M.com</a></li>
+							
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="copy">
+				<div class="row">
+					<div class="col-sm-12 text-center">
 						<p>
 							<span><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
+Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="icon-heart" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">4M</a>
 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. --></span> 
 							<span class="block">Demo Images: <a href="http://unsplash.co/" target="_blank">Unsplash</a> , <a href="http://pexels.com/" target="_blank">Pexels.com</a></span>
 						</p>
@@ -540,6 +582,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 			</div>
 		</footer>
 	</div>
+
 
 	<div class="gototop js-top">
 		<a href="#" class="js-gotop"><i class="ion-ios-arrow-up"></i></a>
@@ -567,16 +610,22 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 <script src="js/jquery.stellar.min.js"></script>
 <!-- Main -->
 <script src="js/main.js"></script>
-	<!--Payment-->
-	<script src="js/payment.js"></script>
-	<script>
+
+
+
+<!--Payment-->
+<script src="js/payment.js"></script>
+
+<script>
   document.getElementById("cc-exp").addEventListener("input", function (event) {
     var input = event.target;
     var trimmed = input.value.replace(/\s+/g, "");
     var formatted = trimmed.replace(/^(\d{2})\/?(\d{0,4})/, "$1/$2");
     input.value = formatted;
   });
+
 </script>
+
 
 <script>
     function populateCities() {
@@ -584,6 +633,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
       var citySelect = document.getElementById("city");
       var state = stateSelect.value;
       var town = "<?php echo isset($town) ? $town : ''; ?>";
+
 
       // Clear city options
       citySelect.innerHTML = '<option value="">- Select City -</option>';
@@ -606,16 +656,16 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
           option.value = selangorCities[i];
           citySelect.add(option);
         }
-      } else if (state === "Melaka") {
+} else if (state === "Melaka") {
         // Add Melaka cities
         var melakaCities = ["Ayer Keroh", "Alor Gajah", "Malacca City (Bandaraya Melaka)", "Klebang", "Jasin", "Batu Berendam", "Bukit Katil"];
         for (var i = 0; i < melakaCities.length; i++) {
           var option = document.createElement("option");
-          option.text = melakaCities[i];
-          option.value = melakaCities[i];
+          option.text = melakaCities [i];
+          option.value = melakaCities [i];
           citySelect.add(option);
         }
-      } else if (state === "Pahang") {
+} else if (state === "Pahang") {
         // Add Pahang cities
         var pahangCities = ["Kuantan", "Cameron Highlands", "Temerloh", "Raub", "Mentakab", "Pekan", "Kuala Lipis", "Gambang"];
         for (var i = 0; i < pahangCities.length; i++) {
@@ -624,7 +674,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
           option.value = pahangCities[i];
           citySelect.add(option);
         }
-      } else if (state === "Negeri Sembilan") {
+} else if (state === "Negeri Sembilan") {
         // Add Negeri Sembilan cities
         var negerisembilanCities = ["Seremban", "Port Dickson", "Nilai", "Seri Menanti", "Bahau", "Kuala Pilah", "Rembau", "Gemas"];
         for (var i = 0; i < negerisembilanCities.length; i++) {
@@ -633,19 +683,17 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
           option.value = negerisembilanCities[i];
           citySelect.add(option);
         }
-      }
+}
 
-      // Set the selected city if it matches the previous selection
-      if (town !== "") {
-        citySelect.value = town;
-      }
-    }
+// Set the selected city if it matches the previous selection
+if (town !== "") {
+  citySelect.value = town;
+}
+}
 
-    // Call the populateCities() function when the page loads
-    window.onload = populateCities;
-  </script>
-
-
-
+// Call the populateCities() function when the page loads
+window.onload = populateCities;
+</script>
+	
 </body>
 </html>
