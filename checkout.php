@@ -473,7 +473,7 @@ if (isset($_POST['savebtn'])) {
 	    $user_quantity = $cart_row['quantity'];
       
 	    // Insert checkout record
-	    $sql = "INSERT INTO test(order_id, product_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
+	    $sql = "INSERT INTO checkout(order_id, product_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
 		  VALUES('$order_id', '$product_id', '$username', '$name', '$phone', '$address', '$town', '$state', '$zipcode', '$cardname', '$cardnumber', '$cardexpire', '$cvv')";
       
 	    $result = mysqli_query($connect, $sql);
