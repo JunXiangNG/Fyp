@@ -445,9 +445,9 @@ if (isset($_POST['savebtn'])) {
         $cvv = $_POST['cvv'];
 
         // Perform validation against the dummy table
-        $query = "SELECT COUNT(*) FROM dummy_table WHERE card_number = '$cardnumber' AND card_expire = '$cardexpire' AND cvv = '$cvv'";
-        $result = mysqli_query($connect, $query);
-        $numRows = mysqli_num_rows($result);
+        $validation_query = "SELECT COUNT(*) FROM dummy_table WHERE card_number = '$cardnumber' AND card_expire = '$cardexpire' AND cvv = '$cvv'";
+		$validation_result = mysqli_query($connect, $validation_query);
+		$numRows = mysqli_fetch_array($validation_result)[0];
 
         // Fetch all products in the cart
         $cart_query = "SELECT * FROM add_to_cart WHERE username = '$username'";
@@ -464,7 +464,7 @@ if (isset($_POST['savebtn'])) {
         
         
 
-        if ($result && $numRows > 0) {
+        if ($validation_result  && $numRows > 0) {
 	while ($cart_row = mysqli_fetch_array($cart_result)) {
 	    $order_id = $cart_row['order_id'];
 	    $product_id = $cart_row['product_id'];
@@ -473,7 +473,7 @@ if (isset($_POST['savebtn'])) {
 	    $user_quantity = $cart_row['quantity'];
       
 	    // Insert checkout record
-	    $sql = "INSERT INTO checkout(order_id, product_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
+	    $sql = "INSERT INTO test(order_id, product_id, username, received_name, phone, address, town_city, state_province, zip_postalcode, card_name, card_number, card_expire, cvv)
 		  VALUES('$order_id', '$product_id', '$username', '$name', '$phone', '$address', '$town', '$state', '$zipcode', '$cardname', '$cardnumber', '$cardexpire', '$cvv')";
       
 	    $result = mysqli_query($connect, $sql);
