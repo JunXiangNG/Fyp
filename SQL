@@ -92,8 +92,8 @@ CREATE TABLE checkout (
   card_expire VARCHAR(10) NOT NULL,
   cvv VARCHAR(10) NOT NULL,
   FOREIGN KEY (product_id) REFERENCES product (product_id),
-  FOREIGN KEY (order_id) REFERENCES orders(order_id)
-  order_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (order_id) REFERENCES orders(order_id),
+  order_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
