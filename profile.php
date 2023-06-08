@@ -323,7 +323,7 @@ if ($count > 0) {
           <input type="password" name="cpassword" class="input-field" id="confirm-password"><br><br>
         </div>
 
-		<input type="checkbox" name="set_address" id="set_address-checkbox" onchange="toggleAddressFields()">  Billing Details<br><br>
+		<input type="checkbox" name="set_address" id="set_address-checkbox" onchange="toggleAddressFields()">  Billing Address<br><br>
 		<div id="address-fields" style="display: none;">
 							<div class="form-group">
 							<label for="phonenumber">Phone Number :</label>
