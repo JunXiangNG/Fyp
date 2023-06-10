@@ -165,35 +165,10 @@ if (!$connect) {
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
 
-									<ul class="dropdown">
-									<?php
-										if ($result) {
-											while ($row = mysqli_fetch_assoc($result)) {
-												$brand_name = $row['brand_name'];
-												echo '<li>' . $brand_name . '</li>';
-											}
-										} else {
-											echo "Query failed: " . mysqli_error($connect);
-										}
-										?>
-									
-									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
-									<ul class="dropdown">
-													<?php
-									if ($result) {
-										mysqli_data_seek($result, 0); // Reset the query result pointer to the first row
-										while ($row = mysqli_fetch_assoc($result)) {
-											$brand_name = $row['brand_name'];
-											echo '<li>' . $brand_name . '</li>';
-										}
-									} else {
-										echo "Query failed: " . mysqli_error($connect);
-									}
-									?>
-									</ul>
+									
 								</li>
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
@@ -202,7 +177,7 @@ if (!$connect) {
 									<a href="#">Account</a>
 									<ul class="dropdown">
 										<li><a href="profile.php">Edit Profile</a></li>
-										<li><a href="#">Order History</a></li>
+										<li><a href="order_history.php">Order History</a></li>
                                         <li><a href="logout.php">Logout</a></li>
 									</ul>
 									
@@ -290,11 +265,16 @@ if (isset($_SESSION['username'])) {
 
     $subtotal = 0;
 
-    $select_query = "SELECT orders.*, orders.order_status, orders.product_price, orders.user_quantity
-    FROM orders
-    INNER JOIN checkout ON orders.order_id = checkout.order_id 
-    WHERE orders.order_id = '$order_id'
-    and orders.username = '$username' ";
+    $select_query = "SELECT pd.product_details_id, pd.product_color, pd.product_size, pd.product_gender, pd.product_image, pd.product_price, od.user_quantity, p.product_name
+    FROM product_details pd
+    INNER JOIN order_details od ON pd.product_details_id = od.product_details_id
+    INNER JOIN orders o ON od.order_id = o.order_id
+    INNER JOIN product p ON pd.product_id = p.product_id
+    WHERE o.order_id = '$order_id'
+    AND o.username = '$username'";
+
+
+
     
     $result = mysqli_query($connect, $select_query);
 
@@ -309,15 +289,15 @@ if (isset($_SESSION['username'])) {
     <div class="col-md-12">
 	  <?php
 	  
-if ($row = mysqli_fetch_assoc($result)) {
-    $order_id = $row['order_id'];
+while ($row = mysqli_fetch_assoc($result)) {
+    
     $product_image = $row['product_image'];
     $product_gender = $row['product_gender'];
     $product_name = $row['product_name'];
     $product_price = $row['product_price'];
     $user_quantity = $row['user_quantity'];
-    $user_color = $row['user_color'];
-    $user_size = $row['user_size'];
+    $product_color = $row['product_color'];
+    $product_size = $row['product_size'];
     $total_cost = $product_price * $user_quantity;
     $subtotal += $total_cost;
 ?>
@@ -359,13 +339,13 @@ if ($row = mysqli_fetch_assoc($result)) {
                    
 				<div class="one-eight text-right pr-6">
                         <div class="display-tc">
-                            <span class="price" style="margin-left: -10px;" ><?php echo $user_size; ?></span>
+                            <span class="price" style="margin-left: -10px;" ><?php echo $product_size; ?></span>
                         </div>
                     </div>
 
 					<div class="one-eight text-right pr-6">
                         <div class="display-tc">
-                            <span class="price"><?php echo $user_color; ?></span>
+                            <span class="price"><?php echo $product_color; ?></span>
                         </div>
                     </div>
 					<div class="one-eight text-right px-4">
