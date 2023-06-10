@@ -107,7 +107,7 @@ CREATE TABLE review (
 );
 
 CREATE TABLE add_to_cart (
-    order_id INT PRIMARY KEY AUTO_INCREMENT,
+   cart_id INT PRIMARY KEY AUTO_INCREMENT,
     product_id INT NOT NULL,
     username VARCHAR(255) NOT NULL, 
     product_image LONGBLOB NOT NULL, 
