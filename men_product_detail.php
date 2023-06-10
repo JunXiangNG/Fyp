@@ -213,7 +213,7 @@ if (!$connect) {
 									<a href="#">Account</a>
 									<ul class="dropdown">
 										<li><a href="profile.php">Edit Profile</a></li>
-										<li><a href="#">Order History</a></li>
+										<li><a href="order_history.php">Order History</a></li>
                                         <li><a href="logout.php">Logout</a></li>
 									</ul>
 									
@@ -286,7 +286,7 @@ if (isset($_GET['product_id'])) {
     $product_id = $_GET["product_id"];
     $select_query = "SELECT * FROM product
                      INNER JOIN product_details ON product.product_id = product_details.product_id
-                     WHERE product.product_id = $product_id";
+                     WHERE product.product_id = $product_id and product_gender ='men'";
                      
     $result_query = mysqli_query($connect, $select_query);
 
@@ -412,7 +412,7 @@ if (isset($_GET['product_id'])) {
 
 								$query = "SELECT * FROM product
 								INNER JOIN product_details ON product.product_id = product_details.product_id
-								WHERE product.product_id = $product_id";
+								WHERE product.product_id = $product_id AND product_gender='men' ";
 								$result = mysqli_query($connect, $query);
 								echo '<script>';
 								echo 'var productQuantity = ' . $product_quantity . ';'; //pass the product_quantity value to java srcipt button quantity
@@ -473,16 +473,14 @@ if (isset($_POST['savebtn'])) {
     }
 
     // Query the product and product_details tables to get the product name, image, and price
-    $query = "SELECT p.product_name, pd.product_price , pd.product_quantity
+    $query = "SELECT p.product_name, pd.product_price, pd.product_quantity
               FROM product p
               INNER JOIN product_details pd ON p.product_id = pd.product_id
-              WHERE pd.product_id = '$product_id' AND  product_gender='men'";
-
+              WHERE pd.product_id = '$product_id' AND product_gender='men' AND p.product_status = 'A'";
 
     $result = mysqli_query($connect, $query);
 
-
-	$order_query="SELECT order_id FROM add_to_cart a INNER JOIN orders o ON a.order_id = o.order_id WHERE a.order_id  '$order_id' ";
+    $order_query = "SELECT order_id FROM add_to_cart a INNER JOIN product_details o ON a.order_id = o.order_id WHERE a.order_id = '$order_id' ";
 
     // Check if the query was successful
     if ($result) {
@@ -494,7 +492,7 @@ if (isset($_POST['savebtn'])) {
         $user_size = $_POST['size'];
         $user_color = $_POST['colour'];
         $user_quantity = $_POST['quantity'];
-
+      
         $total_cost = $product_price * $user_quantity; // Assuming $product_price is defined
 
         // Sanitize the input
@@ -513,38 +511,38 @@ if (isset($_POST['savebtn'])) {
 
         if (mysqli_num_rows($check_product_result) > 0) {
             // Product with the specified color and size exists
-            // Query to check if the product already exists in orders table
+            // Query to check if the product already exists in add to cart table
             $check_query = "SELECT * FROM add_to_cart WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
             $check_result = mysqli_query($connect, $check_query);
 
-			if (mysqli_num_rows($check_result) > 0) {
-				// Product already exists in the orders table, update the order
-				$update_query = "UPDATE orders SET user_quantity = user_quantity + 1 WHERE username = '$username' AND order_id = '$order_id' AND user_size = '$user_size' AND user_color = '$user_color'";
-				
-				$update_result = false;
-				if ($user_quantity >6) {
-					$update_result = mysqli_query($connect, $update_query);
-				}
-				
-				$update_query2 = "UPDATE add_to_cart SET user_quantity = user_quantity + 1 WHERE username = '$username' AND order_id = '$order_id' AND user_size = '$user_size' AND user_color = '$user_color'";
-				
-				$update_result2 = false;
-				if ($user_quantity >6) {
-					$update_result2 = mysqli_query($connect, $update_query2);
-				}
-				
-				if ($update_result && $update_result2) {
-					// Display a success message
-					echo "<script type='text/javascript'>alert('Order updated successfully!');</script>";
-					echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
-				} else {
-					// Display an error message
-					echo "<script type='text/javascript'>alert('Failed to update order, can only order a maximum of 5 items!');</script>" . mysqli_error($connect);
-					echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
-				}
-			}
-			
-			 else {
+            if (mysqli_num_rows($check_result) > 0) {
+                // Product already exists in the add to cart table, update the add to cart
+                $update_query2 = "UPDATE add_to_cart SET user_quantity = user_quantity + '$user_quantity' WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
+
+                $update_result2 = false;
+                if ($user_quantity < 6) {
+                    $update_result2 = mysqli_query($connect, $update_query2);
+                }
+
+                if ($update_result2) {
+                    // Display a success message
+                    echo "<script type='text/javascript'>alert('Quantity updated successfully!');</script>";
+                    echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+                } else {
+                    // Display an error message
+                    echo "<script type='text/javascript'>alert('Failed to update quantity, can only order a maximum of 5 items!');</script>" . mysqli_error($connect);
+                    echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+                }
+            } else {
+                // Query to get the product details ID
+                $product_details_id_query = "SELECT product_details_id FROM product_details WHERE product_id = '$product_id' AND product_color = '$user_color' AND product_size = '$user_size'";
+                $product_details_id_result = mysqli_query($connect, $product_details_id_query);
+                $row = mysqli_fetch_assoc($product_details_id_result);
+                $product_details_id = $row['product_details_id'];
+
+                // Sanitize the product details ID
+                $product_details_id = mysqli_real_escape_string($connect, $product_details_id);
+
                 // Query to get the product image based on color and size
                 $image_query = "SELECT product_image FROM product_details WHERE product_id = '$product_id' AND product_color = '$user_color' AND product_size = '$user_size'";
                 $image_result = mysqli_query($connect, $image_query);
@@ -555,24 +553,18 @@ if (isset($_POST['savebtn'])) {
                 $product_image = mysqli_real_escape_string($connect, $product_image);
 
                 // Insert the data into the orders table
-         // Insert the data into the orders table
-				$insert_query = "INSERT INTO orders (username, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image, product_gender)
-				VALUES ('$username', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image','$product_gender')";
-				$insert_result = mysqli_query($connect, $insert_query);
+                $ins_query = "INSERT INTO add_to_cart (username, product_details_id, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image, product_gender)
+                VALUES ('$username', '$product_details_id', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image', '$product_gender')";
+                $ins_result = mysqli_query($connect, $ins_query);
 
-				$ins_query = "INSERT INTO add_to_cart (username, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image, product_gender)
-				VALUES ('$username', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image','$product_gender')";
-				$ins_result = mysqli_query($connect, $ins_query);
-
-				if ($insert_result && $ins_result) {
-				// Display a success message
-				echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
-				echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
-				} else {
-				// Display an error message
-				echo "<script type='text/javascript'>alert('Failed to place order!');</script>" . mysqli_error($connect);
-				}
-
+                if ($ins_result) {
+                    // Display a success message
+                    echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
+                    echo '<script>window.location.href = "http://localhost/fyp/men_product_detail.php?product_id=' . $product_id . '";</script>';
+                } else {
+                    // Display an error message
+                    echo "<script type='text/javascript'>alert('Failed to place order!');</script>" . mysqli_error($connect);
+                }
             }
         } else {
             // Product does not exist with the specified color and size
@@ -705,7 +697,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 								function increaseValue() {
 									var value = parseInt(document.getElementById('myNumber').value, 10);
 									value = isNaN(value) ? 1 : value;
-									if (value < 5 && value < productQuantity) {
+									if (value < 5 && value < productQuantity ) {
 										value++;
 									}
 									document.getElementById('myNumber').value = value;
@@ -763,4 +755,3 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 	</body>
 </html>
-
