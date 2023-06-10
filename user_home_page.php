@@ -244,7 +244,7 @@ if(isset($_SESSION['username'])) {
 					</div>
 				</div>
 				<?php
-$select_query = "SELECT * FROM product INNER JOIN product_details ON product.product_id = product_details.product_id ";
+$select_query = "SELECT * FROM product INNER JOIN product_details ON product.product_id = product_details.product_id and  product_status = 'A'";
 
 if(isset($_GET['brands']))
 {
@@ -361,7 +361,7 @@ $result = mysqli_query($connect, $select_query);
 								<li><a href="#"><i class="icon-twitter"></i></a></li>
 								<li><a href="#"><i class="icon-facebook"></i></a></li>
 								<li><a href="#"><i class="icon-linkedin"></i></a></li>
-								<li><a href="#"><i class="icon-dribbble"></i></a></li>
+								
 							</ul>
 						</p>
 					</div>
