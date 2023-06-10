@@ -29,6 +29,7 @@ CREATE TABLE product (
   product_name VARCHAR(100) NOT NULL,
   product_description VARCHAR(100) NOT NULL,
   product_code VARCHAR(20) NOT NULL,
+  product_status VARCHAR(30) default ‘A’,
   FOREIGN KEY (brand_id) REFERENCES brand (brand_id)
 );
 
@@ -41,7 +42,6 @@ CREATE TABLE product_details (
   product_gender VARCHAR(10) NOT NULL,
   product_image LONGBLOB NOT NULL,  
   product_price DECIMAL(10,2) NOT NULL,
-  product_status VARCHAR(30),
   FOREIGN KEY (product_id) REFERENCES product (product_id)
 );
 
@@ -67,40 +67,34 @@ CREATE TABLE users (
 
 CREATE TABLE orders (
     order_id INT PRIMARY KEY AUTO_INCREMENT,
-    product_id INT NOT NULL,
     username VARCHAR(255) NOT NULL, 
-    product_image LONGBLOB NOT NULL, 
-    product_name VARCHAR(50) NOT NULL,
-    product_gender VARCHAR(10) NOT NULL,
-    product_price DECIMAL(10, 2) NOT NULL,
-    user_size INT NOT NULL,
-    user_color VARCHAR(20) NOT NULL,
-    user_quantity INT NOT NULL, 
-    total_cost DECIMAL(10, 2) NOT NULL,
     order_status VARCHAR(50) NOT NULL DEFAULT 'Pending',
-   
-    FOREIGN KEY (product_id) REFERENCES product(product_id)
+    order_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE order_details (
+    detail_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    product_id INT NOT NULL,
+    product_details_id VARCHAR(20) NOT NULL,
+    user_quantity INT NOT NULL,
+    total_cost DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id),
+    FOREIGN KEY (product_id) REFERENCES product(product_id),
+    FOREIGN KEY (product_details_id) REFERENCES product_details(product_details_id)
 );
 
 
-CREATE TABLE checkout (
-  checkout_id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
-  username VARCHAR(255) NOT NULL, 
-  product_id INT NOT NULL,
-  order_id INT NOT NULL,
-  received_name VARCHAR(255) NOT NULL,
-  phone VARCHAR(20) NOT NULL,
-  address VARCHAR(255) NOT NULL,
-  town_city VARCHAR(255) NOT NULL,
-  state_province VARCHAR(255) NOT NULL,
-  zip_postalcode VARCHAR(255) NOT NULL,
-  card_name VARCHAR(255) NOT NULL,
-  card_number VARCHAR(255) NOT NULL,
-  card_expire VARCHAR(10) NOT NULL,
-  cvv VARCHAR(10) NOT NULL,
-  FOREIGN KEY (product_id) REFERENCES product (product_id),
-  FOREIGN KEY (order_id) REFERENCES orders(order_id),
-  order_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+CREATE TABLE receipts (
+    receipt_id INT PRIMARY KEY AUTO_INCREMENT,
+    order_id INT NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    phone VARCHAR(20) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    town_city VARCHAR(255) NOT NULL,
+    state_province VARCHAR(255) NOT NULL,
+    zip_postalcode VARCHAR(255) NOT NULL,
+    FOREIGN KEY (order_id) REFERENCES orders(order_id)
 );
 
 
