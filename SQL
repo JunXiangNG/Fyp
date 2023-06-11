@@ -89,6 +89,7 @@ CREATE TABLE receipts (
     receipt_id INT PRIMARY KEY AUTO_INCREMENT,
     order_id INT NOT NULL,
     username VARCHAR(255) NOT NULL,
+     received_name VARCHAR(255) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     address VARCHAR(255) NOT NULL,
     town_city VARCHAR(255) NOT NULL,
