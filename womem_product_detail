@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 	<head>
-	<title>Women product details </title>
+	<title>Product details </title>
    <meta charset="utf-8">
    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
@@ -176,35 +176,11 @@ if (!$connect) {
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/men.php">Men</a>
 
-									<ul class="dropdown">
-									<?php
-										if ($result) {
-											while ($row = mysqli_fetch_assoc($result)) {
-												$brand_name = $row['brand_name'];
-												echo '<li>' . $brand_name . '</li>';
-											}
-										} else {
-											echo "Query failed: " . mysqli_error($connect);
-										}
-										?>
 									
-									</ul>
 								</li>
 								<li class="has-dropdown">
 									<a href="http://localhost/fyp/women.php">Women</a>
-									<ul class="dropdown">
-													<?php
-									if ($result) {
-										mysqli_data_seek($result, 0); // Reset the query result pointer to the first row
-										while ($row = mysqli_fetch_assoc($result)) {
-											$brand_name = $row['brand_name'];
-											echo '<li>' . $brand_name . '</li>';
-										}
-									} else {
-										echo "Query failed: " . mysqli_error($connect);
-									}
-									?>
-									</ul>
+									
 								</li>
 							
 								<li><a href="http://localhost/fyp/about.php">About</a></li>
@@ -213,7 +189,7 @@ if (!$connect) {
 									<a href="#">Account</a>
 									<ul class="dropdown">
 										<li><a href="profile.php">Edit Profile</a></li>
-										<li><a href="#">Order History</a></li>
+										<li><a href="order_history.php">Order History</a></li>
                                         <li><a href="logout.php">Logout</a></li>
 									</ul>
 									
@@ -235,7 +211,7 @@ if (!$connect) {
 								?>
 
 								<li class="cart">
-									<a href="http://localhost/fyp/cart.php#">
+									<a href="cart.php">
 										<i class="icon-shopping-cart"></i> <?php echo $count; ?>
 									</a>
 								</li>	
@@ -273,7 +249,7 @@ if (!$connect) {
 			<div class="container">
 				<div class="row">
 					<div class="col">
-					<p class="bread"><span><a href="http://localhost/fyp/user_home_page.php">Home</a></span>/<span><a href="http://localhost/fyp/women.php">Women</a></span>/<span>Product Details</span></p>
+					<p class="bread"><span><a href="http://localhost/fyp/user_home_page.php">Home</a></span>/<span>Product Details</span></p>
 					</div>
 				</div>
 			</div>
@@ -286,7 +262,7 @@ if (isset($_GET['product_id'])) {
     $product_id = $_GET["product_id"];
     $select_query = "SELECT * FROM product
                      INNER JOIN product_details ON product.product_id = product_details.product_id
-                     WHERE product.product_id = $product_id";
+                     WHERE product.product_id = $product_id ";
                      
     $result_query = mysqli_query($connect, $select_query);
 
@@ -298,21 +274,26 @@ if (isset($_GET['product_id'])) {
             $product_name = $row['product_name'];
             $product_price = $row['product_price'];
             $product_description = $row['product_description'];
-			$product_quantity = $row['product_quantity'];
-			$product_gender = $row['product_gender'];
-			$product_size = $row['product_size'];
-			$product_color = $row['product_color'];
+            $product_quantity = $row['product_quantity'];
+            $product_gender = $row['product_gender'];
+            $product_size = $row['product_size'];
+            $product_color = $row['product_color'];
         }
         
         // Display the color and size options
         
-        $color_query = "SELECT DISTINCT product_color FROM product_details WHERE product_id = $product_id AND product_gender='women'";
-        $size_query = "SELECT DISTINCT product_size FROM product_details WHERE product_id = $product_id AND product_gender='women'";
-        $image_query = "SELECT DISTINCT product_image FROM product_details WHERE product_id = $product_id AND product_gender='women'";
+        $color_query = "SELECT DISTINCT product_color FROM product_details WHERE product_id = $product_id";
+        $size_query = "SELECT DISTINCT product_size FROM product_details WHERE product_id = $product_id";
+        $gender_query = "SELECT DISTINCT product_gender FROM product_details WHERE product_id = $product_id";
+        $image_query = "SELECT DISTINCT product_image FROM product_details WHERE product_id = $product_id";
+        $price_query = "SELECT DISTINCT product_price FROM product_details WHERE product_id = $product_id";
+
         
         $color_result = mysqli_query($connect, $color_query);
         $size_result = mysqli_query($connect, $size_query);
-       $image_result= mysqli_query($connect, $image_query);
+        $gender_result = mysqli_query($connect, $gender_query);
+        $image_result= mysqli_query($connect, $image_query);
+        $price_result= mysqli_query($connect, $price_query);
 ?>
 
 <form name="addfrm" method="post" action="" onsubmit="return validateForm()">
@@ -321,52 +302,66 @@ if (isset($_GET['product_id'])) {
             <div class="row row-pb-lg product-detail-wrap">
                 <div class="col-sm-6">
                     <div class="item">
-					<div class="image-container">
-                        <div class="product-entry border">
-			
-						<div class="big-img">
-						<?php
-							$imageData = $product_image;
-							 
-								if ($imageData) {
-									$imageData = base64_encode($imageData);
-									echo '<img src="data:image/jpeg;base64,' . $imageData . '" class="img-fluid" />';
-								} else {
-									echo 'No Image';
-								}
-							
-							?>
-
-				</div>
-					<div class="images">
-						<div class="small-img">
-							
-								<?php
-								while ($image_row = mysqli_fetch_assoc($image_result)) {
-									$imageData = $image_row['product_image'];
-									if ($imageData) {
-										$imageData = base64_encode($imageData);
-										echo '<img src="data:image/jpeg;base64,' . $imageData . '" onclick="showImg(this.src)" class="img-fluid" />';
-									} else {
-										echo 'No Image';
-									}
-								}
-								?>
-							
-							
-							</div>
-							</div>
-							</div>
-							</div>
-							</div>
-							</div>
+                        <div class="image-container">
+                            <div class="product-entry border">
+                                <div class="big-img">
+                                <?php
+                                    $imageData = $product_image;
+                                     
+                                    if ($imageData) {
+                                        $imageData = base64_encode($imageData);
+                                        echo '<img src="data:image/jpeg;base64,' . $imageData . '" class="img-fluid" />';
+                                    } else {
+                                        echo 'No Image';
+                                    }
+                                ?>
+                                </div>
+                                <div class="images">
+                                    <div class="small-img">
+                                        <?php
+                                        while ($image_row = mysqli_fetch_assoc($image_result)) {
+                                            $imageData = $image_row['product_image'];
+                                            if ($imageData) {
+                                                $imageData = base64_encode($imageData);
+                                                echo '<img src="data:image/jpeg;base64,' . $imageData . '" onclick="showImg(this.src)" class="img-fluid" />';
+                                            } else {
+                                                echo 'No Image';
+                                            }
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-sm-4">
                     <div class="product-desc">
                         <div class="desc">
                             <h3><?php echo $product_name; ?></h3>
-                            <span class="price">RM <?php echo $product_price; ?></span>
+		       
+		   <?php
+			$prices = array();
+			while ($price_row = mysqli_fetch_assoc($price_result)) {
+			$product_price = $price_row['product_price'];
+			$prices[] = 'RM ' . $product_price;
+			}
+
+			echo implode('/', $prices);
+		  ?>
                         </div>
-						<p><b><?php echo $product_gender; ?></b></p>
+
+                        <?php
+			$genders = array(); 
+			while ($gender_row = mysqli_fetch_assoc($gender_result)) {
+			$genders[] = $gender_row['product_gender']; 
+			}
+			$product_genders = implode('/', $genders); 
+
+			echo '<p><b>' . $product_genders . '</b></p>';
+			?>
+
+
                         <p><b><?php echo $product_description; ?></b></p>
 
                         <div class="size-wrap">
@@ -377,7 +372,7 @@ if (isset($_GET['product_id'])) {
                                         <ul style="list-style-type: none; padding: 0;">
                                             <?php while ($size_row = mysqli_fetch_assoc($size_result)) { ?>
                                                 <li style="display: inline-block; width: 50px; height: 50px; border: 1px solid black; text-align: center; line-height: 50px; font-weight: bold;">
-                                                    <input type="checkbox" id="size" name="size" value="<?php echo $size_row['product_size']; ?>" onclick="handleCheckboxChange(this); updateProductQuantity();">
+                                                    <input type="checkbox" id="size" name="size" value="<?php echo $size_row['product_size']; ?>" onclick="handleCheckboxChange(this); ">
                                                     <label for="size"><span style="color: black;"><?php echo $size_row['product_size']; ?></span></label>
                                                 </li>
                                             <?php } ?>
@@ -389,7 +384,7 @@ if (isset($_GET['product_id'])) {
                                         <ul style="list-style-type: none; padding: 0;">
                                             <?php while ($color_row = mysqli_fetch_assoc($color_result)) { ?>
                                                 <li style="display: inline-block; width: 100px; height: 50px; border: 1px solid black; text-align: center; line-height: 50px; font-weight: bold;">
-                                                    <input type="checkbox" id="colourBlack" name="colour" value="<?php echo $color_row['product_color']; ?>" onclick="handleCheckboxChange(this) ; updateProductQuantity();">
+                                                    <input type="checkbox" id="colourBlack" name="colour" value="<?php echo $color_row['product_color']; ?>" onclick="handleCheckboxChange(this); ">
                                                     <label for="colourBlack"><span style="color: black;"><?php echo $color_row['product_color']; ?></span></label>
                                                 </li>
                                             <?php } ?>
@@ -411,7 +406,7 @@ if (isset($_GET['product_id'])) {
 
 								$query = "SELECT * FROM product
 								INNER JOIN product_details ON product.product_id = product_details.product_id
-								WHERE product.product_id = $product_id";
+								WHERE product.product_id = $product_id ";
 								$result = mysqli_query($connect, $query);
 								echo '<script>';
 								echo 'var productQuantity = ' . $product_quantity . ';'; //pass the product_quantity value to java srcipt button quantity
@@ -465,23 +460,20 @@ if (isset($_GET['product_id'])) {
 if (isset($_POST['savebtn'])) {
     // Get the form data
     $product_id = $_GET["product_id"];
-	$order_id = $_GET["order_id"];
+  
+   
 
     if (isset($_SESSION['username'])) {
         $username = $_SESSION['username'];
     }
 
     // Query the product and product_details tables to get the product name, image, and price
-    $query = "SELECT p.product_name, pd.product_price , pd.product_quantity
+    $query = "SELECT p.product_name, pd.product_price, pd.product_quantity
               FROM product p
               INNER JOIN product_details pd ON p.product_id = pd.product_id
-              WHERE pd.product_id = '$product_id' AND  product_gender=women'";
-
+              WHERE pd.product_id = '$product_id' AND p.product_status = 'A'";
 
     $result = mysqli_query($connect, $query);
-
-
-	$order_query="SELECT order_id FROM add_to_cart a INNER JOIN orders o ON a.order_id = o.order_id WHERE a.order_id  '$order_id' ";
 
     // Check if the query was successful
     if ($result) {
@@ -490,10 +482,10 @@ if (isset($_POST['savebtn'])) {
         $product_name = $row['product_name'];
         $product_price = $row['product_price'];
         $product_quantity = $row['product_quantity'];
+       
         $user_size = $_POST['size'];
         $user_color = $_POST['colour'];
         $user_quantity = $_POST['quantity'];
-
         $total_cost = $product_price * $user_quantity; // Assuming $product_price is defined
 
         // Sanitize the input
@@ -512,38 +504,38 @@ if (isset($_POST['savebtn'])) {
 
         if (mysqli_num_rows($check_product_result) > 0) {
             // Product with the specified color and size exists
-            // Query to check if the product already exists in orders table
+            // Query to check if the product already exists in add to cart table
             $check_query = "SELECT * FROM add_to_cart WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
             $check_result = mysqli_query($connect, $check_query);
 
-			if (mysqli_num_rows($check_result) > 0) {
-				// Product already exists in the orders table, update the order
-				$update_query = "UPDATE orders SET user_quantity = user_quantity + 1 WHERE username = '$username' AND order_id = '$order_id' AND user_size = '$user_size' AND user_color = '$user_color'";
-				
-				$update_result = false;
-				if ($user_quantity >6) {
-					$update_result = mysqli_query($connect, $update_query);
-				}
-				
-				$update_query2 = "UPDATE add_to_cart SET user_quantity = user_quantity + 1 WHERE username = '$username' AND order_id = '$order_id' AND user_size = '$user_size' AND user_color = '$user_color'";
-				
-				$update_result2 = false;
-				if ($user_quantity >6) {
-					$update_result2 = mysqli_query($connect, $update_query2);
-				}
-				
-				if ($update_result && $update_result2) {
-					// Display a success message
-					echo "<script type='text/javascript'>alert('Order updated successfully!');</script>";
-					echo '<script>window.location.href = "http://localhost/fyp/women_product_details.php?product_id=' . $product_id . '";</script>';
-				} else {
-					// Display an error message
-					echo "<script type='text/javascript'>alert('Failed to update order, can only order a maximum of 5 items!');</script>" . mysqli_error($connect);
-					echo '<script>window.location.href = "http://localhost/fyp/women_product_details.php?product_id=' . $product_id . '";</script>';
-				}
-			}
-			
-			 else {
+            if (mysqli_num_rows($check_result) > 0) {
+                // Product already exists in the add to cart table, update the add to cart
+                $update_query2 = "UPDATE add_to_cart SET user_quantity = user_quantity + '$user_quantity' WHERE username = '$username' AND product_id = '$product_id' AND user_size = '$user_size' AND user_color = '$user_color'";
+
+                $update_result2 = false;
+                if ($user_quantity < 6) {
+                    $update_result2 = mysqli_query($connect, $update_query2);
+                }
+
+                if ($update_result2) {
+                    // Display a success message
+                    echo "<script type='text/javascript'>alert('Quantity updated successfully!');</script>";
+                    echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
+                } else {
+                    // Display an error message
+                    echo "<script type='text/javascript'>alert('Failed to update quantity, can only order a maximum of 5 items!');</script>" . mysqli_error($connect);
+                    echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
+                }
+            } else {
+                // Query to get the product details ID
+                $product_details_id_query = "SELECT product_details_id FROM product_details WHERE product_id = '$product_id' AND product_color = '$user_color' AND product_size = '$user_size'";
+                $product_details_id_result = mysqli_query($connect, $product_details_id_query);
+                $row = mysqli_fetch_assoc($product_details_id_result);
+                $product_details_id = $row['product_details_id'];
+
+                // Sanitize the product details ID
+                $product_details_id = mysqli_real_escape_string($connect, $product_details_id);
+
                 // Query to get the product image based on color and size
                 $image_query = "SELECT product_image FROM product_details WHERE product_id = '$product_id' AND product_color = '$user_color' AND product_size = '$user_size'";
                 $image_result = mysqli_query($connect, $image_query);
@@ -553,25 +545,19 @@ if (isset($_POST['savebtn'])) {
                 // Sanitize the product image
                 $product_image = mysqli_real_escape_string($connect, $product_image);
 
-                // Insert the data into the orders table
-         // Insert the data into the orders table
-				$insert_query = "INSERT INTO orders (username, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image, product_gender)
-				VALUES ('$username', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image','$product_gender')";
-				$insert_result = mysqli_query($connect, $insert_query);
+                // Insert the data into the add_to_cart table
+                $ins_query = "INSERT INTO add_to_cart (product_id,product_details_id, username, product_image, product_name, product_gender, product_price, user_size, user_color, user_quantity, total_cost)
+                VALUES ('$product_id','$product_details_id', '$username', '$product_image', '$product_name', '$product_gender', '$product_price', '$user_size', '$user_color', '$user_quantity', '$total_cost')";
+                $ins_result = mysqli_query($connect, $ins_query);
 
-				$ins_query = "INSERT INTO add_to_cart (username, product_id, product_name, product_price, total_cost, user_quantity, user_color, user_size, product_image, product_gender)
-				VALUES ('$username', '$product_id', '$product_name', '$product_price', '$total_cost', '$user_quantity', '$user_color', '$user_size', '$product_image','$product_gender')";
-				$ins_result = mysqli_query($connect, $ins_query);
-
-				if ($insert_result && $ins_result) {
-				// Display a success message
-				echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
-				echo '<script>window.location.href = "http://localhost/fyp/women_product_details.php?product_id=' . $product_id . '";</script>';
-				} else {
-				// Display an error message
-				echo "<script type='text/javascript'>alert('Failed to place order!');</script>" . mysqli_error($connect);
-				}
-
+                if ($ins_result) {
+                    // Display a success message
+                    echo "<script type='text/javascript'>alert('Order placed successfully!');</script>";
+                    echo '<script>window.location.href = "http://localhost/fyp/product_detail.php?product_id=' . $product_id . '";</script>';
+                } else {
+                    // Display an error message
+                    echo "<script type='text/javascript'>alert('Failed to place order!');</script>" . mysqli_error($connect);
+                }
             }
         } else {
             // Product does not exist with the specified color and size
@@ -704,7 +690,7 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 								function increaseValue() {
 									var value = parseInt(document.getElementById('myNumber').value, 10);
 									value = isNaN(value) ? 1 : value;
-									if (value < 5 && value < productQuantity) {
+									if (value < 5 && value < productQuantity ) {
 										value++;
 									}
 									document.getElementById('myNumber').value = value;
@@ -762,4 +748,3 @@ Copyright &copy;<script>document.write(new Date().getFullYear());</script> All r
 
 	</body>
 </html>
-
