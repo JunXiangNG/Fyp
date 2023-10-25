@@ -13,4 +13,4 @@ BEGIN
     );
     SET NEW.product_details_id = unique_id;
 END$$
-DELIMITER ;
+DELIMITER ;;
